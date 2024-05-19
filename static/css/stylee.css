@@ -1,0 +1,37 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+footer {
+    background-color: #111;
+}
+ .footerContainer {
+     width: 100%;
+     padding: 70px 30px 20px;
+ }
+
+ .social{
+     display: flex;
+     justify-content: center;
+ }
+ .social a {
+     text-decoration: none;
+     padding: 10px;
+     background-color: white;
+     margin: 10px;
+     border-radius: 50%;
+ }
+
+  .social a i {
+      font-size: 2em;
+      color: black;
+      opacity: 0.9;
+ }
+
+.social a:hover {
+    background-color: #111;
+    transition: 0.5s;
+ }
