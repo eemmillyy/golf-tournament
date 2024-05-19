@@ -1,0 +1,51 @@
+-- Thanks to Juliana Oyola for these instructions -- 
+This will be a document to reference when using GIT
+Two ways one can use github 
+Easiest: Downloading the Github Desktop https://desktop.github.com/
+Terminal
+
+# Accessing the Repo on github on Terminal 
+[♡] You are going to want to clone the current repository in 'Main' Branch
+'git clone https://github.com/julsoyola/golfTournament.git' 
+
+- Follow this if you have trouble (https://gist.github.com/ccannon94/982d69b23659d66c0ca6fb1384f94c97)
+
+[♡] Once you cloned it you are going to want to check if you're in the right branch 
+'git branch' (It should say main)
+
+[♡] Make sure your branch is up to date
+'git pull' 
+
+[♡] Check out your branch 
+git checkout <working-branch-name> (do another 'git pull'  to make sure you're up to date)
+
+[♡] Update your personal branch from master (AKA main)
+'git rebase origin'
+- Trouble shoot (if you get fatal: invalid upstream 'master')
+- Add the remote upstream 'git remote add upstream https://github.com/julsoyola/golfTournament.git' 
+(But use your own branch HTTPS)
+
+
+(If you want to check whats new use 'git status' and it will tell you what branch you are on and what files
+can be commited.)
+
+[♡] Adding a file(s) to the main branch 
+Would rec using the command line or github desktop
+https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
+To add it in terminal you are going to do this..
+[♡] 1. Check 'git status' (check what files u need to add)
+[♡] 2. Add the Files you want to commit 'git add <filename' 
+ -  Ex. git add gitInstructions.txt (I am adding this txt file)
+    
+Or 'git add -all' To add all of ur files
+[♡] 3. Now commit 'git commit -m "Your message here"' 
+[♡] 4. You should make sure you are on the right branch before you send 
+'git branch' (it will tell u which branch u are on)
+
+[♡] 5. Now push to main 'git push' 
+
+Now when you look on github you can see that you made a commit
+As a team we can compare and pull the request. 
+
+This allows us from not pushing bad code and checking it before mushing it all in main. 
+Then once we review it we can Merge Pull Request 
