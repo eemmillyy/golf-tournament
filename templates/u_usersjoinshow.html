@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/signup.css')}}">
+    <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>*Users* Join Team show team</title>
+    <link rel="stylesheet" href="signup.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Additional styling for better visibility of the text when typing */
+        input[type="text"] {
+            color: black;
+        }
+         a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+         .foot p {
+            color: gainsboro;
+            margin-top: 370px;
+            padding-left: 2.3rem;
+        }
+         .box {
+             background-color: grey;
+             display: grid;
+             text-decoration-style: solid;
+             font-size: larger;
+             text-align: center;
+
+         }
+         .pic-box{
+             background-color: grey;
+
+         }
+         .pic img {
+             margin-left: 15px;
+             height: 600px;
+             width: 1050px;
+             margin-bottom: 20px;
+         }
+
+         .box2 {
+             background-color: grey;
+             display: grid;
+             text-decoration-style: solid;
+             font-size: larger;
+             text-align: center;
+             margin-top: 50px;
+
+         }
+            .banner {
+            position: fixed;
+            bottom: 10px;
+            left: 35px; /* Adjust left positioning */
+            color: gainsboro;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+        }
+    </style>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+<input type="checkbox" id="nav-toggle">
+    <div class="sidebar">
+       <div class="sidebar-brand">
+         <h2><img src="../static/css/logo.png" width="50" height="50"><span> Rotary at Lynn Haven</span></h2>
+       </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="/userdash"><span class="las la-home"></span>
+                    <span>Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="/u_allteamlist"><span class="las la-users"></span>
+                    <span>Teams</span></a>
+                </li>
+                <li>
+                    <a href="/usermakesteam" class="active"><span class="las la-plus-circle"></span>
+                    <span>Create Team</span></a>
+                </li>
+                 <li>
+                    <a href="/index"><span class="las la-store-alt"></span>
+                    <span>LynnHaven Links</span></a>
+                </li>
+                 <li>
+                    <a href="/construction"><span class="las la-clipboard-list"></span>
+                    <span>Auction</span></a>
+                </li>
+                <li>
+                    <a href="/view"><span class="las la-user-circle"></span>
+                    <span>Account</span></a>
+                </li>
+                <li>
+                <a href="/logout"><span class="las la-sign-out-alt"></span>
+                     <span>Log Out</span></a>
+                    </li>
+
+            </ul>
+        </div>
+
+        <div class="banner" id="banner"> © Made by Putter Programmers</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var navToggle = document.getElementById('nav-toggle');
+            var banner = document.getElementById('banner');
+
+            navToggle.addEventListener('change', function () {
+                if (navToggle.checked) {
+                    banner.style.display = 'none';
+                } else {
+                    banner.style.display = 'block';
+                }
+            });
+        });
+    </script>
+    </div>
+<div class="main-content">
+     <header>
+            <h2>
+                <label for="nav-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                Join a Team <span class="las la-golf-ball"></span>
+            </h2>
+
+            <div class="user-wrapper">
+                 {% if photo != None %}
+                <img src="../{{ photo }}" height="50" width="50">
+                 {% endif %}
+                {% if photo == None %}
+                <img src="../static/css/uploads/default.jpeg">
+                 {% endif %}
+                <div>
+                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                </div>
+            </div>
+        </header>
+    <div class="box">
+         <i> Please enter the TeamCode provided by your Team Leader</i>
+
+        {% if session['logged_in'] and session['user'] %}
+        <form action = "{{ url_for('userjoin') }}" method="POST">
+            <h3>Search for Team</h3>
+            <input type="text" name="JoinCode" ><br>
+            <input type="submit" name="Search" ><br>
+        </form>
+
+         {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+    {% endif %}
+ </div>
+<div class="box2">
+     {% if session['logged_in'] and session['user'] %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Team Name</th>
+                    <th>Sponsor Name</th>
+                    <th>Team Members</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{ row["TeamName"] }}</td>
+                        <td>{{ row["SponsorName"] }}</td>
+                        <td>{{ row["MemberName1"] }}, {{ row["MemberName2"] }}, {{ row["MemberName3"] }}, {{ row["MemberName4"] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+    <a href="/userteamjoin"> Join This Team</a>
+    <a href="/userdash">Back to Home</a>
+ </div>
+</body>
+</html>
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+        }
+        form {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: mediumseagreen;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: seagreen;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    {% if session['logged_in'] and session['admin'] %}
+        <form action="{{ url_for('searchTeamName') }}" method="POST">
+            <h3>Search for Team</h3>
+            <label for="TeamName">Name of Team/Member/Contact Info:</label><br>
+            <input type="text" id="TeamName" name="TeamName" ><br>
+            <input type="submit" value="Search"><br>
+        </form>
+
+         {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    {% endif %}
+</body>
+</html>

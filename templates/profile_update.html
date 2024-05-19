@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="static/css/profile.css">
+    <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: 'Josefin Sans', sans-serif;
+            background: linear-gradient(to bottom right, royalblue, mediumseagreen);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .two-forms{
+            display: inline-flex;
+            gap: 20px;
+        }
+        .long {
+            width: 200px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        .profile-header {
+            margin-bottom: 40px;
+            text-align: center;
+            border-radius: .8em;
+            background-color: #ffffff;
+            backdrop-filter: opacity(.5);
+        }
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 auto 30px;
+        }
+        .profile-picture img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #ccc;
+            margin: 0 auto 20px;
+        }
+        .profile-info {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .info-item {
+            width: calc(50% - 10px);
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: #ffffff;
+            text-align: left;
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .info-label {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            padding: 5px 10px;
+            background-color: #ffffff;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border: 2px solid #ccc;
+            color: #555;
+            z-index: 1;
+        }
+        .info-item input {
+            margin: 0;
+            color: #333;
+            font-size: 16px;
+            width: 190px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin-left: 5px;
+            border: none;
+        }
+         .info-item select {
+            margin: 0;
+            color: #333;
+            font-size: 13px;
+            width: 190px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            margin-left: 5px;
+            border: none;
+        }
+        .action-buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .action-buttons a {
+            text-decoration: none;
+            color: #ffffff;
+            margin: 0 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: mediumseagreen;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .action-buttons a:hover {
+            background-color: seagreen;
+        }
+        .action-buttons input {
+            text-decoration: none;
+            border: none;
+            color: #ffffff;
+            margin: 0 10px;
+            padding: 12px 20px;
+             border-radius: 5px;
+            background-color: mediumseagreen;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            height: 37px;
+            font-size: 15px;
+        }
+        .action-buttons input:hover {
+            background-color: seagreen;
+        }
+       .info h3{
+           margin-bottom: 15px;
+           padding-bottom: 5px;
+           border-bottom: 1px solid #e0e0e0;
+           color: #353c4e;
+           text-transform: uppercase;
+           letter-spacing: 5px;
+        }
+       .center {
+           margin-left: 40px;
+       }
+       .custom-file-upload {
+            display: inline-block;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: mediumseagreen;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+       .custom-file-upload:hover {
+             background-color: seagreen;
+        }
+
+        .custom-file-upload input[type="file"] {
+            display: none;
+        }
+
+        .input-container {
+            position: relative;
+            display: inline-block;
+
+        }
+
+        .input-container input[type="text"] {
+            padding-right: 30px; /* Adjust the padding to make space for the icon */
+            cursor: pointer;
+        }
+
+        .input-container i {
+            position: absolute;
+            top: 50%;
+            right: 10px; /* Adjust the right position of the icon */
+            transform: translateY(-50%);
+            pointer-events: none; /* Make the icon transparent to pointer events */
+        }
+
+
+    </style>
+</head>
+<body>
+ {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% if session['logged_in'] %}
+            {% for row in rows %}
+
+
+    <div class="container">
+         <form action="/updateProfile" method="POST" enctype="multipart/form-data">
+        <div class="profile-header" >   <br>
+            <div class="profile-picture">
+                <div id="previewContainer">
+                <img id="imagePreview" src="../{{ row['ProfilePicture'] }}" alt="Preview">
+                </div>
+                <label for="uploadInput" class="custom-file-upload">
+                <span> Choose Photo</span>
+                    <input type="file" id="uploadInput" accept="image/*" name="picture">
+                    <input type="hidden" id="fileReceived" value="false">
+                </label>
+            </div>
+
+<script>
+document.getElementById('uploadInput').addEventListener('change', function() {
+    var file = this.files[0];
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imagePreview').setAttribute('src', e.target.result);
+            // Set a flag to indicate that a file has been uploaded
+            document.getElementById('fileReceived').value = 'true';
+
+            // Show the preview container
+            document.getElementById('previewContainer').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+<br><br>
+         <div class="info">
+        <h3><br>Information</h3></div>
+
+        <br><br><br>
+
+          <div class="profile-info">
+                    <div class="two-forms">
+                        <div class="info-item">
+                            <div class="long">
+                                <div class="info-label"><strong>Username</strong></div>
+                                <div class="input-container">
+                                    <input type="text" name="UserName" value="{{ row['UserName'] }}">
+                                    <i class="las la-pen"></i>
+                       </div></div></div>
+                       <div class="info-item">
+                           <div class="long">
+                                 <div class="info-label"><strong>New Password</strong></div>
+                                 <div class="input-container">
+                                <input type="text" name="LoginPassword" value="{{ row['LoginPassword'] }}">
+                                <i class="las la-pen"></i>
+                       </div></div></div>
+                      </div><div></div>
+                    <div class="two-forms">
+                        <div class="info-item">
+                              <div class="long">
+                                  <div class="info-label"><strong>First Name</strong></div>
+                                  <div class="input-container">
+                                  <input type="text" name="UserFName" value="{{ row['UserFName'] }}">
+                                   <i class="las la-pen"></i>
+                       </div></div></div>
+                        <div class="info-item">
+                             <div class="long">
+                                   <div class="info-label"><strong>Gender</strong></div>
+                                 <div class="input-container">
+                                   <select name="UserGender" id="UserGender">
+                                      <option value="Gender">Select A Gender</option>
+                                      <option value="Female ♀">Female ♀</option>
+                                      <option value="Male ♂">Male ♂</option>
+                                   </select>
+                                   <i class="las la-pen"></i>
+                       </div></div></div>
+                       </div><div></div>
+                    <div class="two-forms">
+                        <div class="info-item">
+                            <div class="long">
+                                <div class="info-label"><strong>Middle Initial</strong></div>
+                                <div class="input-container">
+                                <input type="text" name="UserMName" value="{{ row['UserMName'] }}">
+                                <i class="las la-pen"></i>
+                       </div></div></div>
+                        <div class="info-item">
+                            <div class="long">
+                                <div class="info-label"><strong>Date of Birth</strong></div>
+                                <div class="input-container">
+                                <input type="text" name="UserDOB" value="{{ row['UserDOB'] }}">
+                                 <i class="las la-pen"></i>
+                       </div></div></div>
+                        </div><div></div>
+                    <div class="two-forms">
+                        <div class="info-item">
+                            <div class="long">
+                                <div class="info-label"><strong>Last Name</strong></div>
+                                <div class="input-container">
+                                <input type="text" name="UserLName" value="{{ row['UserLName'] }}">
+                                 <i class="las la-pen"></i>
+                       </div></div></div>
+                       <div class="info-item">
+                       <div class="long">
+                            <div class="info-label"><strong>Handicap</strong></div>
+                           <div class="input-container">
+                             <select name="UserHandicap" id="UserHandicap">
+                                <option value="Handicap">Select Handicap Status</option>
+                                <option value="✔">✔ Yes</option>
+                                <option value="✘">✘ No</option>
+                             </select>
+                             <i class="las la-pen"></i>
+                       </div></div></div>
+                       </div><div></div>
+                    <div class="two-forms">
+                        <div class="info-item">
+                            <div class="long">
+                                <div class="info-label"><strong>Phone Number</strong></div>
+                                <div class="input-container">
+                                <input type="text" name="UserPhNum" value="{{ row['UserPhNum'] }}">
+                                 <i class="las la-pen"></i>
+                       </div></div></div>
+                        <div class="info-item">
+                            <div class="long">
+                                <div class="info-label"><strong>Email</strong></div>
+                                <div class="input-container">
+                                <input type="text" name="UserEmail" value="{{ row['UserEmail'] }}">
+                                 <i class="las la-pen"></i>
+                       </div></div></div>
+                            </div>
+                    <div class="action-buttons">
+                         <a href="/view">Back</a>
+                         <input type="submit" name="Update" value="Update Profile">
+                    </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% endif %}
+               </form>
+    </div>
+
+</body>
+
+</html>

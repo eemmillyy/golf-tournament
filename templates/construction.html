@@ -1,0 +1,10 @@
+under construction at the moment sorry :(
+{% if session['admin'] %}
+  <a href="/dash"><input type="button" name="Back" value="Back"></a>
+{% endif%}
+{% if session['user'] %}
+<a href="/userdash"><input type="button" name="Back" value="Back"></a>
+{% endif%}
+{% if not session['admin'] and not session['user'] %}
+<a href="/login"><input type="button" name="Back" value="Back"></a>
+{% endif%}

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign Up Screen old!!!!!!!!!!!!!!!!!!!!!!!!!!!!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            $("#UserDOB").datepicker({ defaultDate: "-30y", dateFormat: "mmddyy" });
+        });
+
+        function togglePassword() {
+            var passwordInput = document.getElementById("passwordInput");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
+    </script>
+    <style>
+        /* Additional CSS for text and cursor */
+        input[type="text"],
+        input[type="password"],
+        select {
+            color: black;
+            caret-color: black;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add box shadow on focus */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .wrapper {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 18px;
+        }
+        .signup-box {
+            margin-bottom: 10px;
+        }
+        .signup-box label {
+            font-weight: normal;
+            color: #333; /* Changed color to match the second page */
+        }
+        #UserGender, #UserHandicap {
+            width: 100%;
+            height: 40px;
+        }
+
+        .password-input {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .password-input input[type="password"] {
+            margin-right: 7px;
+        }
+
+        .show-password {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            margin-left: -330px;
+        }
+        .show-password-checkbox {
+            transform: scale(0.6);
+        }
+        .show-password label {
+            margin-left: -320px;
+        }
+
+        ::-webkit-input-placeholder {
+            color: #e0e6eb;
+            font-weight: lighter;
+        }
+
+        :-moz-placeholder {
+           color: #e0e6eb;
+           font-weight: lighter;
+        }
+
+        ::-moz-placeholder {
+           color: #e0e6eb;
+           font-weight: lighter;
+        }
+
+        :-ms-input-placeholder {
+           color: #e0e6eb;
+           font-weight: lighter;
+        }
+
+        .btn, .login-link p, .login-link a {
+            color: black;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+         {% if messages %}
+            <ul>
+               {% for message in messages %}
+               <li>{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('adduser') }}"  method="POST">
+        <div class="wrapper">
+             <div class="wrapper-1">
+            <div class="header">
+                <h1>Sign Up</h1>
+                <p>Create your account below:</p>
+            </div>
+            <div class="signup-box">
+                <label>Username</label>
+                <input type="text" placeholder="Username" name="UserName" required>
+            </div>
+            <div class="signup-box">
+                <label>First Name</label>
+                <input type="text" placeholder="First Name" name="UserFName" required>
+            </div>
+            <div class="signup-box">
+                <label>Middle Name</label>
+                <input type="text" placeholder="Middle Name" name="UserMName" required>
+            </div>
+            <div class="signup-box">
+                <label>Last Name</label>
+                <input type="text" placeholder="Last Name" name="UserLName" required>
+            </div>
+            <div class="signup-box">
+                <label>Gender:</label>
+                <select name="UserGender" id="UserGender">
+                    <option value="Gender">Select A Gender</option>
+                    <option value="Female ♀">Female ♀</option>
+                    <option value="Male ♂">Male ♂</option>
+                </select>
+            </div>
+
+                  <div class="two-forms">
+                 <div class="dropdown">
+                     <div class="select">
+                        <span class="selected"> Gender </span>
+                        <div class="caret"></div>
+                        </div>
+                        <ul class="menu">
+                        <li>Female ♀</li>
+                        <li>Male ♂</li>
+                        <li class="boxactive"> Gender </li>
+                        </ul>
+                     </div>
+
+
+            <div class="signup-box">
+                <label>Date of Birth (Format: 03052001)</label>
+                <input type="text" placeholder="DOB" name="UserDOB" id="UserDOB" required>
+            </div>
+            <div class="signup-box">
+                <label>Handicap?</label>
+                <select name="UserHandicap" id="UserHandicap">
+                    <option value="Handicap">Select Handicap Status</option>
+                     <option value="✔">✔ Yes</option>
+                    <option value="✘">✘ No</option>
+                </select>
+            </div>
+            <div class="signup-box">
+                <label>Phone Number</label>
+                <input type="text" placeholder="Phone Number" name="UserPhNum" required>
+            </div>
+            <div class="signup-box">
+                <label>Email</label>
+                <input type="text" placeholder="Email" name="UserEmail" required>
+            </div>
+           <div class="signup-box">
+            <label>Password</label>
+            <div class="password-input">
+                <input type="password" id="passwordInput" placeholder="Password" name="LoginPassword" required>
+            </div>
+               <div class="show-password">
+                <input type="checkbox" id="showPasswordCheckbox" class="show-password-checkbox" onclick="togglePassword()">
+                <label for="showPasswordCheckbox">Show Password</label>
+            </div>
+
+        </div>
+
+
+            <button type="submit" class="btn" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">Sign Up</button>
+            <div class="login-link">
+                <p>Already Have An Account?<a href="/login" style="color: black;"> Login</a></p>
+            </div>
+        </div>
+            </div>
+    </form>
+</body>
+</html>

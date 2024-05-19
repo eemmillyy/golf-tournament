@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/signup.css')}}">
+    <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>*Admin* Team Sign Up Screen</title>
+    <link rel="stylesheet" href="signup.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Additional styling for better visibility of the text when typing */
+        input[type="text"] {
+            color: black;
+        }
+         a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .foot p {
+            color: gainsboro;
+            margin-top: 430px;
+            padding-left: 2.3rem;
+        }
+         .banner {
+            position: fixed;
+            bottom: 10px;
+            left: 35px; /* Adjust left positioning */
+            color: gainsboro;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+        }
+    </style>
+</head>
+    {% with messages = get_flashed_messages() %}
+         {% if messages %}
+            <ul>
+               {% for message in messages %}
+               <li>{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+    {% endwith %}
+
+</head>
+<body>
+<input type="checkbox" id="nav-toggle">
+    <div class="sidebar">
+       <div class="sidebar-brand">
+         <h2><img src="../static/css/logo.png" width="50" height="50"><span> Rotary at Lynn Haven</span></h2>
+       </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="/dash"><span class="las la-home"></span>
+                    <span>Dashboard</span></a>
+
+                </li>
+                <li>
+                    <a href="/allteamlist"><span class="las la-users"></span>
+                    <span>Teams</span></a>
+                </li>
+                <li>
+                    <a href="/showUser"><span class="las la-user-tag"></span>
+                    <span>Users</span></a>
+                </li>
+                <li>
+                    <a href="/teamContactsList"><span class="las la-clipboard-list"></span>
+                    <span>Contacts</span></a>
+                </li>
+                <li>
+                    <a href="/adminmaketeam" class="active"><span class="las la-plus-circle"></span>
+                    <span>Create Team</span></a>
+                </li>
+                <li>
+                    <a href="/view"><span class="las la-user-circle"></span>
+                    <span>Account</span></a>
+                </li>
+                <li>
+                <a href="/logout"><span class="las la-sign-out-alt"></span>
+                     <span>Log Out</span></a>
+                    </li>
+
+            </ul>
+        </div>
+        <div class="banner" id="banner"> © Made by Putter Programmers</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var navToggle = document.getElementById('nav-toggle');
+            var banner = document.getElementById('banner');
+
+            navToggle.addEventListener('change', function () {
+                if (navToggle.checked) {
+                    banner.style.display = 'none';
+                } else {
+                    banner.style.display = 'block';
+                }
+            });
+        });
+    </script>
+    </div>
+<div class="main-content">
+     <header>
+            <h2>
+                <label for="nav-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                Create Team <span class="las la-golf-ball"></span>
+            </h2>
+
+            <div class="user-wrapper">
+                   {% if photo != None %}
+                <img src="../{{ photo }}" height="50" width="50">
+                 {% endif %}
+                {% if photo == None %}
+                <img src="../static/css/uploads/default.jpeg">
+                 {% endif %}
+                <div>
+                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                </div>
+            </div>
+        </header>
+
+
+    <form action="{{ url_for('admin_teamSignup') }}"  method="POST">
+        <div class="wrapper">
+            <div class="signup-box">
+                <label><b>Team Name:</b><label>
+                    <div class="input-box">
+                <input type="text" placeholder="Team Name" name="TeamName" id="teamNameInput" autocomplete="off" required>
+            </div>
+            </div>
+            <div class="signup-box">
+                <label><b>Sponsor Name  (optional):</b><label>
+                    <div class="input-box">
+                <input type="text" placeholder="Sponsor Name" name="SponsorName" id="sponsorNameInput" autocomplete="off">
+            </div>
+             </div>
+            <div class="signup-box">
+                <label><b>Needed Cart(s) Amount:</b><label>
+                     <div class="input-box">
+                <input type="text" placeholder="Cart Amount" name="NeedCart" id="cartInput" autocomplete="off">
+            </div>
+             </div>
+            <div class="signup-box">
+                <label for="MemberName1"><b>Team Member 1:</b><label>
+                     <div class="input-box">
+                        <select name="MemberName1" id="MemberName1">
+                        <option value="Name1">Select A User</option>
+                         {% for row in rows %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                        </select>
+                     </div>
+            </div>
+            <div class="signup-box">
+                <label><b>Team Member 2:</b><label>
+                     <div class="input-box">
+                <select name="MemberName2" id="MemberName2">
+                        <option value="Name2">Select A User</option>
+                         {% for row in rows %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                        </select>
+            </div>
+             </div>
+            <div class="signup-box">
+                <label><b>Team Member 3:</b><label>
+                     <div class="input-box">
+                <select name="MemberName3" id="MemberName3">
+                        <option value="Name3">Select A User</option>
+                         {% for row in rows %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                        </select>
+            </div>
+             </div>
+            <div class="signup-box">
+                <label><b>Team Member 4:</b><label>
+                     <div class="input-box">
+                <select name="MemberName4" id="MemberName4">
+                        <option value="Name4">Select A User</option>
+                         {% for row in rows %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                        </select>
+            </div>
+             </div>
+
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+       $(document).ready(function(){
+            $('select[name^="MemberName"]').change(function(){
+                var selectedUserId = $(this).val();
+                $('select[name^="MemberName"]').not(this).find('option').each(function(){
+                    if($(this).val() == selectedUserId) {
+                        $(this).remove();
+                    }
+                });
+            });
+
+            $('#contactDropdown').change(function() {
+                var selectedOption = $('option:selected', this);
+                $('#contactFNameInput').val(selectedOption.data('fname') || '');
+                $('#contactLNameInput').val(selectedOption.data('lname') || '');
+                $('#contactPhNumInput').val(selectedOption.data('phnum') || '');
+                $('#contactEmailInput').val(selectedOption.data('email') || '');
+            });
+
+            $('#contactDropdown').select2({
+                placeholder: 'Select A Member',
+                allowClear: true
+            });
+       });
+</script>
+            <div class="signup-box">
+                <label><b>Contact:</b></label>
+                <div class="input-box">
+                    <select name="ContactDropdown" id="contactDropdown" class="contact-dropdown">
+                        <option value="">Select A Member</option>
+                        {% for row in rows %}
+                            {% if not row['UserTeamId'] %}
+                                <option value="{{ row['UserId'] }}"
+                                    data-fname="{{ row['UserFName'] }}"
+                                    data-lname="{{ row['UserLName'] }}"
+                                    data-phnum="{{ row['UserPhNum'] }}"
+                                    data-email="{{ row['UserEmail'] }}">
+                                {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="signup-box">
+                <label><b>Contact - First Name:</b><label>
+                     <div class="input-box">
+                <input type="text" placeholder="First Name" name="ContactFName" id="contactFNameInput" autocomplete="off" required>
+            </div>
+            </div>
+            <div class="signup-box">
+                <label><b>Contact - Last Name: </b><label>
+                     <div class="input-box">
+                <input type="text" placeholder="Last Name" name="ContactLName" id="contactLNameInput" autocomplete="off" required>
+            </div>
+            </div>
+            <div class="signup-box">
+                <label><b>Contact - Phone Number:</b><label>
+                    <div class="input-box">
+                <input type="text" placeholder="Phone Number" name="ContactPhNum" id="contactPhNumInput" autocomplete="off" required>
+            </div>
+            </div>
+            <div class="signup-box">
+                <label><b>Contact - Email:</b><label>
+                     <div class="input-box">
+                <input type="text" placeholder="Email" name="ContactEmail" id="contactEmailInput" autocomplete="off" required>
+             </div>
+            </div>
+            <button type="submit" class="btn" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">Register Team</button>
+         </div>
+     </form>
+         </div></div>
+
+    <script>
+
+        function showhc1() {
+            var checkBox = document.getElementById("Member1Handicap");
+             var text = document.getElementById("hc1");
+            if (checkBox.checked == true){
+                text.style.display = "block";
+            } else {
+                 text.style.display = "none";
+            }
+        }
+        function showhc2() {
+            var checkBox = document.getElementById("Member2Handicap");
+             var text = document.getElementById("hc2");
+            if (checkBox.checked == true){
+                text.style.display = "block";
+            } else {
+                 text.style.display = "none";
+            }
+        }
+        function showhc3() {
+            var checkBox = document.getElementById("Member3Handicap");
+             var text = document.getElementById("hc3");
+            if (checkBox.checked == true){
+                text.style.display = "block";
+            } else {
+                 text.style.display = "none";
+            }
+        }
+        function showhc4() {
+            var checkBox = document.getElementById("Member4Handicap");
+             var text = document.getElementById("hc4");
+            if (checkBox.checked == true){
+                text.style.display = "block";
+            } else {
+                 text.style.display = "none";
+            }
+        }
+        // JavaScript to display the text in the input fields and set text color to black
+        function setInputValueAndColor(inputId, value) {
+            var inputField = document.getElementById(inputId);
+            inputField.setAttribute("value", value);
+            inputField.style.color = "black";
+        }
+
+        document.getElementById("teamNameInput").addEventListener("input", function() {
+            setInputValueAndColor("teamNameInput", this.value);
+        });
+        document.getElementById("sponsorNameInput").addEventListener("input", function() {
+            setInputValueAndColor("sponsorNameInput", this.value);
+        });
+        document.getElementById("cartInput").addEventListener("input", function() {
+            setInputValueAndColor("cartInput", this.value);
+        });
+        document.getElementById("memberName1Input").addEventListener("input", function() {
+            setInputValueAndColor("memberName1Input", this.value);
+        });
+        document.getElementById("memberName2Input").addEventListener("input", function() {
+            setInputValueAndColor("memberName2Input", this.value);
+        });
+        document.getElementById("memberName3Input").addEventListener("input", function() {
+            setInputValueAndColor("memberName3Input", this.value);
+        });
+        document.getElementById("memberName4Input").addEventListener("input", function() {
+            setInputValueAndColor("memberName4Input", this.value);
+        });
+        document.getElementById("member1HandicapInput").addEventListener("input", function() {
+            setInputValueAndColor("member4HandicapInput", this.value);
+        });
+        document.getElementById("member2HandicapInput").addEventListener("input", function() {
+            setInputValueAndColor("member4HandicapInput", this.value);
+        });
+        document.getElementById("member3HandicapInput").addEventListener("input", function() {
+            setInputValueAndColor("member4HandicapInput", this.value);
+        });
+        document.getElementById("member4HandicapInput").addEventListener("input", function() {
+            setInputValueAndColor("member4HandicapInput", this.value);
+        });
+        document.getElementById("contactFNameInput").addEventListener("input", function() {
+            setInputValueAndColor("contactFNameInput", this.value);
+        });
+        document.getElementById("contactLNameInput").addEventListener("input", function() {
+            setInputValueAndColor("contactLNameInput", this.value);
+        });
+        document.getElementById("contactPhNumInput").addEventListener("input", function() {
+            setInputValueAndColor("contactPhNumInput", this.value);
+        });
+        document.getElementById("contactEmailInput").addEventListener("input", function() {
+            setInputValueAndColor("contactEmailInput", this.value);
+        });
+
+        // JavaScript to set focus on input field when clicked
+        var inputFields = document.querySelectorAll('input');
+        inputFields.forEach(function(input) {
+            input.addEventListener('click', function() {
+                this.focus();
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+

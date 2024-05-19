@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+</head>
+<body data-gr-c-s-loaded="true" style="margin: 0px;">
+    {% with messages = get_flashed_messages() %}
+         {% if messages %}
+            <ul>
+               {% for message in messages %}
+               <li>{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+    {% endwith %}
+
+{% if session['logged_in'] and session['admin'] %}
+
+      <table border="1">
+         <thead>
+            <tr><td>UserId</td>
+            <td>UserName</td>
+            <td>First Name</td>
+            <td>Middle Initial</td>
+            <td>Last Name</td>
+            <td>Gender</td>
+            <td>DOB</td>
+            <td>Phone Number</td>
+            <td>Email</td>
+            <td>Role Level</td>
+         </tr></thead>
+          <tbody>
+           {% for row in rows %}
+          <tr>
+               <td>{{row["UserId"]}}</td>
+               <td>{{row["UserName"]}}</td>
+               <td>{{row["UserFName"]}}</td>
+               <td>{{row["UserMName"]}}</td>
+               <td>{{row["UserLName"]}}</td>
+               <td>{{row["UserGender"]}}</td>
+               <td>{{row["UserDOB"]}}</td>
+               <td>{{row["UserPhNum"]}}</td>
+               <td>{{row["UserEmail"]}}</td>
+               <td>{{row["RoleLevel"]}}</td>
+            </tr>
+      {% endfor %}
+          </tbody>
+      </table>
+    <h2><a href="/">Back to Home </a></h2>
+{% endif %}
+
+</body></html>

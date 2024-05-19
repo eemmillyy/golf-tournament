@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Image</title>
+</head>
+<body>
+    <h1>Generated Image</h1>
+    <img id="generatedImage" src="" alt="Generated Image">
+    <script>
+        // JavaScript to fetch and display the generated image
+        fetch('/generate_image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'latent_vector': [0.1, 0.2, 0.3, ...] // Replace with actual latent vector
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const generatedImage = document.getElementById('generatedImage');
+            generatedImage.src = 'data:image/jpeg;base64,' + btoa(String.fromCharCode.apply(null, new Uint8Array(data.image)));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+</body>
+</html>

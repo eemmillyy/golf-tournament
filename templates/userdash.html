@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <title>User Dash</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dash.css') }}">
+    <link rel="stylesheet" href="dash.css">
+    <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+</head>
+<style>
+
+        .team {
+            margin-bottom: 5px;
+            padding: 15px;
+            width: 1100px;
+            background-color: #f9f9f9;
+            border-radius: 20px;
+            box-shadow: 0 10px 4px rgba(0, 0, 0, 0.1);
+        }
+        .team:nth-child(even) {
+            background-color: #ffffff;
+        }
+        .team a {
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .team-content {
+            width: 650px;
+            justify-content: center;
+            display: none;
+            margin-top: 5px;
+            padding-left:5px;
+        }
+        .contact p {
+            margin: 20px 0;
+        }
+        .label {
+            font-weight: bold;
+        }
+         a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .foot p {
+            color: gainsboro;
+            margin-top: 370px;
+            padding-left: 2.3rem;
+        }
+        .box {
+            background-color: #f9f9f9;
+            border-radius: 20px;
+            box-shadow: 0 10px 4px rgba(0, 0, 0, 0.1);
+            margin: 50px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 2300px; /* Adjust as needed */
+            }
+
+        .txt {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            text-align: center;
+        }
+
+        .join-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .join-button:hover {
+            background-color: #0056b3;
+        }
+
+        .team-fill-msg,
+        .team-full-msg {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        .team-team-name {
+            font-size: 30px;
+            margin-top: 20px;
+        }
+
+        .team-full-msg {
+            color: red;
+        }
+
+        .box .txt {
+            font-size: large;
+            text-align: center;
+        }
+
+        .banner {
+            position: fixed;
+            bottom: 10px;
+            left: 35px; /* Adjust left positioning */
+            color: gainsboro;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+        }
+
+        .b:hover {
+            font-weight: bolder;
+            background-color: seagreen;
+        }
+    </style>
+
+<script>
+    function copyJoinCode(joinCode) {
+        navigator.clipboard.writeText(joinCode)
+            .then(() => alert("Code copied to clipboard: " + joinCode))
+            .catch(error => console.error('Failed to copy: ', error));
+    }
+</script>
+
+
+
+<body>
+
+{% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="message">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+<input type="checkbox" id="nav-toggle">
+    <div class="sidebar">
+       <div class="sidebar-brand">
+         <h2><img src="../static/css/logo.png" width="50" height="50"><span> Rotary at Lynn Haven</span></h2>
+       </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="/userdash" class="active"><span class="las la-home"></span>
+                    <span>Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="/u_allteamlist"><span class="las la-users"></span>
+                    <span>Teams</span></a>
+                </li>
+                <li>
+                    <a href="/usermakesteam"><span class="las la-plus-circle"></span>
+                    <span>Create Team</span></a>
+                </li>
+                 <li>
+                    <a href="/index"><span class="las la-store-alt"></span>
+                    <span>LynnHaven Links</span></a>
+                </li>
+                 <li>
+                    <a href="/construction"><span class="las la-clipboard-list"></span>
+                    <span>Auction</span></a>
+                </li>
+                <li>
+                    <a href="/view"><span class="las la-user-circle"></span>
+                    <span>Account</span></a>
+                </li>
+                <li>
+                <a href="/logout"><span class="las la-sign-out-alt"></span>
+                     <span>Log Out</span></a>
+                </li>
+
+            </ul>
+        </div>
+
+
+        <div class="banner" id="banner"> © Made by Putter Programmers</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var navToggle = document.getElementById('nav-toggle');
+            var banner = document.getElementById('banner');
+
+            navToggle.addEventListener('change', function () {
+                if (navToggle.checked) {
+                    banner.style.display = 'none';
+                } else {
+                    banner.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</div>
+    <div class="main-content">
+        <header>
+            <h2>
+                <label for="nav-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                Dashboard
+            </h2>
+            <div class="search-wrapper">
+                <span class="las la-search"></span>
+
+                {% if session['logged_in'] and session['user'] %}
+                <form action="{{ url_for('searchTeamName') }}" method="POST">
+                <input type="search" placeholder="Search here"  id="TeamName" name="TeamName" ><br>
+
+                </form>
+                {% endif %}
+            </div>
+            <div class="user-wrapper">
+                 {% if photo != None %}
+                <img src="../{{ photo }}" height="50" width="50">
+                 {% endif %}
+                {% if photo == None %}
+                <img src="../static/css/uploads/default.jpeg">
+                 {% endif %}
+                <div>
+                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="cards">
+                <div class="card-single">
+                    <div>
+                        {% if team == 0 %}
+                         <h1> -- </h1>
+                         {% endif %}
+                        {% if team != 0 %}
+                        <h1>{{ team_names }}</h1>
+                        {% endif %}
+                        <span> Team Name </span>
+                    </div>
+                    <div>
+                        <span class="las la-clipboard"></span>
+                    </div>
+                </div>
+                <div class="card-single">
+                    <div>
+                        {% if starthole == 0 %}
+                         <h1> -- </h1>
+                         {% endif %}
+                        {% if starthole != 0 %}
+                        <h1>{{ starthole }}</h1>
+                        {% endif %}
+                        <span> Starting Hole </span>
+                    </div>
+                    <div>
+                        <span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD0UlEQVR4nO1aTWhUVxS+iRWprqqgWLuwrehCMvPOfVpDtcaKS11pXFQ3IiRzzksEaUWoiydIaYsbI7oILWq7kuA7ZyZKIW1EUEEQ/xDxp+CmIAqVpODOv5Tz5o15xMS8OHHMDfPBg+HN/Tnfvefnu3fGmDrqmJoAoUvAeNNysNG4DCs0VHlAqC9fouXGaSJMAzEZxmfAdHQlB/OMi0Sae3bOBcEuJVImhoMguHfJH52zjEtETIIVxcIyEDqTcrm/fcZW4xqRCrwibrCMt4ZdD/uhhDnjGhGF39020wq2AdO/5Xb4wjL+nosK841LRCpwIn5sBiIVaGrWFD2crvGimSZELhi3XYsGnHItf0SwJ0S6nQp2b5T060vQZNwtiHjPqYLY7EIcTFg0Ch1xVjTa6SPjg+lxsDKuw9aJTDHY+o5MMdjpsCOtPa0zUgUxtEzH4iMt011g+ieu7nGl15NhXOkfgtB9K3QZhHqA6aCNCgEUaW2u79s5tbM8DBt9pjVW8AAInbWCT9IFsZonJsx43TId9ov4tS7SpNufl/bFsY4SfDimIYL7oYg7bFRYn+NgaVPU+UnTGfyo5Vz4gRqln/2obeGKU/iZJ/ilL4VvrND3wPgLMF17pdHkFbFHSkrnrpqAGgOMx0HoaUqG3AehQ16RtkAx+HiyYsTvbZttpfAVMP6gijk131O1QW15q4FVcoDg4/RgeSGvVsHuRR359CKqLSC4aUKDAFOHZXqZBHHvm7b3XWetXKnjUxA8ndjyEgQ7M3X0i7QqzjLlQ9F3Zsg0vPf0O2Qa1JbEO5773P7FuH0q7DUOsswxJpEwbLRMW/VCDgTvxG5aXlF1kTv6Pj45hmFjVj4g2JXsTClDY/pPG2fNFmMRKafnDKmXsT8rkVWlXQsqF3zjG8Y4qI3VN6shYpn+ylQ/BP+cOBEayECEepMJurIMrpdswHT+tS/CsFFTtGX6zQrdLl8J4Yvkaug2CJ0AKWweLwbT0LqS2bU0kDSgsgZ7TTBkGizTnkqwexGuzNRP9U86/WZ1s1qkXxsVgqoLohYpUyN4WhDV/RLpErvk294LjCZR9BcoEPzRY2yZTMWqY3mMLTq2zpGWKKqq86fbF1U9iaZiDbRYyI2iWMvCD/fZiLb5pzpWqzDUiVUoqmCsiEZ953Pn56qggXF73IfpVyt4YzguafJF40ioQb4E6xIlfHWkYq1axgtdiQUpY8s7kfFvUqy6uj4TWqafLdPJ+A8EenhifFA+TNHzeLX1JpLxQaKeL2lby/ST9tUxmnt2f1gzw+uoow7jLP4H1RbFSVjBC4AAAAAASUVORK5CYII="></span>
+                    </div>
+                </div>
+                <div class="card-single">
+                    <div>
+                        {% if cartinfo == -1 %}
+                         <h1> -- </h1>
+                         {% endif %}
+                        {% if cartinfo != -1 %}
+                        <h1> {{ cartinfo }} </h1>
+                         {% endif %}
+                        <span> Cart Rental Info</span>
+                    </div>
+                    <div>
+                        <span><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAE6UlEQVR4nO1Za4gcRRCe+MAHPvAZH0ExP/RHEMXT3N50za2CSnyE6I9A8kfwT4SYu6nay5kY0AUfP4LGA/GXCErQHx4k7FbPrYI5L0FBY2J8ez4Sj6ggp2JM9DCKyUn19OR2b1+zjzlzsB807PR0V9XX1VVdPes4HXTQQQcdnKzozvcvhMDvBk2rFONGYBxSmrYC44hi3A2M+4HpAGicBMbfQOMR0DQdNjxi+ybNGMb9iul9MzeUMWRkalolOkRXIiSAce+MUXPWPkiACO1RjH8qTZ9EihTjemB6UDEud9nvgZHMtRDg4nSw/jIINl7g5gbPjeZ37V1zuvRJk/duzr9OVt5lvNN40sijXUpTTjF+anQx7m47kRJSlkjb5DH1GyIad7RL5v9CRDynGH8PydANznwlIlAat9ik8JIzn4n0BANXK03/KqajiWWsuSBi5DJts7HyWLtlzykRL/B77faaTI9lz3TmCxFzwDLtAY3vRX1K4z4b9A8484FIz7aBS0HT53Yr7XOmnQXSLwQgJPKh007UOnmVRu0x3tSoTHNgWhKgcVyeo3fLCn1nKMaf5J1stTkhYk/3v4Ap3RgJHC+qwca9N/DyEp2MWfOOcbuTJGY8QlutZ76ItkY9zJQ4OK6YvrSyviom053vXyhpWNKxlx+4JnEipn7SdNCQyVMqFhFTJdNH4hlpsggRGTc3eMWJcRpftov1XOJEzG/GZ61XtjQb9FIk2qLxm5SmK6W/d4SuB6bjUv7f/taG853EiYT3EzHih7jbq0xeoe+SSmSAacwukt9uDuXpd9pZoDRNhFkm4zYtU8jY+FGWDLB/nyXyi1wZlhb6zmtYcBevOdve2AomMDVNKMaviy9YiukhT9NS0PSCzTJDTgtIc+ZiYPzYJoNvlaZ1s9K9IZQaprNik2jqRsj4IwQDXc1uMcEt2x++SJJBqVx6RWl6t+j5gGL/rtgltbgY8v5qlcclxtUBLnYD/0bIZ+6FgDaAptfNGBOUJaQOKqbnXY1eM6RSb9KFRaXKofTw2nOMXfnMHSdIMh0XO9Nj2dOqe0PTlAwUo+MolqyiNN2vGF9UGr+ftR2+A6Yn0oW+RY2QAaZX7WJuLu4Xw4HpcdB4LPJWxcWCgJbZE7vp+7KkTqXxqSgJ2DblBnRbnPnpQt8iYPpHWrUF8PK4wowJvbaunIimZ2ywPem0CslonAHZgjaGPoszTTFttja8VmscMK21RCYqCQmsR5Y7bcLK4ZWnWsOO1Rsr8aA0HZLxbg5vjie3QiUuq2aExIyPdpf+ShPa2NrZklzQ9Gvokf6r5NkL8B6laRSYDsu3JmB8u5Fqd7bCuM3L44pSgv6tojv83kU/y/kmWbEWkSnz0pQN9HR1ZbipMSL4TvzziMacbPaUormb6s0pUyilc+l9g47KaSpltmlMg9In6Vm85SQMkDNLzoxqdlT3SOnKyeQKYx5pZB+3AsW0q54dNWNPafrD7NVZtzeB3BsaLl9abF4NO+SWWpVI9JdAJQGmXDkJiKQiO5gO1/LIqBHANFhGMqyzwqBMGMA4Us8OsbWqAAnkKNhlL4objSvNZPzb1GKa7k6aiGv+dgiDvaId5h5UJ+lImVLN1UrTo0mTiJd+Y5ZS0YEowR823NHW700x4QV+r+iesYNG5yL9d9BBBx104MTBf5QySOS3v9TQAAAAAElFTkSuQmCC"></span>
+                    </div>
+                </div>
+                <div class="card-single">
+                    <div>
+                        <h1> <li> {{ checkin }} </li> </h1>
+
+                        <span> Check-In Status</span>
+                    </div>
+                    <div>
+                        <script type="text/javascript">
+
+                            // Get the elements to be iterated
+                            let htmlElements =
+                            document.getElementsByTagName("h1");
+                            // Use a regular for-loop
+                            for (let i = 0; i < htmlElements.length; i++) {
+                            // Print the current element
+                            console.log(htmlElements[i]);}
+                        </script>
+
+                    </div>
+                </div>
+            </div>
+
+             <div class="box">
+    <div class="txt">
+                        {% if team == 0 %}
+                         <p class="team-team-name"> 🏌️‍♀️ Welcome  {{ UserName }}  🏌️‍♂️ </p>
+                         {% endif %}
+                        {% if team != 0 %}
+                         <p class="team-team-name"> 🏌️‍♀️ Welcome  {{ team_names }}  🏌️‍♂️ </p>
+                        {% endif %}
+    </div>
+        <div class="button">
+            {% if team == False %}
+            <a href="/usersjoin"><button class="join-button">Join a Team Now! <span class="las la-arrow-right"></span></button></a>
+            {% endif %}
+            {% if team == True %}
+            {% if list_size != 4 %}
+<!--            <p class="team-team-name"> {{ team_names }}</p>-->
+            <p class="team-fill-msg">Fill your team: {{ joincode }}</p>
+            <button onclick="copyJoinCode('{{ joincode }}')">Copy Code</button>
+            {% endif %}
+            {% if list_size == 4 %}
+            <p class="team-full-msg">Your team is full</p>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+
+            <div class="recent-grid">
+                <div class="teams">
+                    <div class="cards">
+                        <div class="card-headers">
+
+                         <div class="card-body">
+                             <div class="table-responsive">
+                             <h2><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAD/ElEQVR4nO2ZSWsUQRSAO7jjDxDBi8tB3ILEJZmqSeJB8eZB/AnqKZn3klzNqBc1ojfFnAXFgJp5bxwRD/6AuIFRiODBi7hExYBbNBl5VV3jkBymp7t6nEgeFMx0Tdf012+tV0GwKP+BdJV61inGi4rweLAQZf+9/tWa8Yxm+KkZy4pgIlhokiniPs34WgA0w4xivKYLvTvc/MFSzwrFuW7FcEox3laELzTBJ004bcAJPimG52bO/CbXLfc0jqActGiCvGL8bSAIxzqod7eb7hzt26kJhxXjZwtZxxBQhiuyRqoMbQ+PLVMEV/9qAU4dGTmyROYUY6tmLGnC2boB5gHhrCIsdt7B7alAaEYKIaYyBAfketeD/Err6PArMcCcoeya5/2ZXDlocZpQhO91sb9NLrcXcJMmfOIbYB4Qw+NMaWBjYg5NOOg04SDELwxUyhC6MuBdZhR2JYpO1rFhxpmTQBioGA9UeTnxYKbci4yTJ0yIFcd25pREE8lA0GhGF2FDXSA22dkQK9FJHDupTyQHwbJifBQ5AEjZYTM2zLg8oRguJLV1HyDaWshQJBAJqeYGguvh91YfIdYXiCacjpRnpACU2smVHSbZJf1znyBstMJBPRKWHbPNBqKlAmBsjQwitZOXP/YNwkYrlyJB2Co2RgHYIBBN8HHLSH551HK93LQgjOUMQ7YmiCTCZgfRBPkIIDja/CB4szaI7OyaHYRxvCaIZpz0+ObuV9YlvO9rXcXwIQKIbSz4GNV7CvnsDYTwR0NBpH5z60rINJVs40DQn2kxlgRGts2ydgf3bvMBo6KYlm9ntwPeCYRHmPGGh98qc3jvqtcO6tusCN+kG37Zb0JMRTOEgxFAct3pgfjRjKI+HalotB3A9GCqNSPVbJ33T7rgUVOkjZkuiIVRBJdTK+N9b6y8DqraWJWDliCKSC+2+UCg4F60InypGY/WBBGHTKO/m0Ab06oAW+XZNMGt8Pr5SFqRHzaRNs5aCOwKzf7r3kLvmnq2vY/+PQSOybPYeg3H5ZpiOBHUI7Zq9VPsxRxvs4X+9XN6bxOxjh6kKx63iZ1QE19cEztLeNiaFPzMMu6pG2IOTCM189ZBSCbXDN9Ck8rFhqjAlAY2NsRnCMecOWWLfRlXaUgCDXyJDQAwZE9rvQNMS3Ry9p8twCGJTuH8DXd+6VVMnmFgX4ehkuxUmCe6HuSXKsJzlbUJh1OBqJawa39ZOoAxICaldqru52Yo16EJnoam9EsRDASNFInx0gFUjCdl46MJntltszlzkT7ApLlm5/LiwNVVrDnuJhip0sIr8Y9goYk50mCjhe+a8HT7CK4KFqKY8xmGC9m7sPZfP8uiBB7kD/3OtHZcWRQDAAAAAElFTkSuQmCC">
+                                 Quick Team-View
+                            <a href="/u_allteamlist"><button class="b">Show all teams <span class="las la-arrow-right"></span></button></a></h2>
+
+                              <div class="card-single">
+
+                              <div>
+                             <body>
+
+                                    {% if session['logged_in'] %}
+                                      {% for row in rows %}
+                                        <div class="team">
+                                          <a onclick="toggleTeam(this)">{{ row['TeamName'] }}</a>
+                                        <div class="team-content">
+                                         <iframe style="width: 160%; height:300px; border:none;" frameborder="0" src="/u_showTeam/{{ row['TeamId'] }}"></iframe>
+                                             </div>
+                                    </div>
+                                 {% endfor %}
+                                 {% endif %}
+
+                                     <script>
+                                 function toggleTeam(team) {
+                                  var content = team.nextElementSibling;
+                                       content.style.display = (content.style.display === "block") ? "none" : "block";
+                                      }
+                                  </script>
+                             </body>
+                            </div></div>
+
+                             </div>
+                              </div>
+
+                </div>
+                <div class="contacts">
+
+                </div>
+            </div> </div>
+
+             </div>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

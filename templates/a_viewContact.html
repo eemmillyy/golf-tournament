@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        a {
+            text-decoration: none;
+            color: mediumseagreen;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        main-content {
+
+            background: white;
+            padding: 100px;
+
+        }
+        user-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        user-wrapper img {
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        user-wrapper small {
+            display: inline-block;
+            color: var(--text-grey);
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    {% if session['logged_in'] and session['admin'] %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Team Id</th>
+                    <th>Team Name</th>
+                    <th>Team Members</th>
+                    <th>Contact First Name</th>
+                    <th>Contact Last Name</th>
+                    <th>Contact Phone Number</th>
+                    <th>Contact Email</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        <td>{{ row["TeamId"] }}</td>
+                        <td>{{ row["TeamName"] }}</td>
+                        <td>
+                        {% if row["MemberName1"] %}
+                            {{ row["Member1Here"] }}{{row["MemberName1"]}},
+                        {% endif %}
+
+                        {% if row["MemberName2"] %}
+                            {{ row["Member2Here"] }}{{row["MemberName2"]}},
+                        {% endif %}
+
+                        {% if row["MemberName3"] %}
+                            {{ row["Member3Here"] }}{{row["MemberName3"]}},
+                        {% endif %}
+
+                        {% if row["MemberName4"] %}
+                            {{ row["Member4Here"] }}{{row["MemberName4"]}}
+                        {% endif %}
+                        </td>
+                        <td>{{ row["ContactFName"] }}</td>
+                        <td>{{ row["ContactLName"] }}</td>
+                        <td>{{ row["ContactPhNum"] }}</td>
+                        <td>{{ row["ContactEmail"] }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>

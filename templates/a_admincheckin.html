@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/viewer.css')}}">
+    <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="viewer.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Check In Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin-top: 150px;
+            padding: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: flex;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+            padding-left: 15px;
+            text-indent: -15px;
+            padding-bottom: 10px;
+        }
+
+        .check {
+            background: whitesmoke;
+            align-items: center;
+
+            padding-left: 30px;
+        }
+
+        .check label {
+            display: flex;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+            padding-left: 150px;
+            text-indent: -15px;
+            padding-bottom: 10px;
+        }
+
+        .check input[type="checkbox"] {
+            display: flex;
+            width: 30px;
+            height: 30px;
+            margin-left: 350px;
+            margin-top: -38px;
+            vertical-align: bottom;
+            position: page;
+        }
+
+         div {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 17px;
+        }
+
+
+        input[type="text"], input[type="checkbox"], input[type="submit"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 13px;
+
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 17px;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 10px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .checkbox-label {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .cart-label {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+ <header>
+            <h2>
+
+                Checking In {{ final }} <span class="las la-check-circle"></span>
+            </h2>
+           <div class="user-wrapper">
+                  {% if photo != None %}
+                <img src="../{{ photo }}" height="50" width="50">
+                 {% endif %}
+                {% if photo == None %}
+                <img src="../static/css/uploads/default.jpeg">
+                 {% endif %}
+                <div>
+                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                </div>
+            </div>
+        </header>
+<body>
+{% if session['logged_in'] and session['admin'] %}
+    {% for row in rows %}
+    <form action="/admincheckin/{{ row['TeamId'] }}"  method="POST">
+        <div class="check">
+            <label class="checkbox-label" for="Member1Here">Is {{ row["MemberName1"] }} here:</label>
+             <input type="checkbox" name="Member1Here" value="{{ row['Member1Here'] }}">
+        </div>
+
+        <div class="check">
+            <label class="checkbox-label" for="Member2Here">Is {{ row["MemberName2"] }} here:</label>
+            <input type="checkbox" name="Member2Here" value="{{ row['Member2Here'] }}">
+        </div>
+
+        <div class="check">
+            <label class="checkbox-label" for="Member3Here">Is {{ row["MemberName3"] }} here:</label>
+            <input type="checkbox" name="Member3Here" value="{{ row['Member3Here'] }}">
+        </div>
+
+        <div class="check">
+            <label class="checkbox-label" for="Member4Here">Is {{ row["MemberName4"] }} here:</label>
+            <input type="checkbox" name="Member4Here" value="{{ row['Member4Here'] }}">
+        </div>
+
+        {% if session['cart2'] %}
+            <div>
+            <p><label for="AsgnCart1"> Assign Cart 1</label></p>
+            <input type="text" name="AsgnCart1" value="{{ row['AsgnCart1'] }}"></div>
+            <div>
+            <label for="AsgnCart2"> Assign Cart 2</label>
+            <input type="text" name="AsgnCart2" value="{{ row['AsgnCart2'] }}"></div>
+        {% endif %}
+        {% if session['cart1'] %}
+            <p><label for="AsgnCart1"> Assign Cart 1</label></p>
+            <input type="text" name="AsgnCart1" value="{{ row['AsgnCart1'] }}">
+        {% endif %}
+        {% if session['cart0'] %}
+            <div>
+            <label> No Needed Carts</label></div>
+        {% endif %}
+        <input type="submit" name="Update" value="Update">
+    </form>
+    {% endfor %}
+{% endif %}
+</body>
+</html>
+
+
+

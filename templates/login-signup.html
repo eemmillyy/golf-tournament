@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Ludiflex | Login & Registration</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="static/css/log.css">
+     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='signupbox.js') }}"></script>
+    <script>
+
+        $(function() {
+            $("#UserDOB").datepicker({ defaultDate: "-30y", dateFormat: "mmddyy" });
+        });
+
+        function togglePassword() {
+            var passwordInput = document.getElementById("passwordInput");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
+    </script>
+    <style>
+        .dropdown {
+            min-width: 15em;
+            position: relative;
+           margin-bottom: 20px;
+            text-decoration-color: whitesmoke;
+              height: 40px;
+        }
+        .dropdown * {
+            box-sizing: border-box;
+            background-color: darkgray;
+            color: white;
+            font-size: 14px;
+            border-radius: 20px; /* Adjust the radius as needed */
+            padding: 8px; /* Optional: add padding for better appearance */
+                 width: 200px; /* Adjust the width as needed */
+            z-index: 20;
+            overflow-y: visible;
+            display: flex;
+        }
+        .input-field{
+            font-size: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            height: 50px;
+            width: 100%;
+            padding: 0 10px 0 45px;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            transition: .2s ease;
+}
+.input-field:hover, .input-field:focus{
+    background: rgba(255, 255, 255, 0.25);
+}
+        .select {
+            background: #2a2f3b;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px #2a2f3b solid;
+            border-radius: 0.5em;
+            padding: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .select-clicked {
+            border: 2px #26489a solid;
+            box-shadow: 0 0 0.8em #26489a;
+        }
+        .select:hover {
+            background: #323741;
+        }
+        .caret {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid #fff;
+            transition: 0.3s;
+        }
+        .caret-rotate {
+            transform: rotate(180deg);
+        }
+        .menu {
+            list-style: none;
+            padding: 0.2em 0.5em;
+            background: #323741;
+            border: 1px #363a43 solid;
+            box-shadow: 0 0.5em 1em rgba(0, 0, 0, 0.2);
+            border-radius: 0.5em;
+            color: #9fa5b5;
+            position: absolute;
+            top: 3em;
+            left: 50%;
+            width: 100%;
+            opacity: 0;
+            overflow-y: scroll;
+            transition: 300ms cubic-bezier(0.77,0,0.18,1);
+            z-index: 1;
+        }
+
+        .menu li {
+            padding: 0.7em 0.5em;
+            margin: 0.3em 0;
+            border-radius: 0.5em;
+            cursor: pointer;
+        }
+        .menu li:hover {
+            background: #2a2b35;
+        }
+
+        .boxactive {
+            background: #1D2231;
+        }
+        .text-faade-in {
+            animation: textFade 300ms ease-out;
+        }
+        .menu-open {
+            border: 1px #383838 solid;
+            height: 15em;
+            opacity: 1;
+
+        }
+        @keyframes textFade {
+            0% {
+                transform: translate(-1em);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+        }
+
+        .move {
+            margin-left: 30px;
+        }
+        .show {
+            margin-left: 380px;
+            margin-top: -20px;
+        }
+        .logtop {   /* Grab by class */
+            margin-top: -20px;
+        }
+         /* Additional CSS for text and cursor */
+        input[type="text"],
+        input[type="password"],
+        select {
+            color: black;
+            caret-color: black;
+            border: 1px solid #ccc;
+
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add box shadow on focus */
+        }
+         #UserGender, #UserHandicap {  /* Grab by id */
+            width: 100%;
+            height: 40px;
+        }
+
+
+    </style>
+</head>
+<body>
+ <div class="wrapper">
+    <nav class="nav">
+        <div class="nav-logo">
+             <img src="https://www.dacdb.com/Rotary/Accounts/6940/Downloads/4239/Approved%20Rotary%20Club%20of%20Lynn%20Haven%20Logos/LH%20Color%20Below%20PNG.png" alt="Logo" class="picture">
+
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="/" class="link">Home</a></li>
+                <li><a href="/login-signup" class="link active">Login/Signup</a></li>
+                <li><a href="https://www.lynnhavenrotary.org/index.php?s=20reasons" class="link">About</a></li>
+                <li><a href="https://www.lynnhavenrotary.org/index.php" class="link">News</a></li>
+            </ul>
+        </div>
+        <div class="nav-button">
+            <button class="btn white-btn" id="loginBtn" onclick="login()">Sign In</button>
+            <button class="btn" id="registerBtn" onclick="register()">Sign Up</button>
+        </div>
+        <div class="nav-menu-btn">
+            <i class="bx bx-menu" onclick="myMenuFunction()"></i>
+        </div>
+    </nav>
+<!----------------------------- Form box ----------------------------------->
+    <div class="form-box">
+        <form action="/login" method="POST">
+
+        <!------------------- login form -------------------------->
+        <div class="login-container" id="login">
+            <div class="top">
+                <div class="logtop">
+                <span>Don't have an account? <a href="#" onclick="register()">Sign Up</a></span>
+                <header>Login</header>
+            </div>
+            <div class="input-box">
+                <input type="text" class="input-field" placeholder="Username" name="username">
+                <i class="bx bx-user"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Password" name="password">
+                <i class="bx bx-lock-alt"></i>
+            </div>
+            <div class="input-box">
+                <input type="submit" class="submit" value="Sign In">
+            </div>
+            <div class="two-col">
+                <div class="one">
+                    <input type="checkbox" id="login-check">
+                    <label for="login-check"> Remember Me</label>
+                </div>
+                <div class="two">
+                    <label><a href="#">Forgot password?</a></label>
+                </div>
+            </div>
+        </div>
+            </div>
+        </form>
+        <!------------------- registration form -------------------------->
+        <div class="register-container" id="register">
+            <div class="top">
+                <span>Have an account? <a href="#" onclick="login()">Login</a></span>
+                <header>Sign Up</header>
+            </div>
+             <form action="{{ url_for('adduser') }}"  method="POST">
+                  <form action="">
+            <div class="two-forms">
+                <div class="input-box">
+                    <input type="text" class="input-field"  placeholder="Username" name="UserName" required>
+                    <i class='bx bx-user-circle' ></i>
+                </div>
+                <div class="input-box">
+                    <div class="move">
+                     <input type="text" class="input-field" placeholder="DOB  format: 12271976 " name="UserDOB" id="UserDOB" required>
+                <i class='bx bx-calendar'></i>
+                        </div>
+                </div>
+                 </div>
+                <div class="two-forms">
+                    <div class="input-box">
+                        <input type="text" class="input-field" placeholder="First Name" name="UserFName" required>
+                    <i class="bx bx-user"></i>
+                         </div>
+                        <div class="input-box">
+                         <input type="text" class="input-field" placeholder="Middle Inital" name="UserMName" required>
+                        <i class="bx bx-user" ></i>
+                           </div>
+                        <div class="input-box">
+                            <input type="text" class="input-field" placeholder="Last Name" name="UserLName" required>
+                        <i class="bx bx-user" ></i>
+                       </div>
+                </div>
+
+             <div class="two-forms">
+                  <div class="input-box">
+                       <div class="dropdown">
+                <select name="UserGender" id="UserGender">
+                    <option value="Gender">Select Gender </option>
+                    <option value="Female ♀">Female ♀</option>
+                    <option value="Male ♂">Male ♂</option>
+                </select>
+            </div></div>
+
+                 <div class="input-box">
+                     <div class="dropdown">
+                    <select name="UserHandicap" id="UserHandicap">
+                    <option value="Handicap">Select Handicap Status</option>
+                     <option value="✔">✔ Yes</option>
+                    <option value="✘">✘ No</option>
+                </select>
+                  </div></div>
+            </div>
+
+
+             <div class="input-box">
+                <input type="text" class="input-field" placeholder="Phone Number" name="UserPhNum" required>
+                <i class='bx bx-phone' ></i>
+            </div>
+             <div class="input-box">
+                <input type="text" class="input-field" placeholder="Email" name="UserEmail" required>
+                <i class="bx bx-envelope"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" class="input-field" placeholder="Password" id="passwordInput" name="LoginPassword" required>
+                <i class="bx bx-lock-alt"></i>
+               <div class="show-password">
+                   <div class="two-col">
+                   <div class="one">
+                       <div class="show">
+                <input type="checkbox" id="showPasswordCheckbox" class="show-password-checkbox" onclick="togglePassword()">
+                <label for="showPasswordCheckbox">Show Password</label>
+                           </div>
+            </div>
+                    </div></div>
+            </div>
+
+            <div class="input-box">
+            <button type="submit" class="submit" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">  Sign Up</button>
+               </div>
+             </form>
+                  </form>
+        </div>
+    </div>
+</div>
+<script>
+
+   function myMenuFunction() {
+    var i = document.getElementById("navMenu");
+    if(i.className === "nav-menu") {
+        i.className += " responsive";
+    } else {
+        i.className = "nav-menu";
+    }
+   }
+
+</script>
+<script>
+    var a = document.getElementById("loginBtn");
+    var b = document.getElementById("registerBtn");
+    var x = document.getElementById("login");
+    var y = document.getElementById("register");
+    function login() {
+        x.style.left = "4px";
+        y.style.right = "-520px";
+        a.className += " white-btn";
+        b.className = "btn";
+        x.style.opacity = 1;
+        y.style.opacity = 0;
+    }
+    function register() {
+        x.style.left = "-510px";
+        y.style.right = "5px";
+        a.className = "btn";
+        b.className += " white-btn";
+        x.style.opacity = 0;
+        y.style.opacity = 1;
+    }
+</script>
+      <script src="{{ url_for('static', filename='signupbox.js') }}"></script>
+</body>
+</html>

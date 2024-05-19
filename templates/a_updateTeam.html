@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/viewer.css')}}">
+    <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>*Admin* Team Sign Up Screen</title>
+    <link rel="stylesheet" href="viewer.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <title>Update Teams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin-top: 40px;
+            padding: 20px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+            grid-area: auto;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: mediumseagreen;
+            font-size: 15px;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: seagreen;
+
+        }
+        input{
+            font-size: 15px;
+        }
+
+    </style>
+</head>
+ <header>
+            <h2>
+
+                Updating {{ final }} <span class="las la-pen-alt"></span>
+            </h2>
+            <div class="user-wrapper">
+                   {% if photo != None %}
+                <img src="../{{ photo }}" height="50" width="50">
+                 {% endif %}
+                {% if photo == None %}
+                <img src="../static/css/uploads/default.jpeg">
+                 {% endif %}
+                <div>
+                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                </div>
+
+            </div>
+        </header>
+<body>
+{% if session['logged_in'] and session['admin'] %}
+    {% for row in rows %}
+    <form action="/updateTeam/{{ row['TeamId'] }}"  method="POST"><div style="margin: 0;padding: 0">
+        <div class="form-group c1 required" data-cid="c1">
+        <label for="TeamName">Team Name:</label>
+        <input type="text" name="TeamName" value="{{ row['TeamName'] }}" size="30" />
+
+        <label for="SponsorName">Sponsor Name:</label>
+        <input type="text" name="SponsorName" value="{{ row['SponsorName'] }}" size="30" />
+        </div>
+         <div>
+        <label for="Cart">Need Cart?:</label>
+        <input type="text" name="NeedCart" value="{{ row['NeedCart'] }}">
+
+        <label for="Member1Name">Member One Name:</label>
+        <input type="text" name="MemberName1" value="{{ row['MemberName1'] }}">
+
+ </div>
+        <label for="Member2Name">Member Two Name:</label>
+        {% if row['MemberName2'] == none or row['MemberName2'] == "None" %}
+            <select name="MemberName2">
+                <option value="">Add Member</option>
+                {% for row in rows1 %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                </select>
+        {% else %}
+            <input type="text" name="MemberName2" value="{{ row['MemberName2'] }}">
+        {% endif %}
+
+        <label for="Member3Name">Member Three Name:</label>
+        {% if row['MemberName3'] == none or row['MemberName3'] == "None" %}
+            <select name="MemberName3">
+                <option value="">Add Member</option>
+                {% for row in rows1 %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                </select>
+        {% else %}
+            <input type="text" name="MemberName3" value="{{ row['MemberName3'] }}">
+        {% endif %}
+
+        <label for="Member4Name">Member Four Name:</label>
+        {% if row['MemberName4'] == none or row['MemberName4'] == "None" %}
+            <select name="MemberName4">
+                <option value="">Add Member</option>
+                {% for row in rows1 %}
+                            {% if not row['UserTeamId'] %}
+                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
+                                </option>
+                            {% endif %}
+                          {% endfor %}
+                </select>
+        {% else %}
+            <input type="text" name="MemberName4" value="{{ row['MemberName4'] }}">
+        {% endif %}
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('select[name^="MemberName"]').change(function(){
+            var selectedUserId = $(this).val();
+            $('select[name^="MemberName"]').not(this).find('option').each(function(){
+                if($(this).val() == selectedUserId) {
+                    $(this).remove();
+                }
+            });
+        });
+    });
+</script>
+
+        <div class="hc">
+        <label for="Member1Handicap, Member2Handicap, Member3Handicap, Member4Handicap">Handicapped?</label>
+            </div>
+            <div class="hcinput">
+                {% if not row['MemberName1'] is none or row['MemberName1'] == "None" %}
+                    <br>{{ row['MemberName1'] }} is handicapped?: </br>
+                    <input type="checkbox" name="Member1Handicap" value="{{ row['Member1Handicap'] }}"
+                    {% if row['Member1Handicap' == "✔"] or row['Member1Handicap' == " ✔"] or row['Member1Handicap'] %}
+                        checked
+                    {% endif %}
+                    onclick="updateHandicapValue(this)"
+                    >
+                {% endif %}
+
+                {% if not row['MemberName2'] is none or row['MemberName2'] == "None" %}
+                <br>{{ row['MemberName2'] }} is handicapped?: </br>
+                    <input type="checkbox" name="Member2Handicap" value="{{ row['Member2Handicap'] }}"
+                    {% if row['Member2Handicap'] == "✔" or row['Member2Handicap' == " ✔"] %}
+                        checked
+                    {% endif %}
+                    onclick="updateHandicapValue(this)"
+                    >
+                {% endif %}
+
+                {% if not row['MemberName3'] is none or row['MemberName3'] == "None" %}
+                <br>{{ row['MemberName3'] }} is handicapped?: </br>
+                    <input type="checkbox" name="Member3Handicap" value="{{ row['Member3Handicap'] }}"
+                    {% if row['Member3Handicap'] == "✔" or row['Member3Handicap' == " ✔"] %}
+                        checked
+                    {% endif %}
+                    onclick="updateHandicapValue(this)"
+                    >
+                {% endif %}
+
+                {% if not row['MemberName4'] is none or row['MemberName4'] == "None" %}
+                <br>{{ row['MemberName4'] }} is handicapped?: </br>
+                    <input type="checkbox" name="Member4Handicap" value="{{ row['Member4Handicap'] }}"
+                    {% if row['Member4Handicap'] == "✔" or row['Member4Handicap' == " ✔"] %}
+                        checked
+                    {% endif %}
+                    onclick="updateHandicapValue(this)"
+                    >
+                {% endif %}
+        </div>
+
+        <script>
+        function updateHandicapValue(checkbox) {
+        if (!checkbox.checked) {
+            checkbox.value = "None";
+            }
+        }
+        </script>
+
+
+        <label for="Start Hole">Starting Hole:</label>
+        <input type="text" name="StartHole" value="{{ row['StartHole'] }}">
+
+        <label for="ContactFName">Contact First Name:</label>
+        <input type="text" name="ContactFName" value="{{ row['ContactFName'] }}">
+
+        <label for="ContactLName">Contact Last Name:</label>
+        <input type="text" name="ContactLName" value="{{ row['ContactLName'] }}">
+
+        <label for="Contact Number">Contact Number:</label>
+        <input type="text" name="ContactPhNum" value="{{ row['ContactPhNum'] }}">
+
+        <label for="ContactEmail">Contact Email:</label>
+        <input type="text" name="ContactEmail" value="{{ row['ContactEmail'] }}">
+        <input type="submit" name="Update" value="Update Team">
+        </div>
+    </form>
+    {% endfor %}
+{% endif %}
+</body>
+</html>

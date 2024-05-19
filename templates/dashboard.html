@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>old!!!!!!!!!!!!!!!!!!!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 18px;
+        }
+        .message {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #dff0d8;
+            border-radius: 5px;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+        }
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .links a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .links a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome, {{UserName}}!</h1>
+            <p>Explore your options below:</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="message">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="links">
+            {% if session['member'] or session['leader'] %}
+                <a href="/view">View Your Information</a>
+            {% endif %}
+
+            {% if session['admin'] %}
+                <a href="/allteamlist">List All Teams</a>
+                <a href="/teamContactsList">List All Contacts</a>
+                <a href="/searchTeamNamePage">Search by Team/Member Name or Contact</a>
+                <a href="/adminmaketeam">Create a Team</a>
+                  <h2> <a href="/update_profile">Edit</a></h2>
+            {% endif %}
+
+            <a href="/dash">dash</a>
+            <a href="/logout">Log out</a>
+        </div>
+    </div>
+</body>
+</html>
+
