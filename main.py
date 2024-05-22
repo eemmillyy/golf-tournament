@@ -5,7 +5,7 @@ import hmac, hashlib
 from secrets import compare_digest
 import json
 import tensorflow as tf
-from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GENERATIVE_PUBLIC_KEYS, GENERATIVE_SECRET_KEYS
+#from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GENERATIVE_PUBLIC_KEYS, GENERATIVE_SECRET_KEYS
 import sqlite3 as sql
 import pandas as pd
 import numpy as np
@@ -25,9 +25,9 @@ cartCounter = 0
 
 
 # Personal Stripe Account Connection -- Need company connections!!
-app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
-app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
-stripe.api_key = app.config['STRIPE_SECRET_KEY']
+#app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
+#app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
+#stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 
 # Load pre-trained StyleGAN2 model
@@ -1988,6 +1988,7 @@ def showOneTeam(TeamId):
         con.row_factory = sql.Row
         cur = con.cursor()
         cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
+        session['Delete'] = TeamId
 
         rows1 = cur.fetchall()
         rows = []
@@ -2841,28 +2842,32 @@ def a_deleteteam(TeamId):
         string_representation = photo[0]
         photo = ' '.join(map(str, string_representation))
         print(photo)
+        session['Delete'] = TeamId
         return render_template("a_DeleteTeam.html", rows=rows, final=final, UserName=session['UserName'], photo=photo)
 
 
 # ADMIN - Delete a team
-@app.route('/a_DeleteTeam/<int:TeamId>', methods=['POST'])
-def a_DeleteTeam(TeamId):
+@app.route('/a_DeleteTeam', methods=['POST'])
+def a_DeleteTeam():
     if not session.get('logged_in'):
         return render_template('home.html')
     elif not session.get('admin'):
         flash('Page not found')
         return render_template('home.html')
+
+    teamId = session['Delete']
+    session['Delete'] = ""
     try:
         # TName = request.form['TeamId']
         con2 = sql.connect('UserInfoDB.db')
         cur2 = con2.cursor()
-        cur2.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserTeamId = ? ", (None, TeamId))
+        cur2.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserTeamId = ? ", (None, teamId))
         con2.commit()
         con2.close()
 
         con = sql.connect('TeamInfoDB.db')
         cur = con.cursor()
-        cur.execute("DELETE FROM TeamInfo WHERE TeamId = ?", (TeamId,))
+        cur.execute("DELETE FROM TeamInfo WHERE TeamId = ?", (teamId,))
         con.commit()
         flash("Successfully Delete Team")
         return render_template('result.html')
