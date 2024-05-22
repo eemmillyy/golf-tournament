@@ -1,26 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <meta charset="UTF-8">
+   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dash.css') }}">
+      <link rel="stylesheet" href="dash.css">
+    <link rel="stylesheet" href="../static/css/table.css">
+   <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Team List</title>
     <style>
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+
+        }
+        h1 {
+            text-align: center;
         }
         table {
-            border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
+            border-collapse: collapse;
+            margin-top: 70px;
         }
         th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid #ccc;
+            padding: 15px;
             text-align: left;
         }
         th {
             background-color: #f2f2f2;
         }
+
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
@@ -31,84 +44,250 @@
         a:hover {
             text-decoration: underline;
         }
-
-        main-content {
-
-            background: white;
-            padding: 100px;
-
+        .navigation {
+            margin-top: 20px;
+            text-align: center;
         }
-        user-wrapper {
-            display: flex;
-            align-items: center;
+        .box {
+            background: black;
+        }
+         .foot p {
+            color: gainsboro;
+            margin-top: 370px;
+            padding-left: 2.3rem;
+        }
+        .banner {
+            position: fixed;
+            bottom: 10px;
+            left: 35px; /* Adjust left positioning */
+            color: gainsboro;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+        }
+          .line-break {
+            white-space: pre;
+        }
+        .number, .email {
+             top: -20px;
+             margin-bottom: 3px; /* Add some space between each line */
+             white-space: nowrap;
         }
 
-        user-wrapper img {
-            border-radius: 50%;
-            margin-right: 1rem;
-        }
+          td:nth-child(1) {
+              text-align: center;
+          }
 
-        user-wrapper small {
-            display: inline-block;
-            color: var(--text-grey);
-        }
-    </style>
+           td:nth-child(2) {
+
+              text-align: center;
+          }
+           td:nth-child(4) {
+               width: calc(60vh - 345px);
+          }
+            td:nth-child(5) {
+              text-align: center;
+          }
+
+          th:nth-child(1) {
+              width: 124px;
+              text-align: center;
+          }
+          th:nth-child(2) {
+              text-align: center;
+          }
+           th:nth-child(3) {
+              text-align: center;
+          }
+           th:nth-child(4) {
+              text-align: center;
+          }
+           th:nth-child(5) {
+
+              text-align: center;
+          }
+            th:nth-child(6) {
+              text-align: center;
+          }
+
+          .e {
+                 color: black; /* Text color */
+           }
+            .e:hover {
+                   text-decoration: underline;
+            }
+       </style>
 </head>
 <body>
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
+         {% if messages %}
             <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
+               {% for message in messages %}
+               <li>{{ message }}</li>
+               {% endfor %}
             </ul>
-        {% endif %}
+         {% endif %}
     {% endwith %}
+<input type="checkbox" id="nav-toggle">
+    <div class="sidebar">
+       <div class="sidebar-brand">
+         <h2><img src="../static/css/logo.png" width="50" height="50"><span> Rotary at Lynn Haven</span></h2>
+       </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li>
+                    <a href="/dash"><span class="las la-home"></span>
+                    <span>Dashboard</span></a>
+
+                </li>
+                <li>
+                    <a href="/allteamlist"><span class="las la-users"></span>
+                    <span>Teams</span></a>
+                </li>
+                  <li>
+                    <a href="/showUser"><span class="las la-user-tag"></span>
+                    <span>Users</span></a>
+                </li>
+                <li>
+                    <a href="/teamContactsList" class="active"><span class="las la-clipboard-list"></span>
+                    <span>Contacts</span></a>
+                </li>
+                <li>
+                    <a href="/adminmaketeam"><span class="las la-plus-circle"></span>
+                    <span>Create Team</span></a>
+                </li>
+                 <li>
+                    <a href="/new"><span class="las la-file-invoice-dollar"></span>
+                    <span>Payment Logs</span></a>
+                </li>
+                <li>
+                    <a href="/view"><span class="las la-user-circle"></span>
+                    <span>Account</span></a>
+                </li>
+                <li>
+                <a href="/logout"><span class="las la-sign-out-alt"></span>
+                     <span>Log Out</span></a>
+                    </li>
+
+            </ul>
+        </div>
+
+        <div class="banner" id="banner"> © Made by Putter Programmers</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var navToggle = document.getElementById('nav-toggle');
+            var banner = document.getElementById('banner');
+
+            navToggle.addEventListener('change', function () {
+                if (navToggle.checked) {
+                    banner.style.display = 'none';
+                } else {
+                    banner.style.display = 'block';
+                }
+            });
+        });
+    </script>
+     </div>
+     <div class="main-content">
+         <div class="box">
+    <header>
+            <h2>
+                <label for="nav-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+
+                Contact List <i class="lar la-address-card"></i>
+            </h2>
+              <div class="search-wrapper">
+                <span class="las la-search"></span>
+
+                {% if session['logged_in'] and session['admin'] %}
+                <form action="{{ url_for('searchTeamName') }}" method="POST">
+                <input type="search" placeholder="Search here"  id="TeamName" name="TeamName" ><br>
+
+                </form>
+                {% endif %}
+            </div>
+
+            <div class="user-wrapper">
+                <a href="{{ url_for('view') }}">
+                <img src="../{{ photo }}" height="50" width="50">
+                 </a>
+                <div>
+                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                </div>
+            </div>
+        </header>
+         </div>  </div>
+
+     <main class="table" id="customers_table">
+        <section class="table__header">
+            <h1>Team Contacts</h1>
+            <div class="input-group">
+                <input type="search" placeholder="Search User Data...">
+                 <span class="las la-search"></span>
+            </div>
+            <div class="export__file">
+                <label for="export-file" class="export__file-btn" title="Export File"></label>
+                <input type="checkbox" id="export-file">
+                <div class="export__file-options">
+                    <label>Export As &nbsp; &#10140;</label>
+                    <label for="export-file" id="toPDF">PDF <img src="../static/css/p.png" alt=""></label>
+                    <label for="export-file" id="toJSON">JSON <img src="../static/css/j.png" alt=""></label>
+                    <label for="export-file" id="toCSV">CSV <img src="../static/css/c.png" alt=""></label>
+                    <label for="export-file" id="toEXCEL">EXCEL <img src="../static/css/x.png" alt=""></label>
+                </div>
+            </div>
+        </section>
+        <section class="table__body">
 
     {% if session['logged_in'] and session['admin'] %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Team Id</th>
-                    <th>Team Name</th>
-                    <th>Team Members</th>
-                    <th>Contact First Name</th>
-                    <th>Contact Last Name</th>
-                    <th>Contact Phone Number</th>
-                    <th>Contact Email</th>
-
-                </tr>
-            </thead>
-            <tbody>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Team Id <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Team Name <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Team Members <span class="icon-arrow">&UpArrow;</span></th>
+                        <th>Contact Name <span class="icon-arrow">&UpArrow;</span></th>
+                         <th>Contact Number <span class="icon-arrow">&UpArrow;</span></th>
+                         <th>Contact Email <span class="icon-arrow">&UpArrow;</span></th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for row in rows %}
                     <tr>
                         <td>{{ row["TeamId"] }}</td>
                         <td>{{ row["TeamName"] }}</td>
                         <td>
                         {% if row["MemberName1"] %}
-                            {{ row["Member1Here"] }}{{row["MemberName1"]}},
+                          <p class="line-break">{{ row["Member1Here"] }}{{row["MemberName1"]}}</p>
                         {% endif %}
-
                         {% if row["MemberName2"] %}
-                            {{ row["Member2Here"] }}{{row["MemberName2"]}},
+                            <p class="line-break">{{ row["Member2Here"] }} {{row["MemberName2"]}} </p>
                         {% endif %}
 
                         {% if row["MemberName3"] %}
-                            {{ row["Member3Here"] }}{{row["MemberName3"]}},
+                            <p class="line-break">{{ row["Member3Here"] }} {{row["MemberName3"]}} </p>
                         {% endif %}
 
                         {% if row["MemberName4"] %}
-                            {{ row["Member4Here"] }}{{row["MemberName4"]}}
+                            <p class="line-break">{{ row["Member4Here"] }} {{row["MemberName4"]}} </p>
                         {% endif %}
+                    </td>
+                         <td>
+                             <img src=" {{ row['ContactPhoto'] }}" alt="">{{ row["ContactFName"] }} {{ row["ContactLName"] }} </td>
+                        <td><p class="number"><i class='bx bx-phone'></i> {{ row["ContactPhNum"] }}</p></td>
+                        <td>
+                            <p class="email"><i class='bx bx-envelope'></i>
+                                <a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{ row['ContactEmail'] }}</a></p>
                         </td>
-                        <td>{{ row["ContactFName"] }}</td>
-                        <td>{{ row["ContactLName"] }}</td>
-                        <td>{{ row["ContactPhNum"] }}</td>
-                        <td>{{ row["ContactEmail"] }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
+                    {% endif %}
         </table>
-    {% endif %}
 </body>
+<script src="../static/js/table.js"></script>
 </html>

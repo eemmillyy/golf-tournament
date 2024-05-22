@@ -31,9 +31,9 @@ stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 
 # Load pre-trained StyleGAN2 model
-app.config['Generative_PUBLIC_KEY'] = GENERATIVE_PUBLIC_KEYS
-app.config['Generative_SECRET_KEY'] = GENERATIVE_SECRET_KEYS
-#tf.api_key = app.config['Generative_SECRET_KEY']
+# app.config['Generative_PUBLIC_KEY'] = GENERATIVE_PUBLIC_KEYS
+# pp.config['Generative_SECRET_KEY'] = GENERATIVE_SECRET_KEYS
+# tf.api_key = app.config['Generative_SECRET_KEY']
 
 
 # Directory route for profile pictures  ie 'static/css/uploads/______'
@@ -52,10 +52,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 # admin create team    / needs space when entering contact name, need all information passing
-# both - account edit  / merge css - seamless (ex: signup-login)
 
 # both - search bar results / make look nicer              1. https://www.youtube.com/watch?v=Ay8BXbAmEYM   2. https://www.youtube.com/watch?v=wHspfWWn1II
-# ADMIN - contacts / make nice view                                                     https://www.youtube.com/watch?v=Ay8BXbAmEYM
+#                                                             https://www.youtube.com/watch?v=Ay8BXbAmEYM
 # ADMIN - create team ; better form-show contact info different ; search users by typing             https://www.youtube.com/watch?v=R4owT-LcKOo
 #                                                                                                    https://www.youtube.com/watch?v=n8dqXI8kw_Y
 # USER - usersjoin.html      //// redesign
@@ -808,7 +807,7 @@ def sign_up():
         try:
             session['UserName'] = str(Encryption.cipher.decrypt(session['UserName']))
         finally:
-            return render_template('dashboard.html', UserName=session['UserName'])
+            return render_template('dashboard-OLD.html', UserName=session['UserName'])
 
 
 # USER - directs user to sign up page
@@ -819,7 +818,7 @@ def generate():
     else:
 
 
-     return render_template('new.html')
+     return render_template('assign1.html')
 
 
 
@@ -1765,7 +1764,7 @@ def searchTeamName():
                 rows.append(newRow)
 
             if session.get('admin'):
-                return render_template("a_viewTeamName.html", rows=rows, UserName=session['UserName'])
+                return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'])
             if session.get('user'):
                 return render_template("u_viewTeam.html", rows=rows, UserName=session['UserName'])
 
@@ -1821,7 +1820,7 @@ def admin_list():
             string_representation = photo[0]
             photo = ' '.join(map(str, string_representation))
             print(photo)
-            return render_template("a_adminlist.html", rows=rows, UserName=session['UserName'], photo=photo)
+            return render_template("a_adminlist-OLD.html", rows=rows, UserName=session['UserName'], photo=photo)
 
 
 # ADMIN - Routes to search for users
@@ -1885,7 +1884,7 @@ def team_Contacts():
             con = sql.connect("TeamInfoDB.db")
             con.row_factory = sql.Row
             cur = con.cursor()
-            cur.execute('SELECT TeamId, TeamName, ContactFName, ContactLName, ContactPhNum, ContactEmail FROM TeamInfo')
+            cur.execute('SELECT TeamId, MemberName1, MemberName2, MemberName3, MemberName4, Member1Here, Member2Here, Member3Here, Member4Here, TeamName, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto FROM TeamInfo')
 
             rows1 = cur.fetchall()
             rows = []
@@ -1917,7 +1916,7 @@ def team_Contacts():
             string_representation = photo[0]
             photo = ' '.join(map(str, string_representation))
             print(photo)
-            return render_template("a_contactList.html", rows=rows, UserName=session['UserName'], photo=photo)
+            return render_template("a_viewContact.html", rows=rows, UserName=session['UserName'], photo=photo)
 
 
 # ADMIN - List all current team information
@@ -1962,7 +1961,7 @@ def admin_teamlist():
             string_representation = photo[0]
             photo = ' '.join(map(str, string_representation))
             print(photo)
-            return render_template("a_allteamlist.html", rows=rows, UserName=session['UserName'], photo=photo)
+            return render_template("a_viewTeamsAll.html", rows=rows, UserName=session['UserName'], photo=photo)
 
 
 # ADMIN - Route to Search for teams by team/member names or contact info
@@ -1974,35 +1973,6 @@ def searchTeamNamePage():
         flash('Page not found')
         return render_template('home.html')
     return render_template('a_searchTeamName.html')
-
-
-# ADMIN - List all contacts
-@app.route('/showContact/<int:TeamId>', methods=['GET', 'POST'])
-def showContact(TeamId):
-    if not session.get('logged_in'):
-        return render_template('home.html')
-    elif not session.get('admin'):
-        flash('Page not found')
-        return render_template('home.html')
-    else:
-        con = sql.connect('TeamInfoDB.db')
-        con.row_factory = sql.Row
-        cur = con.cursor()
-        cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
-
-        rows1 = cur.fetchall()
-        rows = []
-
-        for row in rows1:
-            newRow = dict(row)
-            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
-            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
-            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
-            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
-            rows.append(newRow)
-
-        con.close()
-        return render_template("/a_viewContact.html", rows=rows)
 
 
 # ADMIN - Selects one team to view in depth
@@ -2075,12 +2045,12 @@ def showOneTeam(TeamId):
         string_representation = photo[0]
         photo = ' '.join(map(str, string_representation))
         print(photo)
-        return render_template("/a_viewTeamName.html", rows=rows, final=final, UserName=session['UserName'],
+        return render_template("/a_viewTeamSelected.html", rows=rows, final=final, UserName=session['UserName'],
                                photo=photo)
     con.close()
 
 
-# ADMIN - Selects one team to view in depth
+# ADMIN - Dash Team Quick view
 @app.route('/showTeam/<int:TeamId>', methods=['GET', 'POST'])
 def showTeam(TeamId):
     if not session.get('logged_in'):
@@ -2104,12 +2074,9 @@ def showTeam(TeamId):
             newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
             newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
             rows.append(newRow)
-
         con.close()
-        UserTeamId = rows[0]['ContactPhoto']
-        print("kkkkkkkkkkkk", UserTeamId)
 
-        return render_template("/a_viewTeam.html", rows=rows)
+        return render_template("/a_viewTeamQuick.html", rows=rows)
 
 
 # ADMIN - View users
@@ -2376,7 +2343,7 @@ def admin_teamSignup():
                 return render_template("result.html", msg=msg)
         else:
             flash('Page not found')
-            return render_template('a_allteamlist.html')
+            return render_template('a_viewTeamsAll.html')
 
 
 # ADMIN - directs admin to check in page
