@@ -21,23 +21,18 @@
         .container-payinfo {
           display: flex;
         }
-
         .payinfo {
-          display: flex;
+            display: flex;
             margin-left: 200px;
         }
-
         aside {
-          flex: 1;
-          position: relative;
+            flex: 1;
+            position: relative;
         }
-
         .box-payinfo {
-          flex: 1;
-          /* Styles for the box */
+            flex: 1; /* Styles for the box */
             margin-top: 150px;
         }
-
         table {
             border-collapse: collapse;
             width: 100%;
@@ -59,40 +54,22 @@
             font-size: 40px; /* Adjust the font size as needed */
             color: #3c3c3c;
             margin-left: 5px;
-
         }
         a {
             text-decoration: none;
             color: mediumseagreen;
         }
-
         a:hover {
             text-decoration: underline;
             color: seagreen;
-        }
-        .box {
-            background: black;
         }
         .foot p {
             color: gainsboro;
             margin-top: 430px;
             padding-left: 2.3rem;
         }
-         .banner {
-            position: fixed;
-            bottom: 10px;
-            left: 35px; /* Adjust left positioning */
-            color: gainsboro;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-            display: block;
-        }
-         .line-break {
-            white-space: pre;
-        }
          .line-break-contact {
-            white-space: pre;
+             white-space: pre;
              margin-top: -30px;
              margin-right: -5px;
         }
@@ -102,7 +79,6 @@
              text-align: right;
              white-space: nowrap;
              margin-right: 5px;
-
         }
           td:nth-child(1) {
               text-align: center;
@@ -116,11 +92,10 @@
               text-align: center;
           }
            td:nth-child(4) {
-
               text-align: center;
           }
            td:nth-child(5) {
-            text-align: center;
+               text-align: center;
           }
            td:nth-child(6) {
               text-align: center;
@@ -134,7 +109,6 @@
            td:nth-child(9) {
               text-align: center;
           }
-
            td:nth-child(10) {
               text-align: center;
           }
@@ -150,8 +124,6 @@
             td:last-child {
               text-align: unset;
           }
-
-
           th:nth-child(1) {
               text-align: center;
           }
@@ -174,7 +146,7 @@
               text-align: center;
           }
            th:nth-child(8) {
-            text-align: center;
+               text-align: center;
           }
            th:nth-child(9) {
               text-align: center;
@@ -194,27 +166,23 @@
                th:nth-child(14) {
               text-align: center;
           }
-
            .e {
-                 color: black; /* Text color */
+               color: black; /* Text color */
            }
            .e:hover {
-                 color: black; /* Text color */
+               color: black; /* Text color */
                text-decoration: underline;
            }
            .middle {
                color: #c3c3c3c3;
            }
-
-
            .sponsor_picture {
                margin-left: 100px;
                margin-top: 8px;
                padding: 10px;
-            border-radius: 5px;
-
+               border-radius: 5px;
            }
-            .but-edit {
+           .but-edit {
                padding: 10px 20px; /* Add padding for some spacing */
                background-color: #2a7dca; /* Background color for the anchor */
                color: #fff; /* Text color */
@@ -228,9 +196,9 @@
                text-decoration: none; /* Remove default underline */
                border-radius: 10px; /* Add rounded corners */
                outline: none;
-                box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
+               box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
            }
-            .but-check {
+           .but-check {
                padding: 10px 20px; /* Add padding for some spacing */
                background-color: mediumseagreen; /* Background color for the anchor */
                color: #fff; /* Text color */
@@ -244,7 +212,7 @@
                text-decoration: none; /* Remove default underline */
                border-radius: 10px; /* Add rounded corners */
                outline: none;
-                box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
+               box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
            }
             .but-delete {
                padding: 10px 20px; /* Add padding for some spacing */
@@ -272,17 +240,13 @@
 
      <header>
             <h2>
-
                 Viewing Team Info <span class="las la-info-circle"></span>
             </h2>
 
             <div class="user-wrapper">
-                   {% if photo != None %}
+                 <a href="{{ url_for('view') }}">
                 <img src="../{{ photo }}" height="50" width="50">
-                 {% endif %}
-                {% if photo == None %}
-                <img src="../static/css/uploads/default.jpeg">
-                 {% endif %}
+                 </a>
                 <div>
                     <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
                 </div>
@@ -298,14 +262,10 @@
         {% endif %}
     {% endwith %}
 
-
-
 {% if session['logged_in'] and session['admin'] %}
 
 <main class="table" id="customers_table">
-
         <section class="table__header">
-
             <h1 class="middle">
                 <p class="back" ><a href="/allteamlist"> <i class='bx bxs-left-arrow-circle bx-fade-left-hover'></i></a></p></h1>
             <div class="input-group">
@@ -338,7 +298,6 @@
                             Member 1
                         </th>
                         {% endif %}
-
                        {% if row["MemberName2"] %}
                         <th>
                             Member 2
@@ -411,7 +370,7 @@
                        {% if row["NeedCart"] != 0 %}
                         <td>
                              {% if row["NeedCart"] == 2 %}
-                            Required Rentals: <br><strong>2 </strong>
+                            Required Rentals: <br><strong> 2 </strong>
                              {% endif %}
 
                              {% if row["NeedCart"] == 1 %}
@@ -429,11 +388,8 @@
                             <aside class="line-break-contact"><p class="name"> {{row["ContactFName"]}} {{row["ContactLName"]}}</p><p class="number"><i class='bx bx-phone' ></i> {{row["ContactPhNum"]}}</p><p class="email"><i class='bx bx-envelope' ></i><a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{row['ContactEmail']}}</a></p></aside>
                         </td>
                     </tr>
-
-
                 </tbody>
             </table>
-
         </section>
     <div class="row">
                     <td><a href="{{ url_for('edit_TeamForm', TeamId=row['TeamId']) }}" class="but-edit">Edit</a></td>
@@ -442,7 +398,6 @@
         </div>
             {% endfor %}
     <td>
-
 
   <div class="container-payinfo">
   <aside>
@@ -455,9 +410,7 @@
 
   </div>
 </div>
-
     </main>
-
 {% endif %}
    <script src="../static/js/table.js"></script>
 

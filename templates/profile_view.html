@@ -127,10 +127,24 @@
            text-transform: uppercase;
            letter-spacing: 5px;
         }
+       .wrapper {
+           display: flex;
+           position: absolute;
+           justify-content: center;
+           align-items: center;
+           height: 100vh;
+           background: rgba(39, 39, 39, 0.5);
+           border-radius: 10px;
+           padding: 30px 40px;
+           box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+           width: 2000px;
+           border: 2px solid rgba(255, 255, 255, .2);
+       }
 
     </style>
 </head>
 <body>
+<div class="wrapper">
     <div class="container">
         <div class="profile-header" >   <br>
             <div class="profile-picture">
@@ -141,7 +155,7 @@
 
         </div>
          <div class="info">
-        <h3><br>Information</h3>
+        <h3>Information</h3>
 
          </div><br><br><br>
 
@@ -222,6 +236,7 @@
             {% endif %}
             <a href="{{ url_for('edit_profile', UserName=row['UserName']) }}">Edit</a>
         </div>
+    </div>
     </div>
 </body>
 </html>
