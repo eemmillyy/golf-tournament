@@ -697,6 +697,18 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 
+# WORKING - google api search to get a sponsor photo
+def search_images(query, api_key, cx):
+    url = f"https://www.googleapis.com/customsearch/v1?q={query}&cx={cx}&searchType=image&key={api_key}"
+    response = requests.get(url)
+    data = response.json()
+    if 'items' in data:
+        image_urls = [item['link'] for item in data['items']]
+    else:
+        image_urls = []  # If no items are found, return an empty list
+    return image_urls
+
+
 # WORKING -check if a user is point of contact on team
 def is_a_contact():
     nm = session['UserName']
@@ -2105,31 +2117,6 @@ def showUser():
         return render_template("/a_viewUser.html", rows=rows, UserName=session['UserName'], photo=photo)
 
 
-
-def search_images(query, api_key, cx):
-    url = f"https://www.googleapis.com/customsearch/v1?q={query}&cx={cx}&searchType=image&key={api_key}"
-    response = requests.get(url)
-    data = response.json()
-    if 'items' in data:
-        image_urls = [item['link'] for item in data['items']]
-    else:
-        image_urls = []  # If no items are found, return an empty list
-    return image_urls
-
-@app.route('/new2')
-def new2():
-    return render_template('new2.html')
-
-@app.route('/search', methods=['POST'])
-def search():
-    query = request.form['query']
-    query += ' label'
-    api_key = GOOGLE_API_KEY
-    cx = GOOGLE_ACCOUNT_KEY
-    image_urls = search_images(query, api_key, cx)
-    return render_template('resultt.html', image_urls=image_urls)
-
-
 # ADMIN - Directs admin to team sign up page
 @app.route('/adminmaketeam')
 def teamsignup():
@@ -2259,8 +2246,8 @@ def admin_teamSignup():
                 # search google for logo of sponsor
                 query = request.form['SponsorName']
                 query += ' logo'
-                api_key = "AIzaSyB_DP4VSRrr8awXIvDBapTsj_nfeekp7Js"
-                cx = "806292680b9794db8"
+                api_key = GOOGLE_API_KEY
+                cx = GOOGLE_ACCOUNT_KEY
                 image_urls = search_images(query, api_key, cx)
                 print(image_urls)
                 if image_urls:
