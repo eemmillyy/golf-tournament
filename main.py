@@ -1998,6 +1998,7 @@ def showOneTeam(TeamId):
             newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
             rows.append(newRow)
         con.close()
+
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
         cur = con.cursor()
