@@ -385,22 +385,22 @@
 
                         {% if row["MemberName1"] %}
                        <td>
-                             <p>{{ row["MemberName1"] }} </br> <br> </br><br> here: {{ row["Member1Here"] }}</br><br> HCAP: {{ row["Member1Handicap"] }}</br></p>
+                             <p>{{ row["MemberName1"] }} <br> <br> <br><br> here: {{ row["Member1Here"] }}<br><br> HCAP: {{ row["Member1Handicap"] }}<br></p>
                        </td>
                        {% endif %}
                        {% if row["MemberName2"] %}
                         <td>
-                            <p>{{ row["MemberName2"] }} </br> <br> </br><br> here: {{ row["Member2Here"] }}</br><br> HCAP: {{ row["Member2Handicap"] }}</br></p>
+                            <p>{{ row["MemberName2"] }} <br> <br> <br><br> here: {{ row["Member2Here"] }}<br><br> HCAP: {{ row["Member2Handicap"] }}<br></p>
                         </td>
                        {% endif %}
                        {% if row["MemberName3"] %}
                         <td>
-                            <p>{{ row["MemberName3"] }} </br> <br> </br><br> here: {{ row["Member3Here"] }}</br><br> HCAP: {{ row["Member3Handicap"] }}</br></p>
+                            <p>{{ row["MemberName3"] }} <br> <br> <br><br> here: {{ row["Member3Here"] }}<br><br> HCAP: {{ row["Member3Handicap"] }}<br></p>
                         </td>
                        {% endif %}
                        {% if row["MemberName4"] %}
                         <td>
-                            <p>{{ row["MemberName4"] }} </br> <br> </br><br> here: {{ row["Member4Here"] }}</br><br> HCAP: {{ row["Member4Handicap"] }}</br></p>
+                            <p>{{ row["MemberName4"] }} <br> <br> <br><br> here: {{ row["Member4Here"] }}<br><br> HCAP: {{ row["Member4Handicap"] }}<br></p>
                         </td>
                        {% endif %}
                        <td>{{ row["StartHole"] }}</td>
@@ -421,7 +421,8 @@
                         </td>
                         {% endif %}
 
-                        <td><img src="{{ row['ContactPhoto'] }}" alt="">
+                        <td>
+                            <img src="{{ row['ContactPhoto'] }}" alt="">
                             <aside class="line-break-contact"><p class="name"> {{row["ContactFName"]}} {{row["ContactLName"]}}</p><p class="number"><i class='bx bx-phone' ></i> {{row["ContactPhNum"]}}</p><p class="email"><i class='bx bx-envelope' ></i><a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{row['ContactEmail']}}</a></p></aside>
                         </td>
                     </tr>
@@ -448,16 +449,15 @@
         </div>
             {% endfor %}
 
-
   <div class="container-payinfo">
   <aside>
-    <img src="../static/css/uploads/default.jpeg" alt="" height="420" width="420" class="sponsor_picture">
+    <img src="{{ row['SponsorPhoto'] }}" alt="" height="420" width="420" class="sponsor_picture">
     <p class="payinfo"> This as Sponsor photo?^</p>
   </aside>
   <div class="box-payinfo">
     <!-- Content of the box -->
           <p>- thinking this box can be for team payment activity </p>
-
+{% endfor %}
   </div>
 </div>
     </main>

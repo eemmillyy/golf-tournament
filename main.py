@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file, jsonify
+import requests
 from werkzeug.utils import secure_filename
 from io import BytesIO
 import hmac, hashlib
 from secrets import compare_digest
 import json
-import tensorflow as tf
-#from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GENERATIVE_PUBLIC_KEYS, GENERATIVE_SECRET_KEYS
+from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
+ main
 import sqlite3 as sql
 import pandas as pd
 import numpy as np
@@ -25,15 +26,9 @@ cartCounter = 0
 
 
 # Personal Stripe Account Connection -- Need company connections!!
-#app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
-#app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
-#stripe.api_key = app.config['STRIPE_SECRET_KEY']
-
-
-# Load pre-trained StyleGAN2 model
-# app.config['Generative_PUBLIC_KEY'] = GENERATIVE_PUBLIC_KEYS
-# pp.config['Generative_SECRET_KEY'] = GENERATIVE_SECRET_KEYS
-# tf.api_key = app.config['Generative_SECRET_KEY']
+app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
+app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
+stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 
 # Directory route for profile pictures  ie 'static/css/uploads/______'
@@ -51,10 +46,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # both - login forgot password  / route to ask for email, send email, allow for new pass saved!          https://www.youtube.com/watch?v=vutyTx7IaAI
 
 
-# admin create team    / needs space when entering contact name, need all information passing
-
-# both - search bar results / make look nicer              1. https://www.youtube.com/watch?v=Ay8BXbAmEYM   2. https://www.youtube.com/watch?v=wHspfWWn1II
-#                                                             https://www.youtube.com/watch?v=Ay8BXbAmEYM
+# admin create team    // proper form                                                            
 # ADMIN - create team ; better form-show contact info different ; search users by typing             https://www.youtube.com/watch?v=R4owT-LcKOo
 #                                                                                                    https://www.youtube.com/watch?v=n8dqXI8kw_Y
 # USER - usersjoin.html      //// redesign
@@ -703,6 +695,18 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
 
 
+# WORKING - google api search to get a sponsor photo
+def search_images(query, api_key, cx):
+    url = f"https://www.googleapis.com/customsearch/v1?q={query}&cx={cx}&searchType=image&key={api_key}"
+    response = requests.get(url)
+    data = response.json()
+    if 'items' in data:
+        image_urls = [item['link'] for item in data['items']]
+    else:
+        image_urls = []  # If no items are found, return an empty list
+    return image_urls
+
+
 # WORKING -check if a user is point of contact on team
 def is_a_contact():
     nm = session['UserName']
@@ -779,20 +783,12 @@ def is_a_contact():
     return iscontact, tid
 
 
-@app.route('/generate_image', methods=['POST'])
-def generate_image():
-    # Get parameters from request (e.g., image size, latent vector, etc.)
-    # For simplicity, let's assume we receive latent vector as a parameter
-    latent_vector = request.json.get('latent_vector')
 
-    # Generate image using the model
-    generated_image = model.predict(np.array([latent_vector]))
 
-    # Preprocess generated image (e.g., scale pixel values to [0, 255])
-    generated_image = (generated_image * 127.5 + 127.5).astype(np.uint8)
 
-    # Serve generated image as response
-    return jsonify({'image': generated_image.tolist()})
+
+
+
 
 
 # **********************************************************************************************
@@ -2001,6 +1997,7 @@ def showOneTeam(TeamId):
             newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
             rows.append(newRow)
         con.close()
+
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
         cur = con.cursor()
@@ -2206,7 +2203,21 @@ def admin_teamSignup():
                 m1id = word[0].strip()
                 m1hc = word[1]
                 mn1 = word[2].strip()
+                cfn = word[3].strip()
+                cln = word[4].strip()
+                cpn = word[5]
+                ce = word[6]
+                cp = word[7]
                 memberCount += 1
+                print(m1id)
+                print(m1hc)
+                print(mn1)
+                print(cfn)
+                print(cln)
+                print(cpn)
+                print(ce)
+                print('picture:  ', cp)
+
 
                 m2info = request.form['MemberName2']
                 word = m2info.split(',')
@@ -2232,11 +2243,20 @@ def admin_teamSignup():
                     mn4 = word[2].strip()
                     memberCount += 1
 
-                # select menu based off previous answers
-                cfn = request.form['ContactFName']
-                cln = request.form['ContactLName']
-                cpn = request.form['ContactPhNum']
-                ce = request.form['ContactEmail']
+                # search google for logo of sponsor
+                query = request.form['SponsorName']
+                query += ' logo'
+                api_key = GOOGLE_API_KEY
+                cx = GOOGLE_ACCOUNT_KEY
+                image_urls = search_images(query, api_key, cx)
+                print(image_urls)
+                if image_urls:
+                    spic = image_urls[1]
+                else:
+                    spic = None
+                print(spic)
+
+
                 check = is_empty()
                 if check is False:
                     con = sql.connect('TeamInfoDB.db')
@@ -2292,12 +2312,12 @@ def admin_teamSignup():
                     with sql.connect("TeamInfoDB.db") as con:
                         cur = con.cursor()
                         cur.execute(
-                            "INSERT INTO TeamInfo (TeamName, SponsorName, NeedCart, MemberName1, MemberName2,"
+                            "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, MemberName2,"
                             " MemberName3, MemberName4, Member1ID, Member2ID, Member3ID, Member4ID, Member1Handicap,"
                             " Member2Handicap, Member3Handicap, Member4Handicap, StartHole, Member1Here, Member2Here,"
-                            " Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, JoinCode, MemberCount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                            (tnm, snm, nc, mn1, mn2, mn3, mn4, m1id, m2id, m3id, m4id, m1hc, m2hc,
-                             m3hc, m4hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln), encrypt(cpn), encrypt(ce),
+                            " Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            (tnm, snm, spic, nc, mn1, mn2, mn3, mn4, m1id, m2id, m3id, m4id, m1hc, m2hc,
+                             m3hc, m4hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln), encrypt(cpn), encrypt(ce), cp,
                              code, memberCount))
 
                         con.commit()
