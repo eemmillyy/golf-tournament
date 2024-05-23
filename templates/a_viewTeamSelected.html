@@ -396,18 +396,18 @@
                     <td><a href="{{ url_for('checkin', TeamId=row['TeamId']) }}" class="but-check">Check In</a></td>
                     <td><a href="{{ url_for('a_deleteteam', TeamId=row['TeamId']) }}" class="but-delete">Delete</a></td>
         </div>
-            {% endfor %}
+
     <td>
 
   <div class="container-payinfo">
   <aside>
-    <img src="../static/css/uploads/default.jpeg" alt="" height="420" width="420" class="sponsor_picture">
+    <img src="{{ row['SponsorPhoto'] }}" alt="" height="420" width="420" class="sponsor_picture">
     <p class="payinfo"> This as Sponsor photo?^</p>
   </aside>
   <div class="box-payinfo">
     <!-- Content of the box -->
           <p>- thinking this box can be for team payment activity </p>
-
+{% endfor %}
   </div>
 </div>
     </main>
