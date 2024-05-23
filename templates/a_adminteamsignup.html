@@ -151,7 +151,7 @@
             </div>
              </div>
             <div class="signup-box">
-                <label for="MemberName1"><b>Team Contact:</b><label>
+                <label><b>Team Member 1:</b><label>
                      <div class="input-box">
                         <select name="MemberName1" id="MemberName1">
                         <option value="Name1">Select A User</option>
@@ -215,18 +215,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-       $(document).ready(function(){
-            $('select[name^="MemberName"]').change(function(){
-                var selectedUserId = $(this).val();
-                $('select[name^="MemberName"]').not(this).find('option').each(function(){
-                    if($(this).val() == selectedUserId) {
-                        $(this).remove();
-                    }
-                });
-            });
-       });
+$(document).ready(function(){
+    $('select[name^="MemberName"]').change(function(){
+        var selectedUserId = $(this).val();
 
-
+        // Remove selected option from other dropdowns
+        $('select[name^="MemberName"]').not(this).each(function(){
+            $(this).find('option[value="' + selectedUserId + '"]').remove();
+        });
+    });
+});
 </script>
 
 

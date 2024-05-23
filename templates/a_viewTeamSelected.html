@@ -383,9 +383,9 @@
                             {% endif %}
                         </td>
                         {% endif %}
-
                         <td>
-                            <img src="{{ row['ContactPhoto'] }}" alt="">
+
+                             <img src="../{{ row['ContactPhoto'] }}" alt="">
                             <aside class="line-break-contact"><p class="name"> {{row["ContactFName"]}} {{row["ContactLName"]}}</p><p class="number"><i class='bx bx-phone' ></i> {{row["ContactPhNum"]}}</p><p class="email"><i class='bx bx-envelope' ></i><a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{row['ContactEmail']}}</a></p></aside>
                         </td>
                     </tr>

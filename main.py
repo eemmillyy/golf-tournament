@@ -1,3 +1,4 @@
+import google
 from flask import Flask, render_template, request, session, flash, redirect, url_for, send_file, jsonify
 import requests
 from werkzeug.utils import secure_filename
@@ -23,12 +24,14 @@ app = Flask(__name__, static_url_path='/static')
 counter = 0
 cartCounter = 0
 
-
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
 app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
+app.config['GOOGLE_API_KEY'] = GOOGLE_API_KEY
+app.config['GOOGLE_ACCOUNT_KEY'] = GOOGLE_ACCOUNT_KEY
+google.config = app.config['GOOGLE_ACCOUNT_KEY']
 
 # Directory route for profile pictures  ie 'static/css/uploads/______'
 UPLOAD_FOLDER = 'static/css/uploads'
@@ -1042,14 +1045,14 @@ def user_teamSignup():
                 nc = request.form['NeedCart']
                 m1info = request.form['MemberName1']
                 word = m1info.split(',')
-                m1id = word[0]
-                m1hc = word[1]
-                mn1 = word[2] + word[3]
-                cfn = word[2]
-                cln = word[3]
-                cpn = word[4]
-                ce = word[5]
-                pic = word[6]
+                m1id = word[0].strip()
+                m1hc = word[1].strip()
+                mn1 = word[2].strip() + ' ' + word[3].strip()
+                cfn = word[2].strip()
+                cln = word[3].strip()
+                cpn = word[4].strip()
+                ce = word[5].strip()
+                pic = word[6].strip()
                 print(m1id)
                 print(m1hc)
                 print(mn1)
@@ -1058,27 +1061,44 @@ def user_teamSignup():
                 print(cpn)
                 print(ce)
                 print(pic)
-                check = is_empty()
-                if check is False:
-                    con = sql.connect('TeamInfoDB.db')
-                    con.row_factory = sql.Row
-                    cur = con.cursor()
-                    cur.execute(
-                        "SELECT StartHole FROM TeamInfo WHERE TeamId =(SELECT max(TeamId) FROM TeamInfo)")  # get last hole
-                    num = cur.fetchall()
-                    val = num[0]
-                    lastASGNDhole = val['StartHole']
-                    print("last hole:", lastASGNDhole)
-                    set(lastASGNDhole + 1)
-                    print(counter)
-                    con.close()
+                # search google for logo of sponsor
+                query = request.form['SponsorName']
+                query += ' logo'
+                api_key = GOOGLE_API_KEY
+                cx = GOOGLE_ACCOUNT_KEY
+                image_urls = search_images(query, api_key, cx)
+                print(image_urls)
+                if image_urls:
+                    spic = image_urls[1]
                 else:
-                    increment()
-                if counter <= 18:
-                    sh = counter
-                else:
-                    reset()
-                    sh = counter
+                    spic = None
+                print(spic)
+
+                con = sql.connect('TeamInfoDB.db')
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                cur.execute("SELECT StartHole FROM TeamInfo")  # get list of all holes
+                data = cur.fetchall()
+
+                con.close()
+                start_holes = [row[0] for row in data]
+                print(start_holes)
+                for i in range(1, 36):
+                    for i in range(1, 19):
+                        if i not in start_holes:
+                            print('First available hole:', i)
+                            break
+                    if i >= 18:  # If i reaches 18, reset it to 0
+                        missing_numbers = [i for i in range(1, 19) if start_holes.count(i) != 2]
+                        print(missing_numbers)
+                        sorted_start_holes = sorted(missing_numbers)
+                        print(sorted_start_holes)
+                        first_value = sorted_start_holes[0]
+                        print(first_value)
+                        i = first_value
+                        break
+                sh = i
+
                 code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
                 print(code)
 
@@ -1098,8 +1118,8 @@ def user_teamSignup():
                     with sql.connect("TeamInfoDB.db") as con:
                         cur = con.cursor()
                         cur.execute(
-                            "INSERT INTO TeamInfo (TeamName, SponsorName, NeedCart, MemberName1, Member1ID, Member1Handicap, StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                            (tnm, snm, nc, mn1, m1id, m1hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln),
+                            "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, Member1ID, Member1Handicap, StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            (tnm, snm, spic, nc, mn1, m1id, m1hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln),
                              encrypt(cpn), encrypt(ce), pic, code, 1))
                         con.commit()
                     msg = "Team Added successfully"
@@ -1999,6 +2019,9 @@ def showOneTeam(TeamId):
             rows.append(newRow)
         con.close()
 
+        for row in rows:
+            print(row['ContactPhoto'])
+
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
         cur = con.cursor()
@@ -2206,9 +2229,9 @@ def admin_teamSignup():
                 mn1 = word[2].strip()
                 cfn = word[3].strip()
                 cln = word[4].strip()
-                cpn = word[5]
-                ce = word[6]
-                cp = word[7]
+                cpn = word[5].strip()
+                ce = word[6].strip()
+                cp = word[7].strip()
                 memberCount += 1
                 print(m1id)
                 print(m1hc)
@@ -2217,8 +2240,7 @@ def admin_teamSignup():
                 print(cln)
                 print(cpn)
                 print(ce)
-                print('picture:  ', cp)
-
+                print(cp)
 
                 m2info = request.form['MemberName2']
                 word = m2info.split(',')
@@ -2256,28 +2278,31 @@ def admin_teamSignup():
                 else:
                     spic = None
                 print(spic)
+                # get start hole
+                con = sql.connect('TeamInfoDB.db')
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                cur.execute("SELECT StartHole FROM TeamInfo")  # get list of all holes
+                data = cur.fetchall()
 
-
-                check = is_empty()
-                if check is False:
-                    con = sql.connect('TeamInfoDB.db')
-                    con.row_factory = sql.Row
-                    cur = con.cursor()
-                    cur.execute(
-                        "SELECT StartHole FROM TeamInfo WHERE TeamId =(SELECT max(TeamId) FROM TeamInfo)")  # get last hole
-                    num = cur.fetchall()
-                    val = num[0]
-                    lastASGNDhole = val['StartHole']
-                    set(lastASGNDhole + 1)
-                    con.close()
-                else:
-                    increment()
-                if counter <= 18:
-                    sh = counter
-                else:
-                    reset()
-                    sh = counter
-
+                con.close()
+                start_holes = [row[0] for row in data]
+                print(start_holes)
+                for i in range(1, 36):
+                    for i in range(1, 19):
+                        if i not in start_holes:
+                            print('First available hole:', i)
+                            break
+                    if i >= 18:  # If i reaches 18, reset it to 0
+                        missing_numbers = [i for i in range(1, 19) if start_holes.count(i) != 2]
+                        print(missing_numbers)
+                        sorted_start_holes = sorted(missing_numbers)
+                        print(sorted_start_holes)
+                        first_value = sorted_start_holes[0]
+                        print(first_value)
+                        i = first_value
+                        break
+                sh = i
                 code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
                 print("The code is:", code)
 
