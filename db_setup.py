@@ -77,6 +77,7 @@ cur.execute('''CREATE TABLE TeamInfo(
 TeamId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 TeamName TEXT NOT NULL,
 SponsorName TEXT,
+SponsorPhoto BLOB,
 NeedCart INTEGER,
 MemberName1 TEXT,
 MemberName2 TEXT,
