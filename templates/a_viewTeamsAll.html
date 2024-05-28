@@ -154,6 +154,7 @@
     </style>
 </head>
 <body>
+
     {% with messages = get_flashed_messages() %}
          {% if messages %}
             <ul>
@@ -234,6 +235,7 @@
     </script>
 
     </div>
+
      <div class="main-content">
          <div class="box">
     <header>
@@ -302,6 +304,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% if not rows %}
+                        <tr>
+                            <td colspan="9">
+                                <div>
+                                    <strong>No Teams Currently Registered</strong>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                 {% if rows %}
                 {% for row in rows %}
                 <tr>
                     <td><a href="{{ url_for('showOneTeam',TeamId=row['TeamId']) }}" class="but">View</a></td>
@@ -333,7 +346,7 @@
                     <td><strong> $0 </strong></td>
                     </tr>
                 {% endfor %}
-
+   {% endif %}
                 </tbody>
             </table>
         </section>
