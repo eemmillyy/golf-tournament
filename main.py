@@ -1729,7 +1729,7 @@ def update_profile():
             con.close()
 
 
-# BOTH ADMIN/USER - Search by team/member names or contact info (user output doesnt have all info)
+# BOTH ADMIN/USER - Search by team/member names or contact info (user output doesn't have all info)
 @app.route('/searchTeamName', methods=['POST'])
 def searchTeamName():
     if not session.get('logged_in'):
@@ -1737,6 +1737,7 @@ def searchTeamName():
     try:
 
         searchInfo = request.form.get('TeamName')
+        searchInfo.strip()
 
         with sql.connect("TeamInfoDB.db") as con:
             con.row_factory = sql.Row
@@ -1744,14 +1745,14 @@ def searchTeamName():
 
             cur.execute(
                 "SELECT * FROM TeamInfo WHERE TeamName = ? OR SponsorName = ? OR MemberName1 = ? OR MemberName2 = ? OR "
-                "MemberName3 = ? OR MemberName4 = ? OR ContactLName = ? OR ContactLName = ? OR ContactPhNum = ? OR "
+                "MemberName3 = ? OR MemberName4 = ? OR ContactFName = ? OR ContactLName = ? OR ContactPhNum = ? OR "
                 "ContactEmail = ? OR SponsorName = ?",
-                (searchInfo, searchInfo, searchInfo, searchInfo, searchInfo, searchInfo,
-                 encrypt(searchInfo), encrypt(searchInfo), encrypt(searchInfo), searchInfo, searchInfo))
+                (searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(),
+                 encrypt(searchInfo).strip(), encrypt(searchInfo).strip(), encrypt(searchInfo).strip(), encrypt(searchInfo).strip(), searchInfo.strip()))
 
             rows = []
-
-            for row in cur.fetchall():
+            result = cur.fetchall()
+            for row in result:
                 newRow = dict(row)
                 newRow['ContactFName'] = Encryption.cipher.decrypt(newRow['ContactFName'])
                 newRow['ContactLName'] = str(Encryption.cipher.decrypt(newRow['ContactLName']))
@@ -1760,9 +1761,9 @@ def searchTeamName():
                 rows.append(newRow)
 
             if session.get('admin'):
-                return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'])
+                return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'], result=result)
             if session.get('user'):
-                return render_template("u_viewTeam.html", rows=rows, UserName=session['UserName'])
+                return render_template("u_viewTeam.html", rows=rows, UserName=session['UserName'], result=result)
 
     except Exception as e:
         flash("Search Error")
@@ -3221,7 +3222,6 @@ def log_in():
             data = cur.fetchall()
             df = pd.DataFrame(data,
                               columns=['ProfilePicture'])
-
             con.close()
             for row in df.itertuples():
                 print(row[1])

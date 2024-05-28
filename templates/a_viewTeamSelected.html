@@ -280,7 +280,6 @@
     </style>
 </head>
 <body>
-
      <header>
             <h2>
                 Viewing Team Info <span class="las la-info-circle"></span>
@@ -305,8 +304,17 @@
         {% endif %}
     {% endwith %}
 
-{% if session['logged_in'] and session['admin'] %}
 
+{% if session['logged_in'] and session['admin'] %}
+    {% if not result %}
+        <div>
+        <h1>No Results Found</h1>
+            <h2><a href="/allteamlist">Back</a></h2>
+        </div>
+    {% endif %}
+
+
+     {% if result %}
 <main class="table" id="customers_table">
         <section class="table__header">
             <h1 class="middle">
@@ -466,6 +474,7 @@
 {% endfor %}
   </div>
 </div>
+{% endif %}
     </main>
 {% endif %}
    <script src="../static/js/table.js"></script>
