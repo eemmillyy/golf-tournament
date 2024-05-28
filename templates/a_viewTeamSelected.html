@@ -306,6 +306,8 @@
 
 
 {% if session['logged_in'] and session['admin'] %}
+
+    {% if not rows %}
     {% if not result %}
         <div>
         <h1>No Results Found</h1>
@@ -313,6 +315,8 @@
         </div>
     {% endif %}
 
+
+     {% if rows %}
 
      {% if result %}
 <main class="table" id="customers_table">
