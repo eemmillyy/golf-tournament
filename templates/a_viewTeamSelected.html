@@ -21,18 +21,125 @@
         .container-payinfo {
           display: flex;
         }
+        .container-pay {
+             background-color: white;
+              margin-left: 65px;
+              margin-right: 5px;
+              margin-top: -30px;
+              border-radius: 25px;
+              background-color: rgba(260, 260, 260, 0.5);
+              backdrop-filter: blur(7px);
+              box-shadow: 0 .4rem .8rem #0005;
+              border-radius: .8rem;
+              -webkit-backface-visibility: hidden;
+              -moz-backface-visibility: hidden;
+                height: 500px;
+              overflow: visible;
+              display: flex;
+              text-align: center;
+              font-size: x-large;
+        }
+
+
+        .container-Sponsor {
+          border-radius: 20px;
+          margin-left: 80px;
+          margin-right: 50px;
+          margin-top: 30px;
+          width: 650px;
+        }
+
+        .container-Sponsorpic {
+              background-color: white;
+              margin-left: 5px;
+              margin-right: 5px;
+              margin-top: 30px;
+              border-radius: 25px;
+              background-color: rgba(260, 260, 260, 0.5);
+              backdrop-filter: blur(7px);
+              box-shadow: 0 .4rem .8rem #0005;
+              border-radius: .8rem;
+              -webkit-backface-visibility: hidden;
+              -moz-backface-visibility: hidden;
+              -webkit-transform: translate3d(0, 0, 0);
+              -moz-transform: translate3d(0, 0, 0);
+              overflow: visible;
+              display: flex;
+        }
+
+        .container-Sponsorpic img {
+              background-color: plum;
+              margin-left: 10px;
+              background-color: rgba(260, 260, 260, 0.5);
+              justify-content: center;
+              backdrop-filter: blur(7px);
+              box-shadow: 0 .4rem .8rem #0005;
+              border-radius: .8rem;
+              -webkit-backface-visibility: hidden;
+              -moz-backface-visibility: hidden;
+              overflow: visible;
+              margin-bottom: 10px;
+        }
+
+        .sponsor-text {
+            margin-top: 20px;
+              margin-left: 10px;
+              display: block;
+              align-items: center;
+            text-align: center;
+
+        }
+
+        .sponsor-text p {
+            display: inline;
+            margin-left: 5px;
+             margin-right: 5px;
+              font-size: x-large;
+              text-align: center;
+             justify-items: center;
+
+        }
+        .sponsor-text strong {
+            margin-left: 5px;
+            margin-right: 5px;
+              font-size: xx-large;
+              text-align: center;
+             justify-items: center;
+
+        }
+        .sponsor-but {
+    margin-top: 120px;
+
+    display: inline-block; /* Ensure the button is displayed as a block element */
+    margin-bottom: 10px;
+    width: auto; /* Remove fixed width to allow content to determine width */
+    padding: 20px 10px; /* Increase padding for more height and less width */
+    text-align: center; /* Center text horizontally */
+    background-color: #2a7dca; /* Background color for the button */
+    color: #fff; /* Text color */
+    text-decoration: none; /* Remove default underline */
+    border-radius: 10px; /* Add rounded corners */
+    border: none; /* Remove border */
+}
+
+.sponsor-but:hover {
+    padding: 20px 10px; /* Increase padding for more height and less width */
+    background-color: #0056b3; /* Background color on hover */
+    outline: none;
+    text-decoration: none;
+    color: #fff;
+}
+
         .payinfo {
             display: flex;
-            margin-left: 200px;
+            justify-content: center;
+            margin-left: -60px;
         }
         aside {
             flex: 1;
             position: relative;
         }
-        .box-payinfo {
-            flex: 1; /* Styles for the box */
-            margin-top: 150px;
-        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -176,7 +283,8 @@
            .middle {
                color: #c3c3c3c3;
            }
-           .sponsor_picture {
+            .sponsor_picture {
+               justify-content: center;
                margin-left: 100px;
                margin-top: 8px;
                padding: 10px;
@@ -436,7 +544,7 @@
                         {% endif %}
 
                         <td>
-                            <img src="{{ row['ContactPhoto'] }}" alt="">
+                            <img src="../{{ row['ContactPhoto'] }}" alt="">
                             <aside class="line-break-contact"><p class="name"> {{row["ContactFName"]}} {{row["ContactLName"]}}</p><p class="number"><i class='bx bx-phone' ></i> {{row["ContactPhNum"]}}</p><p class="email"><i class='bx bx-envelope' ></i><a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{row['ContactEmail']}}</a></p></aside>
                         </td>
                     </tr>
@@ -465,15 +573,24 @@
 
   <div class="container-payinfo">
   <aside>
-    <img src="{{ row['SponsorPhoto'] }}" alt="" height="420" width="420" class="sponsor_picture">
-    <p class="payinfo"> This as Sponsor photo?^</p>
-  </aside>
-  <div class="box-payinfo">
+       <div class="box-payinfo">
+           <div class="container-pay">
     <!-- Content of the box -->
           <p>- thinking this box can be for team payment activity </p>
-{% endfor %}
+           </div>
   </div>
-</div>
+  </aside>
+<div class="container-Sponsor">
+  <div class="container-Sponsorpic">
+    <img src="{{ row['SponsorPhoto'] }}" alt="" height="320" width="390" class="sponsor_picture">
+    <div class="sponsor-text">
+     <p>{{ row['TeamName'] }} is sponsored by:<br><br><strong>{{ row['SponsorName'] }}</strong></p>
+        <a href="{{ url_for('edit_TeamForm', TeamId=row['TeamId']) }}" class="sponsor-but">Edit Sponsor Photo</a>
+
+    </div>
+  </div>
+</div></div>
+       {% endfor %}
 {% endif %}
     </main>
 {% endif %}
