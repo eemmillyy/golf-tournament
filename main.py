@@ -2570,7 +2570,6 @@ def a_DeleteTeam():
     teamId = session['Delete']
     session['Delete'] = ""
     try:
-        # TName = request.form['TeamId']
         con2 = sql.connect('UserInfoDB.db')
         cur2 = con2.cursor()
         cur2.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserTeamId = ? ", (None, teamId))
@@ -2956,7 +2955,10 @@ def do_admin_login():
         flash("error in insert operation")
     finally:
         con.close()
-    return home()
+        if session['logged_in'] == False:
+            return log_in()
+        else:
+            return home()
 
 
 @app.route("/logout")
