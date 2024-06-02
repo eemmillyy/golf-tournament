@@ -234,6 +234,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                {% if not rows %}
+                        <tr>
+                            <td colspan="5">
+                                <div>
+                                    <strong>No Teams Registered For Contact</strong>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                 {% if rows %}
                  {% for row in rows %}
                     <tr>
                         <td>{{ row["UserId"] }}</td>
@@ -247,7 +258,7 @@
                         <td> <strong> $128.90 </strong></td>
                     </tr>
                 {% endfor %}
-
+                {% endif %}
 
                 </tbody>
             </table>

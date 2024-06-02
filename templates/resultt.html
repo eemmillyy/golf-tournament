@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        li {
+            margin: 10px;
+        }
+        img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image URLs:</h1>
+    <ul>
+        {% for url in image_urls %}
+            <li><img src="{{ url }}" alt="Image"></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

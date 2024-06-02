@@ -256,6 +256,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                   {% if not rows %}
+                        <tr>
+                            <td colspan="6">
+                                <div>
+                                    <strong>No Teams Registered For Contact</strong>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+
+                 {% if rows %}
                 {% for row in rows %}
                     <tr>
                         <td>{{ row["TeamId"] }}</td>
@@ -285,6 +296,7 @@
                         </td>
                     </tr>
                 {% endfor %}
+                     {% endif %}
             </tbody>
                     {% endif %}
         </table>
