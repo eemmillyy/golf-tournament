@@ -1566,7 +1566,7 @@ def searchTeamName():
     try:
         # receive user search input
         searchInfo = request.form.get('TeamName')
-        searchInfo.strip()
+   
         # user search info to find the team
         with sql.connect("TeamInfoDB.db") as con:
             con.row_factory = sql.Row
@@ -1577,7 +1577,7 @@ def searchTeamName():
                 "MemberName3 = ? OR MemberName4 = ? OR ContactFName = ? OR ContactLName = ? OR ContactPhNum = ? OR "
                 "ContactEmail = ? OR SponsorName = ?",
                 (searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(),
-                 encrypt(searchInfo).strip(), encrypt(searchInfo).strip(), encrypt(searchInfo).strip(), encrypt(searchInfo).strip(), searchInfo.strip()))
+                 encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), searchInfo.strip()))
 
             rows = []
             result = cur.fetchall()
@@ -1770,10 +1770,10 @@ def showOneTeam(TeamId):
         cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
         session['Delete'] = TeamId
 
-        rows1 = cur.fetchall()
+        result = cur.fetchall()
         rows = []
 
-        for row in rows1:
+        for row in result:
             newRow = dict(row)
             newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
             newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
@@ -1815,8 +1815,9 @@ def showOneTeam(TeamId):
         # pull picture pathfile to html
         photo = get_profilepic()
         return render_template("/a_viewTeamSelected.html", rows=rows, final=final, UserName=session['UserName'],
-                               photo=photo)
 
+                               photo=photo, result=result)
+       con.close()
 
 # ADMIN - Dash Team Quick view
 @app.route('/showTeam/<int:TeamId>', methods=['GET', 'POST'])
