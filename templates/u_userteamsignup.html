@@ -115,12 +115,9 @@
             </h2>
 
             <div class="user-wrapper">
-                 {% if photo != None %}
+                  <a href="{{ url_for('view') }}">
                 <img src="../{{ photo }}" height="50" width="50">
-                 {% endif %}
-                {% if photo == None %}
-                <img src="../static/css/uploads/default.jpeg">
-                 {% endif %}
+                 </a>
                 <div>
                     <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
                 </div>
