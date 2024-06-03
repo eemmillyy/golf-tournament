@@ -121,6 +121,9 @@
             font-weight: bolder;
             background-color: seagreen;
         }
+        .line-break {
+            white-space: nowrap;
+        }
     </style>
 
 <script>
@@ -223,12 +226,9 @@
                 {% endif %}
             </div>
             <div class="user-wrapper">
-                 {% if photo != None %}
+                  <a href="{{ url_for('view') }}">
                 <img src="../{{ photo }}" height="50" width="50">
-                 {% endif %}
-                {% if photo == None %}
-                <img src="../static/css/uploads/default.jpeg">
-                 {% endif %}
+                 </a>
                 <div>
                     <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
                 </div>
@@ -281,7 +281,7 @@
                 </div>
                 <div class="card-single">
                     <div>
-                        <h1> <li> {{ checkin }} </li> </h1>
+                        <h1 id="line-break" class="line-break"> <li> {{ checkin }} </li> </h1>
 
                         <span> Check-In Status</span>
                     </div>
@@ -296,6 +296,30 @@
                             // Print the current element
                             console.log(htmlElements[i]);}
                         </script>
+                           <script>
+                                // Get the text content
+                                var textElement = document.getElementById("line-break");
+                                var text = textElement.textContent;
+
+                                // Split the text whenever there's a "check" or "x"
+                                var lines = text.split(/(✔|✘)/);
+
+                                // Create a new array to store the formatted lines
+                                var formattedLines = [];
+
+                                // Loop through the lines array and add line breaks after each "check" or "x"
+                                for (var i = 0; i < lines.length; i++) {
+                                  var line = lines[i].trim();
+                                  if (line !== "" && line !== "✔" && line !== "✘") {
+                                    formattedLines.push(line, "<br>");
+                                  } else if (line === "✔" || line === "✘") {
+                                    formattedLines.push(line);
+                                  }
+                                }
+
+                                // Update the content of the text div with the formatted lines
+                                textElement.innerHTML = formattedLines.join("");
+                              </script>
 
                     </div>
                 </div>

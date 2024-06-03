@@ -1257,6 +1257,7 @@ def user_teamlist():
             flash('Page not found')
             return render_template('home.html')
         else:
+            nm = session['UserName']
             # pull db info - all teams and their info
             con = sql.connect("TeamInfoDB.db")
             con.row_factory = sql.Row
@@ -1270,7 +1271,138 @@ def user_teamlist():
             con.close()
             # pull picture pathfile to html
             photo = get_profilepic()
-            return render_template("u_allteamlist.html", rows=rows, UserName=session['UserName'], photo=photo)
+
+
+            # pull db info - find if user in a team
+            con = sql.connect('UserInfoDB.db')
+            con.row_factory = sql.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT UserTeamId FROM UserInfo WHERE UserName = ?",
+                (encrypt(nm),))
+            rowz = cur.fetchall()
+            if (rowz):
+                UserTeamId = rowz[0]['UserTeamId']
+            else:
+                UserTeamId = None
+            rowzz = []
+            for row in rowz:
+                newRow = dict(row)
+                rowzz.append(newRow)
+            con.close()
+            string = ','.join(str(x) for x in rowzz)
+            print(string)
+            word = 'None'
+            # if no team - unset team variables
+            if word in string:
+                team = None
+                print('no team found')
+                team_names = None
+                memeberList = None
+                sponsor = None
+                sponsorpic = None
+            # if user in team - set team variables
+            else:
+                team = True
+                print("You are in a team")
+                number = re.findall(r'\d+', string)
+                # Convert the numbers to integers
+                teamid = [int(num) for num in number]
+                for id in teamid:
+                    tid = id
+                con = sql.connect("TeamInfoDB.db")
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (tid,))
+                rowz = cur.fetchall()
+                rowzz = []
+                i = 0
+                for row in rowz:
+                    newRow = dict(row)
+                    newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+                    newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+                    newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+                    newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+                    rowzz.append(newRow)
+                    i += 1
+                print("there ", rowzz)
+                con.close()
+                team_names = [d['TeamName'] for d in rowzz]
+                team_names = team_names[0]
+                starthole = [d['StartHole'] for d in rowzz]
+                starthole = starthole[0]
+                joincode = [d['JoinCode'] for d in rowzz]
+                joincode = joincode[0]
+                needacart = [d['NeedCart'] for d in rowzz]
+                amount = needacart[0]
+                sponsorpic = [d['SponsorPhoto'] for d in rowzz]
+                sponsorpic = sponsorpic[0]
+                sponsor = [d['SponsorName'] for d in rowzz]
+                sponsor = sponsor[0]
+
+                print(starthole)
+                print(team_names)
+                print(joincode)
+                print(amount)
+                if amount == 1:
+                    cartinfo = [d['AsgnCart1'] for d in rowzz]
+                    cartinfo = ['--' if x is None else x for x in cartinfo]
+                    cartinfo = ' '.join(cartinfo)
+                    print(cartinfo)
+                elif amount == 2:
+                    cartinfo = [d['AsgnCart1'] for d in rowzz] + [d['AsgnCart2'] for d in rowzz]
+                    cartinfo = [' -- ' if x is None else x for x in cartinfo]
+                    cartinfo = ' '.join(cartinfo)
+                    print(cartinfo)
+                else:
+                    cartinfo = 'not renting'
+                    print(cartinfo)
+                memebers = [d['MemberName1'] for d in rowzz] + [d['MemberName2'] for d in rowzz] + [d['MemberName3'] for
+                                                                                                    d in rowzz] + [
+                               d['MemberName4'] for d in rowzz]
+                memeberList = [item for item in memebers if item is not None]
+                list_size = len(memeberList)
+                memeberList = ' '.join(map(str, memeberList))
+                print("new ", memeberList)
+                print("Size of list:", list_size)
+                if list_size == 1:
+                    checkin = [d['Member1Here'] for d in rowzz] + [d['MemberName1'] for d in rowzz]
+                    checkin = ' '.join(map(str, checkin))
+                elif list_size == 2:
+                    checkin = [d['Member1Here'] for d in rowzz] + [d['MemberName1'] for d in rowzz] + [d['Member2Here']
+                                                                                                       for d in
+                                                                                                       rowzz] + [
+                                  d['MemberName2'] for d in rowzz]
+                    checkin = ' '.join(map(str, checkin))
+                elif list_size == 3:
+                    checkin = ([d['Member1Here'] for d in rowzz] + [d['MemberName1'] for d in rowzz] + [d['Member2Here']
+                                                                                                        for d in rowzz]
+                               + [d['MemberName2'] for d in rowzz] + [d['Member3Here'] for d in rowzz] + [
+                                   d['MemberName3'] for d in rowzz])
+                    checkin = ' '.join(map(str, checkin))
+                elif list_size == 4:
+                    checkin = ([d['Member1Here'] for d in rowzz] + [d['MemberName1'] for d in rowzz] + [d['Member2Here']
+                                                                                                        for d in
+                                                                                                        rowzz] + [
+                                   d['MemberName2'] for d in rowzz]
+                               + [d['Member3Here'] for d in rowzz] + [d['MemberName3'] for d in rowzz] + [
+                                   d['Member4Here'] for d in rowzz] + [d['MemberName4'] for d in rowzz])
+                    checkin = ' '.join(map(str, checkin))
+                print(checkin)
+                # pull db info - All team info
+                con = sql.connect("TeamInfoDB.db")
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                cur.execute('SELECT * FROM TeamInfo')
+                rows1 = cur.fetchall()
+                rows = []
+                for row in rows1:
+                    newRow = dict(row)
+                    rows.append(newRow)
+                con.close()
+
+
+            return render_template("u_viewTeamAll.html", rows=rows, UserName=nm, photo=photo, team=team, team_names=team_names, memeberList=memeberList, sponsor=sponsor, sponsorpic=sponsorpic)
 
 
 # USER - team quickview on dashboard
@@ -1293,7 +1425,7 @@ def user_showTeam(TeamId):
             newRow = dict(row)
             rows.append(newRow)
         con.close()
-        return render_template("/u_viewTeam.html", rows=rows)
+        return render_template("/u_viewTeamQuick.html", rows=rows)
 
 
 '''
@@ -1592,7 +1724,7 @@ def searchTeamName():
             if session.get('admin'):
                 return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'], result=result)
             if session.get('user'):
-                return render_template("u_viewTeam.html", rows=rows, UserName=session['UserName'], result=result)
+                return render_template("u_viewTeamQuick.html", rows=rows, UserName=session['UserName'], result=result)
 
     except Exception as e:
         flash("Search Error")

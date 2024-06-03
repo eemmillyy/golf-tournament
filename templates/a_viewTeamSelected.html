@@ -414,9 +414,7 @@
 
 
 {% if session['logged_in'] and session['admin'] %}
-
     {% if not rows %}
-    {% if not result %}
         <div>
         <h1>No Results Found</h1>
             <h2><a href="/allteamlist">Back</a></h2>
@@ -425,8 +423,6 @@
 
 
      {% if rows %}
-
-     {% if result %}
 <main class="table" id="customers_table">
         <section class="table__header">
             <h1 class="middle">
