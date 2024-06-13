@@ -15,3 +15,19 @@ button.addEventListener('click', event => {
         // using `result.error.message`.
     });
 })
+
+document.querySelector("#checkout-button").addEventListener("click", function () {
+    const stripe = Stripe('your-publishable-key-here'); // Replace with actual publishable key
+    const sessionId = 'your-session-id-here'; // Replace with actual session ID
+
+    stripe.redirectToCheckout({
+        sessionId: sessionId
+    }).then(function (result) {
+        if (result.error) {
+            alert(result.error.message);
+        }
+    }).catch(function (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    });
+});
