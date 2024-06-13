@@ -162,60 +162,6 @@
     });
 </script>
 
-        <div class="hc">
-        <label for="Member1Handicap, Member2Handicap, Member3Handicap, Member4Handicap">Handicapped?</label>
-            </div>
-            <div class="hcinput">
-                {% if not row['MemberName1'] is none or row['MemberName1'] == "None" %}
-                    <br>{{ row['MemberName1'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member1Handicap" value="{{ row['Member1Handicap'] }}"
-                    {% if row['Member1Handicap' == "✔"] or row['Member1Handicap' == " ✔"] or row['Member1Handicap'] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-
-                {% if not row['MemberName2'] is none or row['MemberName2'] == "None" %}
-                <br>{{ row['MemberName2'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member2Handicap" value="{{ row['Member2Handicap'] }}"
-                    {% if row['Member2Handicap'] == "✔" or row['Member2Handicap' == " ✔"] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-
-                {% if not row['MemberName3'] is none or row['MemberName3'] == "None" %}
-                <br>{{ row['MemberName3'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member3Handicap" value="{{ row['Member3Handicap'] }}"
-                    {% if row['Member3Handicap'] == "✔" or row['Member3Handicap' == " ✔"] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-
-                {% if not row['MemberName4'] is none or row['MemberName4'] == "None" %}
-                <br>{{ row['MemberName4'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member4Handicap" value="{{ row['Member4Handicap'] }}"
-                    {% if row['Member4Handicap'] == "✔" or row['Member4Handicap' == " ✔"] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-        </div>
-
-        <script>
-        function updateHandicapValue(checkbox) {
-        if (!checkbox.checked) {
-            checkbox.value = "None";
-            }
-        }
-        </script>
-
-
         <label for="Start Hole">Starting Hole:</label>
         <input type="text" name="StartHole" value="{{ row['StartHole'] }}">
 

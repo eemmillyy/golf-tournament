@@ -129,7 +129,6 @@
             </div>
         </header>
 
-
     <form action="{{ url_for('admin_teamSignup') }}"  method="POST">
         <div class="wrapper">
             <div class="signup-box">
@@ -142,6 +141,7 @@
                 <label><b>Sponsor Name  (optional):</b><label>
                     <div class="input-box">
                 <input type="text" placeholder="Sponsor Name" name="SponsorName" id="sponsorNameInput" autocomplete="off">
+
             </div>
              </div>
             <div class="signup-box">
@@ -151,13 +151,13 @@
             </div>
              </div>
             <div class="signup-box">
-                <label for="MemberName1"><b>Team Member 1:</b><label>
+                <label for="MemberName1"><b>Team Contact:</b><label>
                      <div class="input-box">
                         <select name="MemberName1" id="MemberName1">
                         <option value="Name1">Select A User</option>
                          {% for row in rows %}
                             {% if not row['UserTeamId'] %}
-                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
+                                <option value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail'] }}, {{ row['ProfilePicture'] }}">
                                     {{ row['UserFName'] }} {{ row['UserLName'] }}
                                 </option>
                             {% endif %}
@@ -224,65 +224,13 @@
                     }
                 });
             });
-
-            $('#contactDropdown').change(function() {
-                var selectedOption = $('option:selected', this);
-                $('#contactFNameInput').val(selectedOption.data('fname') || '');
-                $('#contactLNameInput').val(selectedOption.data('lname') || '');
-                $('#contactPhNumInput').val(selectedOption.data('phnum') || '');
-                $('#contactEmailInput').val(selectedOption.data('email') || '');
-            });
-
-            $('#contactDropdown').select2({
-                placeholder: 'Select A Member',
-                allowClear: true
-            });
        });
-</script>
-            <div class="signup-box">
-                <label><b>Contact:</b></label>
-                <div class="input-box">
-                    <select name="ContactDropdown" id="contactDropdown" class="contact-dropdown">
-                        <option value="">Select A Member</option>
-                        {% for row in rows %}
-                            {% if not row['UserTeamId'] %}
-                                <option value="{{ row['UserId'] }}"
-                                    data-fname="{{ row['UserFName'] }}"
-                                    data-lname="{{ row['UserLName'] }}"
-                                    data-phnum="{{ row['UserPhNum'] }}"
-                                    data-email="{{ row['UserEmail'] }}">
-                                {{ row['UserFName'] }} {{ row['UserLName'] }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
 
-            <div class="signup-box">
-                <label><b>Contact - First Name:</b><label>
-                     <div class="input-box">
-                <input type="text" placeholder="First Name" name="ContactFName" id="contactFNameInput" autocomplete="off" required>
-            </div>
-            </div>
-            <div class="signup-box">
-                <label><b>Contact - Last Name: </b><label>
-                     <div class="input-box">
-                <input type="text" placeholder="Last Name" name="ContactLName" id="contactLNameInput" autocomplete="off" required>
-            </div>
-            </div>
-            <div class="signup-box">
-                <label><b>Contact - Phone Number:</b><label>
-                    <div class="input-box">
-                <input type="text" placeholder="Phone Number" name="ContactPhNum" id="contactPhNumInput" autocomplete="off" required>
-            </div>
-            </div>
-            <div class="signup-box">
-                <label><b>Contact - Email:</b><label>
-                     <div class="input-box">
-                <input type="text" placeholder="Email" name="ContactEmail" id="contactEmailInput" autocomplete="off" required>
-             </div>
-            </div>
+
+</script>
+
+
+
             <button type="submit" class="btn" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">Register Team</button>
          </div>
      </form>
@@ -366,18 +314,7 @@
         document.getElementById("member4HandicapInput").addEventListener("input", function() {
             setInputValueAndColor("member4HandicapInput", this.value);
         });
-        document.getElementById("contactFNameInput").addEventListener("input", function() {
-            setInputValueAndColor("contactFNameInput", this.value);
-        });
-        document.getElementById("contactLNameInput").addEventListener("input", function() {
-            setInputValueAndColor("contactLNameInput", this.value);
-        });
-        document.getElementById("contactPhNumInput").addEventListener("input", function() {
-            setInputValueAndColor("contactPhNumInput", this.value);
-        });
-        document.getElementById("contactEmailInput").addEventListener("input", function() {
-            setInputValueAndColor("contactEmailInput", this.value);
-        });
+
 
         // JavaScript to set focus on input field when clicked
         var inputFields = document.querySelectorAll('input');

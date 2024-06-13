@@ -28,12 +28,15 @@
         }
     </script>
     <style>
+
         .dropdown {
             min-width: 15em;
             position: relative;
            margin-bottom: 20px;
             text-decoration-color: whitesmoke;
               height: 40px;
+
+
         }
         .dropdown * {
             box-sizing: border-box;
@@ -47,17 +50,17 @@
             overflow-y: visible;
             display: flex;
         }
-        .input-field{
-            font-size: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            height: 50px;
-            width: 100%;
-            padding: 0 10px 0 45px;
-            border: none;
-            border-radius: 30px;
-            outline: none;
-            transition: .2s ease;
+  .input-field{
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    height: 50px;
+    width: 100%;
+    padding: 0 10px 0 45px;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    transition: .2s ease;
 }
 .input-field:hover, .input-field:focus{
     background: rgba(255, 255, 255, 0.25);
@@ -175,6 +178,9 @@
             width: 100%;
             height: 40px;
         }
+         .login-error {
+             color: red;
+         }
 
 
     </style>
@@ -202,6 +208,17 @@
             <i class="bx bx-menu" onclick="myMenuFunction()"></i>
         </div>
     </nav>
+     <span class="login-error">
+         {% with messages = get_flashed_messages() %}
+         {% if messages %}
+         <ul class=flashes>
+             {% for message in messages %}
+             <li>{{ message }}</li>
+             {% endfor %}
+         </ul>
+         {% endif %}
+         {% endwith %}
+     </span>
 <!----------------------------- Form box ----------------------------------->
     <div class="form-box">
         <form action="/login" method="POST">
@@ -262,7 +279,7 @@
                     <i class="bx bx-user"></i>
                          </div>
                         <div class="input-box">
-                         <input type="text" class="input-field" placeholder="Middle Inital" name="UserMName" required>
+                         <input type="text" class="input-field" placeholder="Middle Name" name="UserMName" required>
                         <i class="bx bx-user" ></i>
                            </div>
                         <div class="input-box">
@@ -359,3 +376,4 @@
       <script src="{{ url_for('static', filename='signupbox.js') }}"></script>
 </body>
 </html>
+
