@@ -55,7 +55,7 @@ function sortTable(column, sort_asc) {
 // 3. Converting HTML table to PDF
 
 const pdf_btn = document.querySelector('#toPDF');
-const customers_table = document.querySelector('#customers_table');
+const customers_table = document.querySelector('#customers_table'); // Ensure this ID matches the table
 
 
 const toPDF = function (customers_table) {
@@ -128,23 +128,14 @@ const toCSV = function (table) {
     //     return [...cells].map(cell => cell.textContent.trim()).join(',');
     // }).join('\n');
 
-    const t_heads = table.querySelectorAll('th'),
-        tbody_rows = table.querySelectorAll('tbody tr');
-
-    const headings = [...t_heads].map(head => {
-        let actual_head = head.textContent.trim().split(' ');
-        return actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase();
-    }).join(',') + ',' + 'image name';
-
+    const t_heads = table.querySelectorAll('th');
+    const tbody_rows = table.querySelectorAll('tbody tr');
+    const headings = [...t_heads].map(head => head.textContent.trim()).join(',') + '\\n';
     const table_data = [...tbody_rows].map(row => {
-        const cells = row.querySelectorAll('td'),
-            img = decodeURIComponent(row.querySelector('img').src),
-            data_without_img = [...cells].map(cell => cell.textContent.replace(/,/g, ".").trim()).join(',');
-
-        return data_without_img + ',' + img;
-    }).join('\n');
-
-    return headings + '\n' + table_data;
+        const cells = row.querySelectorAll('td');
+        return [...cells].map(cell => cell.textContent.trim()).join(',');
+    }).join('\\n');
+    return headings + '\\n' + table_data;
 }
 
 csv_btn.onclick = () => {
@@ -164,23 +155,14 @@ const toExcel = function (table) {
     //     return [...cells].map(cell => cell.textContent.trim()).join('\t');
     // }).join('\n');
 
-    const t_heads = table.querySelectorAll('th'),
-        tbody_rows = table.querySelectorAll('tbody tr');
-
-    const headings = [...t_heads].map(head => {
-        let actual_head = head.textContent.trim().split(' ');
-        return actual_head.splice(0, actual_head.length - 1).join(' ').toLowerCase();
-    }).join('\t') + '\t' + 'image name';
-
+    const t_heads = table.querySelectorAll('th');
+    const tbody_rows = table.querySelectorAll('tbody tr');
+    const headings = [...t_heads].map(head => head.textContent.trim()).join(',') + '\\n';
     const table_data = [...tbody_rows].map(row => {
-        const cells = row.querySelectorAll('td'),
-            img = decodeURIComponent(row.querySelector('img').src),
-            data_without_img = [...cells].map(cell => cell.textContent.trim()).join('\t');
-
-        return data_without_img + '\t' + img;
-    }).join('\n');
-
-    return headings + '\n' + table_data;
+        const cells = row.querySelectorAll('td');
+        return [...cells].map(cell => cell.textContent.trim()).join(',');
+    }).join('\\n');
+    return headings + '\\n' + table_data;
 }
 
 excel_btn.onclick = () => {
@@ -195,11 +177,9 @@ const downloadFile = function (data, fileType, fileName = '') {
         'json': 'application/json',
         'csv': 'text/csv',
         'excel': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    }
-    a.href = `
-        data:${mime_types[fileType]};charset=utf-8,${encodeURIComponent(data)}
-    `;
+    };
+    a.href = `data:${mime_types[fileType]};charset=utf-8,${encodeURIComponent(data)}`;
     document.body.appendChild(a);
     a.click();
-    a.remove();
+    document.body.removeChild(a);
 }
