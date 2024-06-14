@@ -138,10 +138,10 @@ const toCSV = function (table) {
     return headings + '\\n' + table_data;
 }
 
-csv_btn.onclick = () => {
+csv_btn.addEventListener('click', () => {
     const csv = toCSV(customers_table);
-    downloadFile(csv, 'csv', 'customer orders');
-}
+    downloadFile(csv, 'csv', 'customer_orders.csv');
+});
 
 // 6. Converting HTML table to EXCEL File
 
@@ -165,10 +165,10 @@ const toExcel = function (table) {
     return headings + '\\n' + table_data;
 }
 
-excel_btn.onclick = () => {
+excel_btn.addEventListener('click', () => {
     const excel = toExcel(customers_table);
-    downloadFile(excel, 'excel');
-}
+    downloadFile(excel, 'excel', 'customer_orders.xlsx');
+});
 
 const downloadFile = function (data, fileType, fileName = '') {
     const a = document.createElement('a');
