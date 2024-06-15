@@ -106,7 +106,7 @@
     {% endif %}
 {% endwith %}
 
-{% if session['logged_in'] and session['admin'] %}
+{% if session['logged_in'] and session['admin'] or UserTeamLead %}
     <table>
         <thead>
             <tr>
