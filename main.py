@@ -844,9 +844,9 @@ def adduser():
                 with sql.connect("UserInfoDB.db") as con:
                     cur = con.cursor()
                     cur.execute(
-                        "INSERT INTO UserInfo (UserName, UserFName, UserMName, UserLName, UserGender, UserDOB, UserHandicap, UserPhNum, UserEmail, RoleLevel, LoginPassword, ProfilePicture) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                        "INSERT INTO UserInfo (UserName, UserFName, UserMName, UserLName, UserGender, UserDOB, UserHandicap, UserPhNum, UserEmail, RoleLevel, LoginPassword, ProfilePicture, UserTeamLead) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                         (encrypt(nm), fnm, mi, lnm, gen, dob, uhc, encrypt(pn), encrypt(email), lvl, encrypt(pwd),
-                         'static/css/uploads/default.jpeg'))
+                         'static/css/uploads/default.jpeg', False))
                     con.commit()
                     msg = "Record successfully added You may now login"
         except:
@@ -1426,6 +1426,129 @@ def user_showTeam(TeamId):
             rows.append(newRow)
         con.close()
         return render_template("/u_viewTeamQuick.html", rows=rows)
+
+
+@app.route('/uc_editTeam')
+def cap_editTeam():
+    if not session.get('logged_in'):
+        return render_template('home.html')
+    elif not session.get('user'):
+        flash('Page not found')
+        return render_template('home.html')
+    else:
+        nm = session['UserName']
+        con = sql.connect('UserInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute('SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName =?', (encrypt(nm),))
+
+        result = cur.fetchone()
+        con.close()
+
+        tid, tcpt = result
+
+
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute('SELECT * FROM TeamInfo WHERE TeamId =?', (tid,))
+        rows1 = cur.fetchall()
+        rows = []
+        for row in rows1:
+            newRow = dict(row)
+            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+            rows.append(newRow)
+        con.close()
+
+        return render_template('c-userEditTeam.html', rows=rows)
+
+@app.route('/uc_addMember', methods=['POST','GET'])
+def cap_addMember():
+    if not session.get('logged_in'):
+        return render_template('home.html')
+    elif not session.get('user'):
+        flash('Page not found')
+        return render_template('home.html')
+    else:
+        nm = session['UserName']
+        mFn = request.form.get('MemberFName')
+        mLn = request.form.get('MemberLName')
+        mEm = request.form.get('MemberEmail')
+        mEm = encrypt(mEm)
+        mHandi = request.form.get('MemberHCap')
+        fullname = mFn + " " + mLn
+
+        con = sql.connect('UserInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute('SELECT UserTeamId FROM UserInfo WHERE UserName =?', (encrypt(nm),))
+
+        result = cur.fetchone()
+        tid = result[0]
+        print(tid)
+
+        cur.execute(
+            "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', UserTeamLead) Values (?,?,?,?,?,?)",
+            (mFn, mLn, mHandi, mEm, 1, False))
+        con.commit()
+        cur.execute("SELECT UserId FROM UserInfo WHERE UserEmail =?", (mEm,))
+        result3 = cur.fetchone()
+        memID = result3[0]
+        con.close()
+
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT MemberCount FROM TeamInfo WHERE TeamId = ?", (tid,))
+        result2 = cur.fetchone()
+        memc = result2[0]
+
+        member_added = False
+
+        if (memc == 1):
+            cur.execute(
+                "UPDATE TeamInfo SET MemberName2 = ?, Member2ID = ?, Member2Handicap = ?, MemberCount = ? WHERE TeamId = ?",
+                (fullname, memID, mHandi, memc + 1, tid))
+            con.commit()
+            con.close()
+            member_added = True
+
+        elif (memc == 2):
+            cur.execute(
+                "UPDATE TeamInfo SET MemberName3 = ?, Member3ID = ?, Member3Handicap = ?, MemberCount = ? WHERE TeamId = ?",
+                (fullname, memID, mHandi, memc + 1, tid))
+            con.commit()
+            con.close()
+            member_added = True
+        elif (memc == 3):
+            cur.execute(
+                "UPDATE TeamInfo SET MemberName4 = ?, Member4ID = ?, Member4Handicap = ?, MemberCount = ? WHERE TeamId = ?",
+                (fullname, memID, mHandi, memc + 1, tid))
+            con.commit()
+            con.close()
+            member_added = True
+        elif (memc >= 4):
+            msg = "This Team is Currenly Full"
+            con.close()
+            return render_template('result.html', UserName=session['UserName'], msg=msg)
+
+        if member_added:
+            con = sql.connect('UserInfoDB.db')
+            con.row_factory = sql.Row
+            cur = con.cursor()
+            cur.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserId = ?", (tid, memID))
+            con.commit()
+            msg = "You have successfully joined this team!"
+            con.close()
+            return render_template('result.html', UserName=session['UserName'], msg=msg)
+        else:
+            msg = "error in team addition"
+            con.close()
+
+            return render_template('result.html', UserName=session['UserName'], msg=msg)
 
 
 '''
