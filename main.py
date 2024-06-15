@@ -5,12 +5,14 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 import hmac, hashlib
 from secrets import compare_digest
-import json
+from collections import defaultdict
 from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
 import sqlite3 as sql
 import pandas as pd
 import numpy as np
 import Encryption
+import datetime
+import json
 import base64
 import stripe
 import re
@@ -44,7 +46,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ------------------ FRONTEND ------------------
 # both - signup / remember me is fake                                                                    https://www.youtube.com/watch?v=CRvV9nFKoPI
-# both - signup / if incorrect input display flash message, if successful flash message to log in page   https://www.youtube.com/watch?v=reumU4CvruA
 # both - login forgot password  / route to ask for email, send email, allow for new pass saved!          https://www.youtube.com/watch?v=vutyTx7IaAI
 
 
@@ -90,11 +91,13 @@ def home():
     #  -------------------------------- ADMIN DASH --------------------------------
     session['UserName'] = str(Encryption.cipher.decrypt(session['UserName']))
     if session.get('admin'):
+        # get current year
+        current_year = datetime.datetime.now().year
         # pull db info - quick team view
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
         cur = con.cursor()
-        cur.execute('SELECT * FROM TeamInfo')
+        cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year,))
         rows1 = cur.fetchall()
         rows = []
         i = 0
@@ -306,11 +309,13 @@ def home():
 
                 # Print the HTML output
                 print(output)
+                # get current year
+                current_year = datetime.datetime.now().year
                 # pull db info - All db info
                 con = sql.connect("TeamInfoDB.db")
                 con.row_factory = sql.Row
                 cur = con.cursor()
-                cur.execute('SELECT * FROM TeamInfo')
+                cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year, ))
                 rows1 = cur.fetchall()
                 rows = []
                 for row in rows1:
@@ -329,11 +334,15 @@ def home():
 def dash():
     if not session.get('logged_in'):
         return render_template('home.html')
+    if not session.get('admin'):
+        return render_template('home.html')
+    # get current year
+    current_year = datetime.datetime.now().year
     # pull db info - quick team view
     con = sql.connect("TeamInfoDB.db")
     con.row_factory = sql.Row
     cur = con.cursor()
-    cur.execute('SELECT * FROM TeamInfo')
+    cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year, ))
     rows1 = cur.fetchall()
     rows = []
     i = 0
@@ -539,11 +548,13 @@ def userdash():
                                    d['Member4Here'] for d in rowzz] + [d['MemberName4'] for d in rowzz])
                     checkin = ' '.join(map(str, checkin))
                 print(checkin)
+                # get current year
+                current_year = datetime.datetime.now().year
                 # pull db info - All team info
                 con = sql.connect("TeamInfoDB.db")
                 con.row_factory = sql.Row
                 cur = con.cursor()
-                cur.execute('SELECT * FROM TeamInfo')
+                cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year, ))
                 rows1 = cur.fetchall()
                 rows = []
                 for row in rows1:
@@ -580,6 +591,76 @@ def validate_string(string):
         return False
     else:
         return True
+
+# WORKING - verify UserName is NOT taken
+@app.route('/check_username', methods=['POST'])
+def check_username():
+    username = request.form['username']
+    # pull db info - find if username in db
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute('SELECT UserName FROM UserInfo')
+    rows1 = cur.fetchall()
+    rows = []
+    for row in rows1:
+        newRow = dict(row)
+        newRow['UserName'] = str(Encryption.cipher.decrypt(row['UserName']))
+        rows.append(newRow)
+    con.close()
+    names = [d['UserName'] for d in rows]
+    # Check if the username already exists in the database
+    if username in names:
+        return jsonify({'status': 'error', 'message': 'Username already exists'})
+    else:
+        return jsonify({'status': 'success'})
+
+
+# WORKING - verify Phone Number is NOT in use
+@app.route('/check_ph-number', methods=['POST'])
+def check_phnumber():
+    ph_number = request.form['number']
+    # pull db info - find if phone number in db
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute('SELECT UserPhNum FROM UserInfo')
+    rows1 = cur.fetchall()
+    rows = []
+    for row in rows1:
+        newRow = dict(row)
+        newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
+        rows.append(newRow)
+    con.close()
+    nums = [d['UserPhNum'] for d in rows]
+    # Check if the username already exists in the database
+    if ph_number in nums:
+        return jsonify({'status': 'error', 'message': 'Phone Number already in use'})
+    else:
+        return jsonify({'status': 'success'})
+
+# WORKING - verify Email is NOT in use
+@app.route('/check_email', methods=['POST'])
+def check_email():
+    email = request.form['email']
+    # pull db info - find if phone number in db
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute('SELECT UserEmail FROM UserInfo')
+    rows1 = cur.fetchall()
+    rows = []
+    for row in rows1:
+        newRow = dict(row)
+        newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+        rows.append(newRow)
+    con.close()
+    emails = [d['UserEmail'] for d in rows]
+    # Check if the username already exists in the database
+    if email in emails:
+        return jsonify({'status': 'error', 'message': 'Email already in use'})
+    else:
+        return jsonify({'status': 'success'})
 
 
 # WORKING - formats error message
@@ -674,7 +755,32 @@ def search_images(query, api_key, cx):
         image_urls = []  # If no items are found, return an empty list
     return image_urls
 
+# WORKING - get registered users for dropbox population (admin - edit team)
+@app.route('/get_registered_users')
+def get_registered_users():
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute("SELECT UserId, UserHandicap, UserFName, UserLName FROM UserInfo WHERE UserTeamId is NULL")
+    rows1 = cur.fetchall()
+    registered_users = []
+    for row in rows1:
+        user_dict = {
+            'id': row['UserId'],
+            'handicap': row['UserHandicap'],
+            'name': row['UserFName'] + ' ' + row['UserLName']
+        }
+        registered_users.append(user_dict)
 
+    con.close()
+    print(registered_users)
+
+    # Query your database to fetch registered users
+    # Assuming you have fetched the data into a variable named 'registered_users'
+    # Convert the data to a list of dictionaries
+
+    # Return the registered users in JSON format
+    return jsonify(registered_users)
 # WORKING -check if a user is point of contact on team
 def is_a_contact():
     nm = session['UserName']
@@ -764,7 +870,6 @@ def sign_up():
             session['UserName'] = str(Encryption.cipher.decrypt(session['UserName']))
         finally:
             return render_template('dashboard-OLD.html', UserName=session['UserName'])
-
 
 # TESTING LINK --- will delete
 @app.route('/new')
@@ -981,11 +1086,13 @@ def user_teamSignup():
                 else:
                     spic = None
                 print(spic)
+                # get current year
+                year = datetime.datetime.now().year
                 # pull db info - get first available start hole
                 con = sql.connect('TeamInfoDB.db')
                 con.row_factory = sql.Row
                 cur = con.cursor()
-                cur.execute("SELECT StartHole FROM TeamInfo")
+                cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year, ))
                 data = cur.fetchall()
                 con.close()
                 start_holes = [row[0] for row in data]
@@ -1011,6 +1118,9 @@ def user_teamSignup():
                 # generate random team-id join link
                 code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
                 print(code)
+                # Generate current year for team
+                year = datetime.datetime.now().year
+
                 # input validation
                 if not validate_string(tnm):
                     valid_input = False
@@ -1029,9 +1139,9 @@ def user_teamSignup():
                     with sql.connect("TeamInfoDB.db") as con:
                         cur = con.cursor()
                         cur.execute(
-                            "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, Member1ID, Member1Handicap, StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, Member1ID, Member1Handicap, StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                             (tnm, snm, spic, nc, mn1, m1id, m1hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln),
-                             encrypt(cpn), encrypt(ce), pic, code, 1))
+                             encrypt(cpn), encrypt(ce), pic, code, 1, year))
                         con.commit()
                     msg = "Team Added successfully"
             except:
@@ -1061,10 +1171,12 @@ def joincode():
         val = num[0]
         lastTeam = val['TeamId']
         con.close()
+        # Generate current year for team
+        year = datetime.datetime.now().year
         # update db info - pull team-id to user db
         with sql.connect("UserInfoDB.db") as con:
             cur = con.cursor()
-            cur.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserName = ?", (lastTeam, encrypt(nm)))
+            cur.execute("UPDATE UserInfo SET UserTeamId = ?, UserTeamYear = ? WHERE UserName = ?", (lastTeam, year, encrypt(nm)))
             con.commit()
         con.close()
         # pull db info - check team-id in user db
@@ -1234,7 +1346,9 @@ def user_teamJoin():
 
         # if new member added - update team id for user
         if member_added:
-            cur2.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserId = ?", (tid, memid))
+            # Generate current year for team
+            year = datetime.datetime.now().year
+            cur2.execute("UPDATE UserInfo SET UserTeamId = ?, UserTeamYear = ? WHERE UserId = ?", (tid, year, memid))
             con2.commit()
             msg = "You have successfully joined this team!"
             con2.close()
@@ -1510,12 +1624,12 @@ def view():
         con.row_factory = sql.Row
         cur = con.cursor()
         cur.execute(
-            "SELECT UserName, UserFName, UserMName, UserLName, UserGender, UserDOB, UserHandicap, UserPhNum, UserEmail, UserTeamId, LoginPassword, ProfilePicture FROM UserInfo "
+            "SELECT UserName, UserFName, UserMName, UserLName, UserGender, UserDOB, UserHandicap, UserPhNum, UserEmail, UserTeamId, UserTeamYear, LoginPassword, ProfilePicture FROM UserInfo "
             "WHERE UserName = ?", (encrypt(nm),))
         data = cur.fetchall()
         df = pd.DataFrame(data,
                           columns=['UserName', 'UserFName', 'UserMName', 'UserLName', 'UserGender', 'UserDOB',
-                                   'UserHandicap', 'UserPhNum', 'UserEmail', 'UserTeamId', 'LoginPassword',
+                                   'UserHandicap', 'UserPhNum', 'UserEmail', 'UserTeamId','UserTeamYear', 'LoginPassword',
                                    'ProfilePicture'])
         con.close()
         # convert to an array
@@ -1542,7 +1656,7 @@ def view():
             df._set_value(index, 'LoginPassword', pwd)
             index += 1
         for row in df.itertuples():
-            print(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12])
+            print(row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13])
         # pull picture pathfile to html
         photo = get_profilepic()
 
@@ -1820,12 +1934,13 @@ def team_Contacts():
         if not session.get('admin'):
             flash('Page not found')
             return render_template('home.html')
-
         else:
+            # Get current year
+            current_year = datetime.datetime.now().year
             con = sql.connect("TeamInfoDB.db")
             con.row_factory = sql.Row
             cur = con.cursor()
-            cur.execute('SELECT TeamId, MemberName1, MemberName2, MemberName3, MemberName4, Member1Here, Member2Here, Member3Here, Member4Here, TeamName, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto FROM TeamInfo')
+            cur.execute('SELECT TeamId, MemberName1, MemberName2, MemberName3, MemberName4, Member1Here, Member2Here, Member3Here, Member4Here, TeamName, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto FROM TeamInfo WHERE Year = ?', (current_year, ))
 
             rows1 = cur.fetchall()
             rows = []
@@ -1854,10 +1969,13 @@ def admin_teamlist():
             flash('Page not found')
             return render_template('home.html')
         else:
+            # Get current year
+            current_year = datetime.datetime.now().year
+            # pull info - team db info
             con = sql.connect("TeamInfoDB.db")
             con.row_factory = sql.Row
             cur = con.cursor()
-            cur.execute('SELECT * FROM TeamInfo')
+            cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year, ))
             rows1 = cur.fetchall()
             rows = []
 
@@ -1959,14 +2077,15 @@ def showTeam(TeamId):
         flash('Page not found')
         return render_template('home.html')
     else:
+        # get current year
+        current_year = datetime.datetime.now().year
+        # get team info from db
         con = sql.connect('TeamInfoDB.db')
         con.row_factory = sql.Row
         cur = con.cursor()
-        cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
-
+        cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ? AND Year = ?", (TeamId, current_year))
         rows1 = cur.fetchall()
         rows = []
-
         for row in rows1:
             newRow = dict(row)
             newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
@@ -1975,6 +2094,7 @@ def showTeam(TeamId):
             newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
             rows.append(newRow)
         con.close()
+        print(rows)
 
         return render_template("/a_viewTeamQuick.html", rows=rows)
 
@@ -1988,6 +2108,8 @@ def showUser():
         flash('Page not found')
         return render_template('home.html')
     else:
+        # Get current year
+        year = datetime.datetime.now().year
         con = sql.connect('UserInfoDB.db')
         con.row_factory = sql.Row
         cur = con.cursor()
@@ -2000,7 +2122,7 @@ def showUser():
         con.close()
         # pull picture pathfile to html
         photo = get_profilepic()
-        return render_template("/a_viewUser.html", rows=rows, UserName=session['UserName'], photo=photo)
+        return render_template("/a_viewUser.html", rows=rows, UserName=session['UserName'], year=year, photo=photo)
 
 
 # ADMIN - Directs admin to team sign up page
@@ -2124,11 +2246,13 @@ def admin_teamSignup():
                 else:
                     spic = None
                 print(spic)
+                # get current year
+                year = datetime.datetime.now().year
                 # get start hole
                 con = sql.connect('TeamInfoDB.db')
                 con.row_factory = sql.Row
                 cur = con.cursor()
-                cur.execute("SELECT StartHole FROM TeamInfo")  # get list of all holes
+                cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year, ))  # get list of all holes
                 data = cur.fetchall()
 
                 con.close()
@@ -2149,8 +2273,12 @@ def admin_teamSignup():
                         i = first_value
                         break
                 sh = i
+                # Generates Join Code
                 code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-                print("The code is:", code)
+
+                # Get current year for team
+                #year = 2023
+                year = datetime.datetime.now().year
 
                 if not validate_string(tnm):
                     valid_input = False
@@ -2187,10 +2315,10 @@ def admin_teamSignup():
                             "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, MemberName2,"
                             " MemberName3, MemberName4, Member1ID, Member2ID, Member3ID, Member4ID, Member1Handicap,"
                             " Member2Handicap, Member3Handicap, Member4Handicap, StartHole, Member1Here, Member2Here,"
-                            " Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                            " Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                             (tnm, snm, spic, nc, mn1, mn2, mn3, mn4, m1id, m2id, m3id, m4id, m1hc, m2hc,
                              m3hc, m4hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln), encrypt(cpn), encrypt(ce), cp,
-                             code, memberCount))
+                             code, memberCount, year))
 
                         con.commit()
 
@@ -2198,36 +2326,21 @@ def admin_teamSignup():
                     cur2 = con2.cursor()
                     cur2.execute("SELECT TeamId FROM TeamInfo WHERE TeamId = ?", (cur.lastrowid,))
                     id = cur2.fetchone()
+                    cur2.execute("SELECT Year FROM TeamInfo WHERE TeamId = ?", (cur.lastrowid,))
+                    cur_year = cur2.fetchone()
 
                     con2.commit()
 
                 with sql.connect("UserInfoDB.db") as con3:
                     cur3 = con3.cursor()
-                    cur3.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserId IN (?,?,?,?)",
-                                 (id[0], m1id, m2id, m3id, m4id))
+                    cur3.execute("UPDATE UserInfo SET UserTeamId = ?,  UserTeamYear = ? WHERE UserId IN (?,?,?,?)",
+                                 (id[0], cur_year[0], m1id, m2id, m3id, m4id))
 
                     con3.commit()
                     con3.close()
                     con2.close()
 
                     msg = "Team Added successfully"
-
-                    '''cur.execute(
-                            "SELECT * FROM TeamInfo WHERE TeamId =(SELECT max(TeamId) FROM TeamInfo)")
-                        inc = cur.fetchall()
-                        pnt = inc[0]
-                        if(pnt['MemberName2'] == None):
-                            memc = 1
-                        elif(pnt['MemberName3'] == None and pnt['MemberName2'] != None):
-                            memc = 2
-                        elif(pnt['MemberName4'] == None and pnt['MemberName3'] != None):
-                            memc = 3
-                        elif(pnt['MemberName4'] != None):
-                            memc = 4
-                        print(memc)
-
-                        cur.execute("UPDATE TeamInfo SET MemberCount = ? WHERE TeamId =(SELECT max(TeamId) FROM TeamInfo)", memc)
-                        con.commit()'''
 
             except:
                 con.rollback()
@@ -2388,15 +2501,15 @@ def admin_checkin(TeamId):
         con.close()
 
 
-# ADMIN - Edit teams
-@app.route('/editTeam/<int:TeamId>', methods=['GET', 'POST'])
-def edit_TeamForm(TeamId):
+# ADMIN - Update teams
+@app.route('/updateTeam/<int:TeamId>', methods=['POST'])
+def updateTeamForm(TeamId):
     if not session.get('logged_in'):
         return render_template('home.html')
     elif not session.get('admin'):
         flash('Page not found')
         return render_template('home.html')
-    else:
+    try:
         con = sql.connect('TeamInfoDB.db')
         con.row_factory = sql.Row
         cur = con.cursor()
@@ -2455,22 +2568,6 @@ def edit_TeamForm(TeamId):
             newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
             rows1.append(newRow)
         con.close()
-        # pull picture pathfile to html
-        photo = get_profilepic()
-
-        return render_template("a_updateTeam.html", rows=rows, final=final, UserName=session['UserName'], rows1=rows1,
-                               photo=photo)
-
-
-# ADMIN - Update teams
-@app.route('/updateTeam/<int:TeamId>', methods=['POST'])
-def updateTeamForm(TeamId):
-    if not session.get('logged_in'):
-        return render_template('home.html')
-    elif not session.get('admin'):
-        flash('Page not found')
-        return render_template('home.html')
-    try:
         conNew = sql.connect("TeamInfoDB.db")
         conNew.row_factory = sql.Row
         cur = conNew.cursor()
@@ -2481,6 +2578,7 @@ def updateTeamForm(TeamId):
         memberCount = infoRows['MemberCount']
         newMemberCount = 0
 
+
         oldMem2ID = infoRows['Member2ID']
         oldMem3ID = infoRows['Member3ID']
 
@@ -2489,6 +2587,8 @@ def updateTeamForm(TeamId):
         newNeedCart = request.form['NeedCart']
 
         mn1 = request.form['MemberName1']
+        mn1_custom_name = request.form.get('Member1CustomName', '')  # Custom name input
+        mn1_custom_email = request.form.get('Member1CustomEmail', '')  # Custom email input
 
         if request.form.get('Member1Handicap'):
             m1hc = "✔"
@@ -2613,6 +2713,14 @@ def updateTeamForm(TeamId):
                      mn4, m2id, m3id, m4id, m1hc, m2hc, m3hc, m4hc, newStartHole, encrypt(newContactFName),
                      encrypt(newContactLName), encrypt(newContactPhNum), encrypt(newContactEmail), memberCount, TeamId))
         con.commit()
+        # Handle custom member input for Member 1
+        if mn1_custom_name and mn1_custom_email:
+            # Insert custom member into UserInfo table
+            cur.execute("""
+                        INSERT INTO UserInfo (UserName, UserEmail, UserTeamId) 
+                        VALUES (?, ?, ?)""",
+                        (mn1_custom_name, mn1_custom_email, TeamId))
+            con.commit()
 
         with sql.connect("UserInfoDB.db") as con3:
             cur3 = con3.cursor()
@@ -2624,7 +2732,7 @@ def updateTeamForm(TeamId):
         return render_template('result.html')
     except Exception as e:
         print("An error occurred:", e)
-        return render_template('a_updateTeam.html')
+        return render_template('a_viewTeamSelected.html')
     finally:
         con3.close()
         con.close()
@@ -2720,6 +2828,197 @@ def a_DeleteTeam():
         return render_template('a_DeleteTeam.html')
     finally:
         con.close()
+
+
+# ADMIN - View Teams Archive
+@app.route('/showArchive')
+def showArchive():
+    if not session.get('logged_in'):
+        return render_template('home.html')
+    elif not session.get('admin'):
+        flash('Page not found')
+        return render_template('home.html')
+    else:
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT Year, TeamId, TeamName, MemberName1, MemberName2, MemberName3, MemberName4 FROM TeamInfo")
+        teams_by_year = defaultdict(list)
+        rows1 = cur.fetchall()
+        rowz = []
+        team_info = []
+        for row in rows1:
+            year = row['Year']
+            info = dict(row)
+            team_info.append(info)
+            teams_by_year[year].append(team_info)
+            newRow = dict(row)
+            rowz.append(newRow)
+        print(teams_by_year)
+        sorted_teams = sorted(teams_by_year.items())
+        print("lllllllll ", sorted_teams)
+        print(team_info)
+        con.close()
+
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM TeamInfo")
+
+        rows1 = cur.fetchall()
+        rows = []
+
+        for row in rows1:
+            newRow = dict(row)
+            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+            rows.append(newRow)
+        con.close()
+        # pull picture pathfile to html
+        photo = get_profilepic()
+        return render_template("/a_teamArchive.html", rows=rows, sorted_teams=sorted_teams, UserName=session['UserName'], photo=photo)
+
+
+# ADMIN - Revive a team from Archive
+@app.route('/a_ReviveTeam/<int:TeamId>', methods=['GET', 'POST'])
+def a_ReviveTeam(TeamId):
+    if not session.get('logged_in'):
+        return render_template('home.html')
+    elif not session.get('admin'):
+        flash('Page not found')
+        return render_template('home.html')
+    else:
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
+        rows1 = cur.fetchall()
+        rowz = []
+        for row in rows1:
+            newRow = dict(row)
+            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+            rowz.append(newRow)
+        con.close()
+        m2id, m2hc, mn2, m2h = None, None, None, None
+        m3id, m3hc, mn3, m3h = None, None, None, None
+        m4id, m4hc, mn4, m4h = None, None, None, None
+        tnm_list = [d['TeamName'] for d in rowz]
+        tnm = str(tnm_list[0])
+        mc_list = [d['MemberCount'] for d in rowz]
+        mc = int(mc_list[0])
+        snm_list = [d['SponsorName'] for d in rowz]
+        snm = str(snm_list[0])
+        spic_list = [d['SponsorPhoto'] for d in rowz]
+        spic = str(spic_list[0])
+        nc_list = [d['NeedCart'] for d in rowz]
+        nc = int(nc_list[0])
+        mn1_list = [d['MemberName1'] for d in rowz]
+        mn1 = str(mn1_list[0])
+        m1id_list = [d['Member1ID'] for d in rowz]
+        m1id = int(m1id_list[0])
+        m1hc_list = [d['Member1Handicap'] for d in rowz]
+        m1hc = str(m1hc_list[0])
+        m1h_list = [d['Member1Here'] for d in rowz]
+        m1h = str(m1h_list[0])
+        if mc >= 2:
+            mn2_list = [d['MemberName2'] for d in rowz]
+            mn2 = str(mn2_list[0])
+            m2id_list = [d['Member2ID'] for d in rowz]
+            m2id = int(m2id_list[0])
+            m2hc_list = [d['Member2Handicap'] for d in rowz]
+            m2hc = str(m2hc_list[0])
+            m2h_list = [d['Member2Here'] for d in rowz]
+            m2h = str(m2h_list[0])
+        if mc >= 3:
+            mn3_list = [d['MemberName3'] for d in rowz]
+            mn3 = str(mn3_list[0])
+            m3id_list = [d['Member3ID'] for d in rowz]
+            m3id = int(m3id_list[0])
+            m3hc_list = [d['Member3Handicap'] for d in rowz]
+            m3hc = str(m3hc_list[0])
+            m3h_list = [d['Member3Here'] for d in rowz]
+            m3h = str(m3h_list[0])
+        if mc == 4:
+            mn4_list = [d['MemberName4'] for d in rowz]
+            mn4 = str(mn4_list[0])
+            m4id_list = [d['Member4ID'] for d in rowz]
+            m4id = int(m4id_list[0])
+            m4hc_list = [d['Member4Handicap'] for d in rowz]
+            m4hc = str(m4hc_list[0])
+            m4h_list = [d['Member4Here'] for d in rowz]
+            m4h = str(m4h_list[0])
+        cfn_list = [d['ContactFName'] for d in rowz]
+        cfn = str(cfn_list[0])
+        cln_list = [d['ContactLName'] for d in rowz]
+        cln = str(cln_list[0])
+        cpn_list = [d['ContactPhNum'] for d in rowz]
+        cpn = str(cpn_list[0])
+        ce_list = [d['ContactEmail'] for d in rowz]
+        ce = str(ce_list[0])
+        pic_list = [d['ContactPhoto'] for d in rowz]
+        pic = str(pic_list[0])
+        code_list = [d['JoinCode'] for d in rowz]
+        code = str(code_list[0])
+        year = datetime.datetime.now().year
+        # get start hole
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year, ))  # get list of all holes
+        data = cur.fetchall()
+
+        con.close()
+        start_holes = [row[0] for row in data]
+        print(start_holes)
+        for i in range(1, 36):
+            for i in range(1, 19):
+                if i not in start_holes:
+                    print('First available hole:', i)
+                    break
+            if i >= 18:  # If i reaches 18, reset it to 0
+                missing_numbers = [i for i in range(1, 19) if start_holes.count(i) != 2]
+                print(missing_numbers)
+                sorted_start_holes = sorted(missing_numbers)
+                print(sorted_start_holes)
+                first_value = sorted_start_holes[0]
+                print(first_value)
+                i = first_value
+                break
+        sh = i
+
+        with sql.connect("TeamInfoDB.db") as con:
+            cur = con.cursor()
+            cur.execute(
+                "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, Member1ID, Member1Handicap,"
+                "MemberName2, Member2ID, Member2Handicap, MemberName3, Member3ID, Member3Handicap, MemberName4, Member4ID, Member4Handicap,"
+                " StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail,"
+                " ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (tnm, snm, spic, nc, mn1, m1id, m1hc, mn2, m2id, m2hc, mn3, m3id, m3hc, mn4, m4id, m4hc, sh, m1h, m2h, m3h, m4h, encrypt(cfn), encrypt(cln),
+                 encrypt(cpn), encrypt(ce), pic, code, mc, year))
+            con.commit()
+        # pull info - team db info
+        con = sql.connect("TeamInfoDB.db")
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (year, ))
+        rows1 = cur.fetchall()
+        rows = []
+        for row in rows1:
+            newRow = dict(row)
+            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+            rows.append(newRow)
+        con.close()
+        # pull picture pathfile to html
+        photo = get_profilepic()
+    return render_template("a_viewTeamsAll.html", rows=rows, UserName=session['UserName'], photo=photo)
 
 
 # **********************************************************************************************
@@ -3081,7 +3380,7 @@ def do_admin_login():
 
             else:
                 session['logged_in'] = False
-                flash('invalid username and/or password!')
+                flash('Invalid Username or Password')
     except:
         con.rollback()
         flash("error in insert operation")

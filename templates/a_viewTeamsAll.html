@@ -197,6 +197,10 @@
                     <span>Payment Logs</span></a>
                 </li>
                 <li>
+                    <a href="/showArchive"><span class="las la-archive"></span>
+                    <span>Team Archive</span></a>
+                </li>
+                <li>
                     <a href="/view"><span class="las la-user-circle"></span>
                     <span>Account</span></a>
                 </li>
@@ -340,7 +344,12 @@
                     <td>{{ row["StartHole"] }}</td>
                      <td>{{ row["NeedCart"] }}</td>
 
+                     {% if row['ContactPhoto'] != None %}
                     <td><img src="{{ row['ContactPhoto'] }}" alt="">
+                    {% endif %}
+                    {% if row['ContactPhoto'] == None %}
+                    <td><img src="../static/css/uploads/default.jpeg">
+                    {% endif %}
                         <aside class="line-break-contact"><p class="name"> {{row["ContactFName"]}} {{row["ContactLName"]}}</p><p class="number"><i class='bx bx-phone' ></i> {{row["ContactPhNum"]}}</p><p class="email"><i class='bx bx-envelope' ></i><a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{row['ContactEmail']}}</a></p></aside>
                     </td>
                     <td><strong> $0 </strong></td>

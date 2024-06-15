@@ -33,6 +33,7 @@ UserEmail TEXT NOT NULL,
 RoleLevel BOOLEAN NOT NULL,
 LoginPassword TEXT NOT NULL,
 UserTeamId INTEGER,
+UserTeamYear INTEGER,
 ProfilePicture BLOB);''')
 
 conn.commit()
@@ -91,7 +92,7 @@ Member1Handicap BOOLEAN,
 Member2Handicap BOOLEAN,
 Member3Handicap BOOLEAN,
 Member4Handicap BOOLEAN,
-StartHole INT,
+StartHole INTEGER,
 Member1Here BOOLEAN,
 Member2Here BOOLEAN,
 Member3Here BOOLEAN,
@@ -104,7 +105,8 @@ ContactPhNum TEXT NOT NULL,
 ContactEmail TEXT NOT NULL,
 ContactPhoto BLOB,
 JoinCode TEXT,
-MemberCount INT);''')
+MemberCount INTEGER,
+Year INTEGER);''')
 
 # save changes
 conn.commit()
