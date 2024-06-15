@@ -4,6 +4,7 @@ About this project: SQL database to store user information
 Assumptions:NA
 All work below was performed by Emily Skipper
 """
+import contextlib
 import sqlite3
 import Encryption
 
@@ -21,20 +22,22 @@ except:
 
 cur.execute('''CREATE TABLE UserInfo(
 UserId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-UserName TEXT NOT NULL,
+UserName TEXT,
 UserFName TEXT NOT NULL,
-UserMName TEXT NOT NULL,
+UserMName TEXT,
 UserLName TEXT NOT NULL,
 UserGender BOOLEAN,
-UserDOB INTEGER NOT NULL,
+UserDOB INTEGER,
 UserHandicap BOOLEAN,
-UserPhNum TEXT NOT NULL,
+UserPhNum TEXT,
 UserEmail TEXT NOT NULL,
 RoleLevel BOOLEAN NOT NULL,
-LoginPassword TEXT NOT NULL,
+LoginPassword TEXT,
 UserTeamId INTEGER,
 UserTeamYear INTEGER,
-ProfilePicture BLOB);''')
+ProfilePicture BLOB,
+UserTeamLead BOOLEAN);''')
+
 
 conn.commit()
 print('UserInfo Table created.')
@@ -44,7 +47,7 @@ nm = str(Encryption.cipher.encrypt(b'Admin').decode("utf-8"))
 ph = str(Encryption.cipher.encrypt(b'111-111-1111').decode("utf-8"))
 email = str(Encryption.cipher.encrypt(b'admin@test.com').decode("utf-8"))
 pwd = str(Encryption.cipher.encrypt(b'test123').decode("utf-8"))
-cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture') Values (?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "adminfirst", "adminmiddle", "adminlast", "Female", "12/12/2000", "✘", ph, email, 3, pwd, 'static/css/uploads/default.jpeg'))
+cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture', UserTeamLead) Values (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "adminfirst", "adminmiddle", "adminlast", "Female", "12/12/2000", "✘", ph, email, 3, pwd, 'static/css/uploads/default.jpeg', False))
 conn.commit()
 
 # ----- HARDCODE GUEST LOGIN -----
@@ -52,7 +55,7 @@ nm = str(Encryption.cipher.encrypt(b'Guest').decode("utf-8"))
 ph = str(Encryption.cipher.encrypt(b'123-675-7645').decode("utf-8"))
 email = str(Encryption.cipher.encrypt(b'guest@test.com').decode("utf-8"))
 pwd = str(Encryption.cipher.encrypt(b'test123').decode("utf-8"))
-cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture') Values (?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "g-first", "g-middle", "g-last", "Female", "12/12/2000", "✔", ph, email, 1, pwd, 'static/css/uploads/default.jpeg'))
+cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture', UserTeamLead) Values (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "g-first", "g-middle", "g-last", "Female", "12/12/2000", "✔", ph, email, 1, pwd, 'static/css/uploads/default.jpeg', False))
 conn.commit()
 
 
