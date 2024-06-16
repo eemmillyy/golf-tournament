@@ -115,13 +115,13 @@
                     <a href="/adminmaketeam"><span class="las la-plus-circle"></span>
                     <span>Create Team</span></a>
                 </li>
-                 <li>
-                    <a href="/new2"><span class="las la-file-invoice-dollar"></span>
-                    <span>fake </span></a>
-                </li>
                 <li>
                     <a href="/new"><span class="las la-file-invoice-dollar"></span>
                     <span>Payment Logs</span></a>
+                </li>
+                 <li>
+                    <a href="/showArchive"><span class="las la-archive"></span>
+                    <span>Team Archive</span></a>
                 </li>
                 <li>
                     <a href="/view"><span class="las la-user-circle"></span>
@@ -239,8 +239,10 @@
 
                               <div>
                              <body>
-
                                     {% if session['logged_in'] and session['admin'] %}
+                                        {% if not rows %}
+                                            Currently No Registered Teams
+                                        {% endif %}
                                       {% for row in rows %}
                                         <div class="team">
                                           <a onclick="toggleTeam(this)">{{ row['TeamName'] }}</a>

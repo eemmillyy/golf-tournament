@@ -15,8 +15,26 @@
     <script>
 
         $(function() {
-            $("#UserDOB").datepicker({ defaultDate: "-30y", dateFormat: "mmddyy" });
+            $("#UserDOB").datepicker({
+                dateFormat: 'mm/dd/yy', // Date format
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-100:+0", // Allow selection of 100 years ago to the current year
+                maxDate: '0', // Maximum selectable date is today
+                onSelect: function(dateText) {
+                    // Format the selected date with slashes
+                    var formattedDate = formatDateWithSlashes(dateText);
+                    // Populate the input field with the formatted date
+                    $(this).val(formattedDate);
+                }
+            });
         });
+
+        // Function to format date with slashes (MM/DD/YYYY)
+        function formatDateWithSlashes(date) {
+            var parts = date.split('/');
+            return parts[0] + '/' + parts[1] + '/' + parts[2];
+        }
 
         function togglePassword() {
             var passwordInput = document.getElementById("passwordInput");
@@ -178,10 +196,32 @@
             width: 100%;
             height: 40px;
         }
-         .login-error {
-             color: red;
-         }
+         .input-box {
+            position: relative;
+        }
 
+        .input-box .message {
+            position: absolute;
+            top: -5px;
+            left: 36px;
+            font-size: 13px;
+        }
+         .input-box .input-field.invalid {
+            border-color: #ff0000; /* Red border color */
+            background-color: rgba(255, 0, 0, 0.1); /* Transparent red background */
+        }
+        .message {
+            color: red; /* Red color for the message */
+            font-size: 12px; /* Adjust font size */
+            margin-top: -15px; /* Adjust margin to position message above input field */
+        }
+        .flashes {
+            color: red; /* Set the text color to red */
+            left: 100px;
+            margin-top: -30px;
+            font-size: 15px;
+
+        }
 
     </style>
 </head>
@@ -208,17 +248,6 @@
             <i class="bx bx-menu" onclick="myMenuFunction()"></i>
         </div>
     </nav>
-     <span class="login-error">
-         {% with messages = get_flashed_messages() %}
-         {% if messages %}
-         <ul class=flashes>
-             {% for message in messages %}
-             <li>{{ message }}</li>
-             {% endfor %}
-         </ul>
-         {% endif %}
-         {% endwith %}
-     </span>
 <!----------------------------- Form box ----------------------------------->
     <div class="form-box">
         <form action="/login" method="POST">
@@ -230,6 +259,17 @@
                 <span>Don't have an account? <a href="#" onclick="register()">Sign Up</a></span>
                 <header>Login</header>
             </div>
+                     <span class="login-error">
+         {% with messages = get_flashed_messages() %}
+         {% if messages %}
+         <ul class=flashes>
+             {% for message in messages %}
+             <li>{{ message }}</li>
+             {% endfor %}
+         </ul>
+         {% endif %}
+         {% endwith %}
+     </span>
             <div class="input-box">
                 <input type="text" class="input-field" placeholder="Username" name="username">
                 <i class="bx bx-user"></i>
@@ -263,27 +303,28 @@
                   <form action="">
             <div class="two-forms">
                 <div class="input-box">
-                    <input type="text" class="input-field"  placeholder="Username" name="UserName" required>
+                    <p id="usernameError" class="message" ></p>
+                   <input type="text" class="input-field" placeholder="Username" name="UserName" id="usernameInput" required>
                     <i class='bx bx-user-circle' ></i>
                 </div>
                 <div class="input-box">
                     <div class="move">
-                     <input type="text" class="input-field" placeholder="DOB  format: 12271976 " name="UserDOB" id="UserDOB" required>
+                     <input type="text" class="input-field" placeholder="DOB  mm/dd/yyyy " name="UserDOB" id="UserDOB" required>
                 <i class='bx bx-calendar'></i>
-                        </div>
+                    </div>
                 </div>
                  </div>
                 <div class="two-forms">
                     <div class="input-box">
-                        <input type="text" class="input-field" placeholder="First Name" name="UserFName" required>
+                        <input type="text" class="input-field capitalize" placeholder="First Name" name="UserFName" required>
                     <i class="bx bx-user"></i>
                          </div>
                         <div class="input-box">
-                         <input type="text" class="input-field" placeholder="Middle Name" name="UserMName" required>
+                         <input type="text" class="input-field capitalize" placeholder="Middle Name" name="UserMName" required>
                         <i class="bx bx-user" ></i>
                            </div>
                         <div class="input-box">
-                            <input type="text" class="input-field" placeholder="Last Name" name="UserLName" required>
+                            <input type="text" class="input-field capitalize" placeholder="Last Name" name="UserLName" required>
                         <i class="bx bx-user" ></i>
                        </div>
                 </div>
@@ -308,13 +349,14 @@
                   </div></div>
             </div>
 
-
              <div class="input-box">
-                <input type="text" class="input-field" placeholder="Phone Number" name="UserPhNum" required>
+                <p id="numberError" class="message" ></p>
+                <input type="text" class="input-field" placeholder="Phone Number" name="UserPhNum" id="numberInput" required>
                 <i class='bx bx-phone' ></i>
             </div>
              <div class="input-box">
-                <input type="text" class="input-field" placeholder="Email" name="UserEmail" required>
+                <p id="emailError" class="message" ></p>
+                <input type="text" class="input-field" placeholder="Email" name="UserEmail" id="emailInput" required>
                 <i class="bx bx-envelope"></i>
             </div>
             <div class="input-box">
@@ -332,14 +374,26 @@
             </div>
 
             <div class="input-box">
-            <button type="submit" class="submit" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">  Sign Up</button>
+            <button type="submit" id="submitButton" class="submit" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">  Sign Up</button>
                </div>
              </form>
                   </form>
         </div>
+
     </div>
 </div>
 <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const capitalizeInputs = document.querySelectorAll('.capitalize');
+
+        capitalizeInputs.forEach(function(input) {
+            input.addEventListener('input', function() {
+                // Capitalize the first letter and keep the rest of the input as it is
+                this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+            });
+        });
+    });
 
    function myMenuFunction() {
     var i = document.getElementById("navMenu");
@@ -373,6 +427,118 @@
         y.style.opacity = 1;
     }
 </script>
+    <script>
+        // Send an AJAX request to the backend to check username availability
+        $(document).ready(function() {
+        $('#usernameInput').on('input', function() {
+            var username = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/check_username',
+                data: { 'username': username },
+                success: function(response) {
+                    if (response.status === 'error') {
+                        $('#usernameError').text(response.message);
+                        $('#usernameInput').addClass('invalid');
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#usernameError').text('');
+                        $('#usernameInput').removeClass('invalid');
+                        $('#submitButton').prop('disabled', false);
+                    }
+                }
+            });
+        });
+        $('form').submit(function(event) {
+            if ($('#submitButton').prop('disabled')) {
+                event.preventDefault();
+            }
+         });
+    });
+
+    // Send an AJAX request to the backend to check phone number availability
+    $(document).ready(function() {
+        $('#numberInput').on('input', function() {
+            var number = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/check_ph-number',
+                data: { 'number': number },
+                success: function(response) {
+                    if (response.status === 'error') {
+                        $('#numberError').text(response.message);
+                        $('#numberInput').addClass('invalid');
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#numberError').text('');
+                        $('#numberInput').removeClass('invalid');
+                        $('#submitButton').prop('disabled', false);
+                    }
+                }
+            });
+        });
+        $('form').submit(function(event) {
+            if ($('#submitButton').prop('disabled')) {
+                event.preventDefault();
+            }
+         });
+    });
+
+    // Send an AJAX request to the backend to check email availability
+    $(document).ready(function() {
+        $('#emailInput').on('input', function() {
+            var email = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/check_email',
+                data: { 'email': email },
+                success: function(response) {
+                    if (response.status === 'error') {
+                        $('#emailError').text(response.message);
+                        $('#emailInput').addClass('invalid');
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#emailError').text('');
+                        $('#emailInput').removeClass('invalid');
+                        $('#submitButton').prop('disabled', false);
+                    }
+                }
+            });
+        });
+        $('form').submit(function(event) {
+            if ($('#submitButton').prop('disabled')) {
+                event.preventDefault();
+            }
+         });
+    });
+    </script>
+     <script>
+         // add dashes to phone number
+        const numberInput = document.getElementById('numberInput');
+
+        numberInput.addEventListener('input', function() {
+            let phoneNumber = numberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (phoneNumber.length > 3 && phoneNumber.length <= 6) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{1,3})/, '$1-$2'); // Format: xxx-xxx
+            } else if (phoneNumber.length > 6) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{1,4})/, '$1-$2-$3'); // Format: xxx-xxx-xxxx
+            }
+            numberInput.value = phoneNumber;
+        });
+
+     // add slashes to DOB
+        const dobInput = document.getElementById('UserDOB');
+        dobInput.addEventListener('input', function() {
+            let dob = dobInput.value.replace(/\D/g, '');
+            if (dob.length > 2 && dob.length <= 4) {
+                dob = dob.replace(/^(\d{2})(\d{1,2})/, '$1/$2');
+            } else if (dob.length > 4) {
+                dob = dob.replace(/^(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3');
+            }
+            dobInput.value = dob;
+        });
+    </script>
+
       <script src="{{ url_for('static', filename='signupbox.js') }}"></script>
 </body>
 </html>

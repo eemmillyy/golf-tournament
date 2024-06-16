@@ -117,6 +117,10 @@
     {% endwith %}
 
     {% if session['logged_in'] and session['admin'] %}
+        {% if not rows %}
+            Currently No Registered Teams
+            {% endif %}
+        {% if rows %}
         <table>
             <thead>
                 <tr>
@@ -165,6 +169,6 @@
                 {% endfor %}
             </tbody>
         </table>
-    {% endif %}
+    {% endif %}  {% endif %}
 </body>
 </html>
