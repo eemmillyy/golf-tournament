@@ -80,7 +80,6 @@
 </head>
  <header>
             <h2>
-
                 Deleting {{ final }} <span class="lar la-trash-alt"></span>
             </h2>
             <div class="user-wrapper">
@@ -106,7 +105,7 @@
     {% endif %}
 {% endwith %}
 
-{% if session['logged_in'] and session['admin'] %}
+{% if session['logged_in'] and session['admin'] or UserTeamLead %}
     <table>
         <thead>
             <tr>
