@@ -140,6 +140,14 @@
                     <a href="/usermakesteam"><span class="las la-plus-circle"></span>
                     <span>Create Team</span></a>
                 </li>
+
+                {% if UserTeamLead == 1 %}
+                    <li>
+                        <a href="/uc_editTeam"><span class="las la-plus-circle"></span>
+                        <span>Edit Team</span></a>
+                    </li>
+                {% endif %}
+
                  <li>
                     <a href="/index" class="active"><span class="las la-store-alt"></span>
                     <span>LynnHaven Links</span></a>

@@ -41,6 +41,7 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
 # work needing to be done:
 # provided YouTube links for examples / follow along code
 
@@ -172,13 +173,15 @@ def home():
             con.row_factory = sql.Row
             cur = con.cursor()
             cur.execute(
-                "SELECT UserTeamId FROM UserInfo WHERE UserName = ?",
+                "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
                 (encrypt(nm),))
             rowz = cur.fetchall()
             if (rowz):
                 UserTeamId = rowz[0]['UserTeamId']
+                UserTeamLead = rowz[0]['UserTeamLead']
             else:
                 UserTeamId = None
+                UserTeamLead = None
             rowzz = []
             for row in rowz:
                 newRow = dict(row)
@@ -190,7 +193,6 @@ def home():
             # if user not in team - unset team variables
             if word in string:
                 inaTeam = "You currently have no team"
-                print(inaTeam)
                 team_names = 0
                 starthole = 0
                 checkin = 0
@@ -214,12 +216,12 @@ def home():
             else:
                 team = True
                 inaTeam = "Welcome team "
-                print(inaTeam)
                 number = re.findall(r'\d+', string)
                 # Convert the numbers to integers
                 teamid = [int(num) for num in number]
                 for id in teamid:
                     tid = id
+                    break
                 # pull db info - pull all team info for variables
                 con = sql.connect("TeamInfoDB.db")
                 con.row_factory = sql.Row
@@ -322,11 +324,12 @@ def home():
                     newRow = dict(row)
                     rows.append(newRow)
                 con.close()
+
         finally:
             return render_template('userdash.html', team=team, inaTeam=inaTeam, rows=rows, UserName=session['UserName'],
                                    team_names=team_names, starthole=starthole, checkin=checkin, joincode=joincode,
                                    cartinfo=cartinfo, list_size=list_size, amount=amount, UserTeamId=UserTeamId,
-                                   photo=photo)
+                                   photo=photo, UserTeamLead=UserTeamLead)
 
 
 # ADMIN - directs admin to dash
@@ -422,14 +425,16 @@ def userdash():
             con.row_factory = sql.Row
             cur = con.cursor()
             cur.execute(
-                "SELECT UserTeamId FROM UserInfo WHERE UserName = ?",
+                "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
                 (encrypt(nm),))
             rowz = cur.fetchall()
 
             if (rowz):
                 UserTeamId = rowz[0]['UserTeamId']
+                UserTeamLead = rowz[0]['UserTeamLead']
             else:
                 UserTeamId = None
+                UserTeamLead = None
 
             rowzz = []
             for row in rowz:
@@ -442,7 +447,6 @@ def userdash():
             # if no team - unset team variables
             if word in string:
                 inaTeam = "You currently have no team"
-                print(inaTeam)
                 team_names = 0
                 starthole = 0
                 checkin = 0
@@ -466,12 +470,12 @@ def userdash():
             else:
                 team = True
                 inaTeam = "You are in a team"
-                print(inaTeam)
                 number = re.findall(r'\d+', string)
                 # Convert the numbers to integers
                 teamid = [int(num) for num in number]
                 for id in teamid:
                     tid = id
+                    break
                 con = sql.connect("TeamInfoDB.db")
                 con.row_factory = sql.Row
                 cur = con.cursor()
@@ -565,7 +569,7 @@ def userdash():
             return render_template('userdash.html', team=team, inaTeam=inaTeam, rows=rows, UserName=session['UserName'],
                                    team_names=team_names, starthole=starthole, checkin=checkin, joincode=joincode,
                                    memeberList=memeberList, cartinfo=cartinfo, list_size=list_size, amount=amount,
-                                   UserTeamId=UserTeamId, photo=photo)
+                                   UserTeamId=UserTeamId, photo=photo, UserTeamLead=UserTeamLead)
 
 
 # **********************************************************************************************
@@ -744,6 +748,7 @@ def get_profilepic():
     photo = ' '.join(map(str, string_representation))
     return photo
 
+
 # WORKING - google api search to get a sponsor photo
 def search_images(query, api_key, cx):
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&cx={cx}&searchType=image&key={api_key}"
@@ -820,14 +825,12 @@ def is_a_contact():
     word = 'None'
     if word in string:
         inaTeam = "You currently have no team"
-        print(inaTeam)
         team = False
         iscontact = 0
         tid = 0
     else:
         team = True
         inaTeam = "You are in a team"
-        print(inaTeam)
         number = re.findall(r'\d+', string)
         # Convert the numbers to integers
         teamid = [int(num) for num in number]
@@ -877,7 +880,7 @@ def generate():
     if not session.get('logged_in'):
         return render_template('signup.html')
     else:
-     return render_template('assign1.html')
+        return render_template('assign1.html')
 
 
 # USER - Add new user to SQL table - USERINFO  DB
@@ -953,7 +956,7 @@ def adduser():
                         (encrypt(nm), fnm, mi, lnm, gen, dob, uhc, encrypt(pn), encrypt(email), lvl, encrypt(pwd),
                          'static/css/uploads/default.jpeg', False))
                     con.commit()
-                    msg = "Record successfully added You may now login"
+                    msg = "Record successfully added. You may now login"
         except:
             con.rollback()
         finally:
@@ -1005,13 +1008,21 @@ def userteamsignups():
         con.row_factory = sql.Row
         cur = con.cursor()
         cur.execute(
-            "SELECT UserTeamId FROM UserInfo WHERE UserName = ?",
+            "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
             (encrypt(nm),))
         rows1 = cur.fetchall()
         rows = []
         for row in rows1:
             newRow = dict(row)
             rows.append(newRow)
+
+        if rows1:
+            UserTeamId = rows[0]['UserTeamId']
+            UserTeamLead = rows[0]['UserTeamLead']
+        else:
+            UserTeamId = None
+            UserTeamLead = None
+
         print("here", rows)
         con.close()
         string = ','.join(str(x) for x in rows)
@@ -1019,7 +1030,8 @@ def userteamsignups():
         word = 'None'
         if word not in string:
             print('success')
-            return render_template('u_teamsignupfull.html', UserName=session['UserName'], photo=photo)
+            return render_template('u_teamsignupfull.html', UserName=session['UserName'], photo=photo,
+                                   UserTeamLead=UserTeamLead)
         # else pull db info - get user info as team contact info
         else:
             nm = session['UserName']
@@ -1027,7 +1039,7 @@ def userteamsignups():
             con.row_factory = sql.Row
             cur = con.cursor()
             cur.execute(
-                "SELECT UserId, UserFName, UserLName, UserHandicap, UserPhNum, UserEmail FROM UserInfo  WHERE UserName = ?",
+                "SELECT UserId, UserFName, UserLName, UserHandicap, UserPhNum, UserEmail FROM UserInfo WHERE UserName = ?",
                 (encrypt(nm),))
             rows1 = cur.fetchall()
             rows = []
@@ -1143,7 +1155,12 @@ def user_teamSignup():
                             (tnm, snm, spic, nc, mn1, m1id, m1hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln),
                              encrypt(cpn), encrypt(ce), pic, code, 1, year))
                         con.commit()
-                    msg = "Team Added successfully"
+
+                    with sql.connect("UserInfoDB.db") as con2:
+                        cur2 = con2.cursor()
+                        cur2.execute("UPDATE UserInfo SET UserTeamLead = ? WHERE UserName = ?", (True, encrypt(nm)))
+                        con2.commit()
+                    con2.close()
             except:
                 con.rollback()
             finally:
@@ -1383,22 +1400,24 @@ def user_teamlist():
                 newRow = dict(row)
                 rows.append(newRow)
             con.close()
+
             # pull picture pathfile to html
             photo = get_profilepic()
-
 
             # pull db info - find if user in a team
             con = sql.connect('UserInfoDB.db')
             con.row_factory = sql.Row
             cur = con.cursor()
             cur.execute(
-                "SELECT UserTeamId FROM UserInfo WHERE UserName = ?",
+                "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
                 (encrypt(nm),))
             rowz = cur.fetchall()
             if (rowz):
                 UserTeamId = rowz[0]['UserTeamId']
+                UserTeamLead = rowz[0]['UserTeamLead']
             else:
                 UserTeamId = None
+                UserTeamLead = None
             rowzz = []
             for row in rowz:
                 newRow = dict(row)
@@ -1407,6 +1426,7 @@ def user_teamlist():
             string = ','.join(str(x) for x in rowzz)
             print(string)
             word = 'None'
+
             # if no team - unset team variables
             if word in string:
                 team = None
@@ -1415,6 +1435,7 @@ def user_teamlist():
                 memeberList = None
                 sponsor = None
                 sponsorpic = None
+
             # if user in team - set team variables
             else:
                 team = True
@@ -1424,6 +1445,7 @@ def user_teamlist():
                 teamid = [int(num) for num in number]
                 for id in teamid:
                     tid = id
+                    break
                 con = sql.connect("TeamInfoDB.db")
                 con.row_factory = sql.Row
                 cur = con.cursor()
@@ -1515,8 +1537,9 @@ def user_teamlist():
                     rows.append(newRow)
                 con.close()
 
-
-            return render_template("u_viewTeamAll.html", rows=rows, UserName=nm, photo=photo, team=team, team_names=team_names, memeberList=memeberList, sponsor=sponsor, sponsorpic=sponsorpic)
+            return render_template("u_viewTeamAll.html", rows=rows, UserName=nm, photo=photo, team=team,
+                                   team_names=team_names, memeberList=memeberList, sponsor=sponsor,
+                                   sponsorpic=sponsorpic, UserTeamLead=UserTeamLead)
 
 
 # USER - team quickview on dashboard
@@ -1554,20 +1577,22 @@ def cap_editTeam():
         con = sql.connect('UserInfoDB.db')
         con.row_factory = sql.Row
         cur = con.cursor()
-        cur.execute('SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName =?', (encrypt(nm),))
+        cur.execute('SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?', (encrypt(nm),))
 
         result = cur.fetchone()
         con.close()
 
         tid, tcpt = result
 
-
         con = sql.connect('TeamInfoDB.db')
         con.row_factory = sql.Row
         cur = con.cursor()
         cur.execute('SELECT * FROM TeamInfo WHERE TeamId =?', (tid,))
+        session['Delete'] = tid
+
         rows1 = cur.fetchall()
         rows = []
+
         for row in rows1:
             newRow = dict(row)
             newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
@@ -1579,7 +1604,8 @@ def cap_editTeam():
 
         return render_template('c-userEditTeam.html', rows=rows)
 
-@app.route('/uc_addMember', methods=['POST','GET'])
+
+@app.route('/uc_addMember', methods=['POST', 'GET'])
 def cap_addMember():
     if not session.get('logged_in'):
         return render_template('home.html')
@@ -1622,7 +1648,7 @@ def cap_addMember():
 
         member_added = False
 
-        if (memc == 1):
+        if memc == 1:
             cur.execute(
                 "UPDATE TeamInfo SET MemberName2 = ?, Member2ID = ?, Member2Handicap = ?, MemberCount = ? WHERE TeamId = ?",
                 (fullname, memID, mHandi, memc + 1, tid))
@@ -1630,22 +1656,22 @@ def cap_addMember():
             con.close()
             member_added = True
 
-        elif (memc == 2):
+        elif memc == 2:
             cur.execute(
                 "UPDATE TeamInfo SET MemberName3 = ?, Member3ID = ?, Member3Handicap = ?, MemberCount = ? WHERE TeamId = ?",
                 (fullname, memID, mHandi, memc + 1, tid))
             con.commit()
             con.close()
             member_added = True
-        elif (memc == 3):
+        elif memc == 3:
             cur.execute(
                 "UPDATE TeamInfo SET MemberName4 = ?, Member4ID = ?, Member4Handicap = ?, MemberCount = ? WHERE TeamId = ?",
                 (fullname, memID, mHandi, memc + 1, tid))
             con.commit()
             con.close()
             member_added = True
-        elif (memc >= 4):
-            msg = "This Team is Currenly Full"
+        elif memc >= 4:
+            msg = "This Team is Currently Full"
             con.close()
             return render_template('result.html', UserName=session['UserName'], msg=msg)
 
@@ -1659,7 +1685,7 @@ def cap_addMember():
             con.close()
             return render_template('result.html', UserName=session['UserName'], msg=msg)
         else:
-            msg = "error in team addition"
+            msg = "Error in team addition"
             con.close()
 
             return render_template('result.html', UserName=session['UserName'], msg=msg)
@@ -1731,6 +1757,7 @@ def u_LeaveTeam(TeamId):
         flash("Error")
         return render_template('u_leaveTeam.html')
 '''
+
 
 # **********************************************************************************************
 #                             FOR BOTH USERS / ADMINS                      lines: 1105-1258    *
@@ -1907,13 +1934,13 @@ def update_profile():
                 cur = con.cursor()
                 cur.execute(
                     "UPDATE TeamInfo SET ContactFname = ?, ContactLname = ?, ContactPhNum = ?, ContactEmail = ? WHERE TeamId = ?",
-                    (encrypt(newUserFName), encrypt(newUserLName), encrypt(newUserPhNum), encrypt(newUserEmail), tid, ))
+                    (encrypt(newUserFName), encrypt(newUserLName), encrypt(newUserPhNum), encrypt(newUserEmail), tid,))
                 con.commit()
                 con = sql.connect('TeamInfoDB.db')
                 cur = con.cursor()
                 cur.execute(
                     "UPDATE TeamInfo SET ContactPhoto = ? WHERE TeamId = ?",
-                    (p, tid, ))
+                    (p, tid,))
                 con.commit()
             else:
                 pass
@@ -1935,7 +1962,7 @@ def searchTeamName():
     try:
         # receive user search input
         searchInfo = request.form.get('TeamName')
-   
+
         # user search info to find the team
         with sql.connect("TeamInfoDB.db") as con:
             con.row_factory = sql.Row
@@ -1945,8 +1972,10 @@ def searchTeamName():
                 "SELECT * FROM TeamInfo WHERE TeamName = ? OR SponsorName = ? OR MemberName1 = ? OR MemberName2 = ? OR "
                 "MemberName3 = ? OR MemberName4 = ? OR ContactFName = ? OR ContactLName = ? OR ContactPhNum = ? OR "
                 "ContactEmail = ? OR SponsorName = ?",
-                (searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(),
-                 encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), searchInfo.strip()))
+                (searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(), searchInfo.strip(),
+                 searchInfo.strip(),
+                 encrypt(searchInfo.strip()), encrypt(searchInfo.strip()), encrypt(searchInfo.strip()),
+                 encrypt(searchInfo.strip()), searchInfo.strip()))
 
             rows = []
             result = cur.fetchall()
@@ -1959,7 +1988,8 @@ def searchTeamName():
                 rows.append(newRow)
 
             if session.get('admin'):
-                return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'], result=result)
+                return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'],
+                                       result=result)
             if session.get('user'):
                 return render_template("u_viewTeamQuick.html", rows=rows, UserName=session['UserName'], result=result)
 
@@ -2190,7 +2220,7 @@ def showOneTeam(TeamId):
         return render_template("/a_viewTeamSelected.html", rows=rows, final=final, UserName=session['UserName'],
 
                                photo=photo, result=result)
-       con.close()
+
 
 # ADMIN - Dash Team Quick view
 @app.route('/showTeam/<int:TeamId>', methods=['GET', 'POST'])
@@ -2366,7 +2396,7 @@ def admin_teamSignup():
                 image_urls = search_images(query, api_key, cx)
                 print(image_urls)
                 if image_urls:
-                    spic = image_urls[1]
+                 spic = image_urls[1]
                 else:
                     spic = None
                 print(spic)
@@ -2630,7 +2660,8 @@ def admin_checkin(TeamId):
 def updateTeamForm(TeamId):
     if not session.get('logged_in'):
         return render_template('home.html')
-    elif not session.get('admin'):
+
+    elif not session.get('admin') and UserTeamLead != 1:
         flash('Page not found')
         return render_template('home.html')
     try:
@@ -2688,7 +2719,7 @@ def updateTeamForm(TeamId):
         rows1 = []
         for row in rows2:
             newRow = dict(row)
-            newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
+            # newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
             newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
             rows1.append(newRow)
         con.close()
@@ -2866,11 +2897,35 @@ def updateTeamForm(TeamId):
 # ADMIN - directs admin to delete team
 @app.route('/a_deleteteam/<int:TeamId>', methods=['GET', 'POST'])
 def a_deleteteam(TeamId):
+    if 'UserName' not in session:
+        return redirect(url_for('log_in'))
+
+    nm = session['UserName']
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
+        (encrypt(nm),))
+    rowz = cur.fetchall()
+    if (rowz):
+        UserTeamLead = rowz[0]['UserTeamLead']
+    else:
+        UserTeamLead = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+
     if not session.get('logged_in'):
         return render_template('home.html')
-    elif not session.get('admin'):
+
+    elif not session.get('admin') and UserTeamLead != 1:
         flash('Page not found')
         return render_template('home.html')
+
     else:
         con = sql.connect('TeamInfoDB.db')
         con.row_factory = sql.Row
@@ -2914,29 +2969,56 @@ def a_deleteteam(TeamId):
         final = ""
         for ele in split:
             final += ele
-        print("final", final)
+        print("final second", final)
         con.close()
         # pull picture pathfile to html
         photo = get_profilepic()
         session['Delete'] = TeamId
-        return render_template("a_DeleteTeam.html", rows=rows, final=final, UserName=session['UserName'], photo=photo)
+        return render_template("a_DeleteTeam.html", rows=rows, final=final, UserName=session['UserName'], photo=photo,
+                               UserTeamLead=UserTeamLead)
 
 
 # ADMIN - Delete a team
 @app.route('/a_DeleteTeam', methods=['POST'])
 def a_DeleteTeam():
+    if 'UserName' not in session:
+        return redirect(url_for('log_in'))
+
+    nm = session['UserName']
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
+        (encrypt(nm),))
+    rowz = cur.fetchall()
+    if (rowz):
+        UserTeamLead = rowz[0]['UserTeamLead']
+    else:
+        UserTeamLead = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+
     if not session.get('logged_in'):
         return render_template('home.html')
-    elif not session.get('admin'):
+
+    elif not session.get('admin') and UserTeamLead != 1:
+
         flash('Page not found')
         return render_template('home.html')
 
     teamId = session['Delete']
     session['Delete'] = ""
+
     try:
         con2 = sql.connect('UserInfoDB.db')
         cur2 = con2.cursor()
-        cur2.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserTeamId = ? ", (None, teamId))
+        cur2.execute("UPDATE UserInfo SET UserTeamId = ?, UserTeamLead = ? WHERE UserTeamId = ? ",
+                     (None, False, teamId))
         con2.commit()
         con2.close()
 
@@ -2945,7 +3027,15 @@ def a_DeleteTeam():
         cur.execute("DELETE FROM TeamInfo WHERE TeamId = ?", (teamId,))
         con.commit()
         flash("Successfully Delete Team")
+
+        con3 = sql.connect('UserInfoDB.db')
+        cur3 = con3.cursor()
+        cur3.execute("DELETE FROM UserInfo WHERE UserName IS NULL ")
+        con3.commit()
+        con3.close()
+
         return render_template('result.html')
+
     except Exception as e:
         con.rollback()
         flash("Error")
@@ -3151,10 +3241,33 @@ def a_ReviveTeam(TeamId):
 # USERS - Routes to storefront
 @app.route('/index')
 def index():
+    if 'UserName' not in session:
+        return redirect(url_for('log_in'))
+
     nm = session['UserName']
+
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
+        (encrypt(nm),))
+    rowz = cur.fetchall()
+    if (rowz):
+        UserTeamLead = rowz[0]['UserTeamLead']
+    else:
+        UserTeamLead = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+
     # pull picture pathfile to html
     photo = get_profilepic()
-    return render_template('index.html', UserName=nm, photo=photo)
+
+    return render_template('index.html', UserName=nm, photo=photo, UserTeamLead=UserTeamLead)
 
 
 @app.route('/stripe_pay')
@@ -3443,7 +3556,7 @@ def log_in():
         return render_template('login-signup.html')
     else:
         try:
-            session['UserName'] = str(Encryption.cipher.decrypt(session['UserName']))
+            # session['UserName'] = str(Encryption.cipher.decrypt(session['UserName']))
             # pull picture pathfile to html
             nm = session['UserName']
             con = sql.connect("UserInfoDB.db")

@@ -82,7 +82,7 @@
             </div>
         </header>
 <body>
-{% if session['logged_in'] and session['admin'] %}
+{% if session['logged_in'] and session['admin'] or UserTeamLead %}
     {% for row in rows %}
     <form action="/updateTeam/{{ row['TeamId'] }}"  method="POST"><div style="margin: 0;padding: 0">
         <div class="form-group c1 required" data-cid="c1">
