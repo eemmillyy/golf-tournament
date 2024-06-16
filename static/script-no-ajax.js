@@ -3,22 +3,6 @@ var stripe = Stripe(checkout_public_key);
 const button = document.querySelector('#buy_now_btn');
 const button = document.querySelector('#buy_now_btn2');
 
-document.querySelector("#checkout-button").addEventListener("click", function () {
-    const stripe = Stripe('your-publishable-key-here'); // Replace with actual publishable key
-    const sessionId = 'your-session-id-here'; // Replace with actual session ID
-
-    stripe.redirectToCheckout({
-        sessionId: sessionId
-    }).then(function (result) {
-        if (result.error) {
-            alert(result.error.message);
-        }
-    }).catch(function (error) {
-        console.error('Error:', error);
-        alert('An error occurred. Please try again.');
-    });
-});
-
 button.addEventListener('click', event => {
     stripe.redirectToCheckout({
         // Make the id field from the Checkout Session creation API response
