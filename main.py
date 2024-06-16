@@ -26,6 +26,8 @@ app = Flask(__name__, static_url_path='/static')
 counter = 0
 cartCounter = 0
 # test
+# test
+
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
 app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
