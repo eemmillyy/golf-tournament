@@ -5,9 +5,96 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91ef4322-acf5-4d13-bc85-3a0cc36e3c72" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/script-ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/script-ajax.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/script-no-ajax.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/script-no-ajax.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Encryption.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/db_setup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/adminListTeams.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/b.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/bs.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/c.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/dash.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/export.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/g.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/golf.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/j.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/log.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/longlogo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/mss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/mts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/mull.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/p.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/pic.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/profile.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/signup.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/stee.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/store.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/stylee.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/table.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/tableone.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/uploads/default.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/viewer.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/viewtable.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/w.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/water.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/ws.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/wss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/wtee.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/wts.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/x.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/table.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/narrow-jumbotron.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/script-ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/script-no-ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/signupbox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/team-instructions.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_DeleteTeam.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_admincheckin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_adminlist-OLD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_adminteamsignup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_contactList-OLD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_searchAndEdit.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_searchTeamName.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_searchUser.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_teamArchive.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_updateTeam.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_viewContact.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_viewTeamQuick.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_viewTeamSelected.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_viewTeamsAll.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_viewUser-OLD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/a_viewUser.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/assign1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/c-userEditTeam.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/construction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/dash.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/dashboard-OLD.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login-signup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/profile_update.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/profile_view.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/result.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/resultpop.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/resultt.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/signup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/test.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/thanks.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_leaveTeam.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_teamjoin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_teamsignupfull.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_usersjoin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_usersjoinshow.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_userteamsignup.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_viewTeamAll.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/u_viewTeamQuick.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/userdash.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,21 +123,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/Users/alexisgarcia/PycharmProjects/golf-tournament",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/alexisgarcia/PycharmProjects/golf-tournament&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -85,6 +172,7 @@
       <workItem from="1718323425321" duration="1824000" />
       <workItem from="1718327862738" duration="34000" />
       <workItem from="1718376037966" duration="4607000" />
+      <workItem from="1718573556217" duration="1000" />
     </task>
     <servers />
   </component>
