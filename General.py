@@ -1,29 +1,8 @@
-import google
-from flask import Blueprint, render_template, request, session, flash, redirect, url_for, send_file, jsonify
-from Login import auth
-from util import util, encrypt, validate_string, format_output, search_images, is_a_contact, get_profilepic, reset_cart, count_carts
-from User import user
-from Admin import admin
-import requests
-from werkzeug.utils import secure_filename
-from io import BytesIO
-import hmac, hashlib
-from secrets import compare_digest
-from collections import defaultdict
-from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
+from flask import Blueprint, current_app, render_template, request, session, flash, redirect, url_for, send_file, jsonify
+from util import util, encrypt, validate_string, format_output, search_images, is_a_contact, get_profilepic
 import sqlite3 as sql
 import pandas as pd
-import numpy as np
 import Encryption
-import datetime
-import json
-import base64
-import stripe
-import re
-import string
-import random
-import ast
-import socket
 import os
 
 both = Blueprint('both', __name__)
@@ -143,19 +122,19 @@ def update_profile():
             if file:
                 # ensure each photo has distinct name ie no duplicates (ex: if 2 hi.jpeg uploaded will result in users having someone else's profile pic)
                 # count the number of files
-                files = os.listdir(app.config['UPLOAD_FOLDER'])
+                files = os.listdir(current_app.config['UPLOAD_FOLDER'])
                 num_files = len(files)
                 # Split the filename and extension
                 name, ext = os.path.splitext(file.filename)
                 # Construct the new filename with the numeric suffix
                 new_filename = f"{num_files + 1}{ext}"
                 # save photo to directory statics/css/uploads/_____
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], new_filename))
+                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], new_filename))
 
                 # pull most recent uploaded photo
-                files = [os.path.join(app.config['UPLOAD_FOLDER'], f) for f in os.listdir(app.config['UPLOAD_FOLDER'])
+                files = [os.path.join(current_app.config['UPLOAD_FOLDER'], f) for f in os.listdir(current_app.config['UPLOAD_FOLDER'])
                          if
-                         os.path.isfile(os.path.join(app.config['UPLOAD_FOLDER'], f))]
+                         os.path.isfile(os.path.join(current_app.config['UPLOAD_FOLDER'], f))]
                 if files:
                     p = max(files, key=os.path.getctime)
                     p = "../" + p
