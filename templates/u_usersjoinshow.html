@@ -142,11 +142,11 @@
             </h2>
 
             <div class="user-wrapper">
-                  <a href="{{ url_for('view') }}">
+                  <a href="{{ url_for('both.view') }}">
                 <img src="../{{ photo }}" height="50" width="50">
                  </a>
                 <div>
-                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                    <a href="{{ url_for('both.view') }}"><h4> {{UserName}} </h4></a>
                 </div>
             </div>
         </header>
@@ -154,7 +154,7 @@
          <i> Please enter the TeamCode provided by your Team Leader</i>
 
         {% if session['logged_in'] and session['user'] %}
-        <form action = "{{ url_for('userjoin') }}" method="POST">
+        <form action = "{{ url_for('user.userjoin') }}" method="POST">
             <h3>Search for Team</h3>
             <input type="text" name="JoinCode" ><br>
             <input type="submit" name="Search" ><br>

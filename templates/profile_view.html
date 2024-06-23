@@ -234,7 +234,7 @@
             {% if session['user'] %}
                 <a href="/userdash">Back</a>
             {% endif %}
-            <a href="{{ url_for('edit_profile', UserName=row['UserName']) }}">Edit</a>
+            <a href="{{ url_for('both.edit_profile', UserName=row['UserName']) }}">Edit</a>
         </div>
     </div>
     </div>
