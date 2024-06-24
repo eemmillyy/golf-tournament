@@ -233,7 +233,7 @@
                 <span class="las la-search"></span>
 
                 {% if session['logged_in'] and session['admin'] %}
-                <form action="{{ url_for('searchTeamName') }}" method="POST">
+                <form action="{{ url_for('both.searchTeamName') }}" method="POST">
                 <input type="search" placeholder="Search here"  id="TeamName" name="TeamName" ><br>
 
                 </form>
@@ -248,7 +248,7 @@
                 <img src="../static/css/uploads/default.jpeg">
                  {% endif %}
                 <div>
-                    <a href="{{ url_for('view') }}"><h4> {{UserName}} </h4></a>
+                    <a href="{{ url_for('both.view') }}"><h4> {{UserName}} </h4></a>
                 </div>
             </div>
         </header>
@@ -275,7 +275,7 @@
                 {% for row in rows %}
                     {% if year == row['Year'] %}
                     <tr>
-                        <td><a href="{{ url_for('a_ReviveTeam',TeamId=row['TeamId']) }}" class="but">Revive</a></td>
+                        <td><a href="{{ url_for('admin.a_ReviveTeam',TeamId=row['TeamId']) }}" class="but">Revive</a></td>
                         <td>{{ row["TeamName"] }}</td>
                         <td>{{ row["SponsorName"] }}</td>
                         <td>

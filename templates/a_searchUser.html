@@ -6,7 +6,7 @@
 </head>
 <body>
     {% if session['logged_in'] and session['admin'] %}
-        <form action = "{{ url_for('searchUser') }}" method="POST">
+        <form action = "{{ url_for('admin.searchUser') }}" method="POST">
             <h3>Search for User</h3>
             User Last Name<br>
             <input type="text" name="UserLName" ><br>
