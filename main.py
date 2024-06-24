@@ -25,7 +25,7 @@ import os
 app = Flask(__name__, static_url_path='/static')
 counter = 0
 cartCounter = 0
-# test
+
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
 app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
@@ -1376,6 +1376,102 @@ def user_teamJoin():
             con2.close()
             con.close()
             return render_template('result.html', UserName=session['UserName'], msg=msg, photo=photo)
+
+
+# User - Edit teams
+@app.route('/editTeam/<int:TeamId>', methods=['GET', 'POST'])
+def edit_TeamForm(TeamId):
+    if 'UserName' not in session:
+        return redirect(url_for('log_in'))
+    nm = session['UserName']
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
+        (encrypt(nm),))
+    rowz = cur.fetchall()
+    if (rowz):
+        UserTeamLead = rowz[0]['UserTeamLead']
+    else:
+        UserTeamLead = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+
+    if not session.get('logged_in'):
+        return render_template('home.html')
+
+    elif UserTeamLead != 1:
+        flash('Page not found')
+        return render_template('home.html')
+    else:
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
+
+        rows1 = cur.fetchall()
+        rows = []
+
+        for row in rows1:
+            newRow = dict(row)
+            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+            rows.append(newRow)
+
+        con.close()
+        con = sql.connect("TeamInfoDB.db")
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute('SELECT TeamName FROM TeamInfo WHERE TeamId = ?', (TeamId,))
+        counter = cur.fetchall()
+        count = []
+        for cnt in counter:
+            newRow = dict(cnt)
+            count.append(newRow)
+        string = ',:'.join(str(x) for x in count)
+        print(string)
+        splitter = string.split("{'TeamName': '")
+        strr = ""
+        print(splitter)
+        for ele in splitter:
+            strr += ele
+        new = []
+        for char in strr:
+            if char.isalnum():
+                new.append(str(char))
+        split = new
+        print(split)
+        final = ""
+        for ele in split:
+            final += ele
+        print("final", final)
+        con.close()
+
+        con = sql.connect('UserInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM UserInfo WHERE RoleLevel = 1")
+
+        rows2 = cur.fetchall()
+        rows1 = []
+        for row in rows2:
+            newRow = dict(row)
+            # newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
+            newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+            rows1.append(newRow)
+        con.close()
+        # pull picture pathfile to html
+        photo = get_profilepic()
+
+        return render_template("a_updateTeam.html", rows=rows, final=final, UserName=session['UserName'], rows1=rows1,
+                               photo=photo, UserTeamLead=UserTeamLead)
 
 
 # USER - list all current team information
