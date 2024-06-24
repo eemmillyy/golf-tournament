@@ -15,3 +15,4 @@ button.addEventListener('click', event => {
         // using `result.error.message`.
     });
 })
+
