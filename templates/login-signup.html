@@ -309,7 +309,7 @@
                 </div>
                 <div class="input-box">
                     <div class="move">
-                     <input type="text" class="input-field" placeholder="DOB  mm/dd/yyyy " name="UserDOB" id="UserDOB" required>
+                     <input type="text" class="input-field" placeholder="Date of Birth" name="UserDOB" id="UserDOB" required>
                 <i class='bx bx-calendar'></i>
                     </div>
                 </div>
@@ -320,7 +320,7 @@
                     <i class="bx bx-user"></i>
                          </div>
                         <div class="input-box">
-                         <input type="text" class="input-field capitalize" placeholder="Middle Name" name="UserMName" required>
+                         <input type="text" class="input-field capitalize" placeholder="Middle Initial" name="UserMName" maxlength="1" required>
                         <i class="bx bx-user" ></i>
                            </div>
                         <div class="input-box">
@@ -343,16 +343,20 @@
                      <div class="dropdown">
                     <select name="UserHandicap" id="UserHandicap">
                     <option value="Handicap">Select Handicap Status</option>
-                     <option value="✔">✔ Yes</option>
-                    <option value="✘">✘ No</option>
+                     <script>
+                    for (let i = 0; i <= 54; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
                 </select>
                   </div></div>
             </div>
 
              <div class="input-box">
                 <p id="numberError" class="message" ></p>
-                <input type="text" class="input-field" placeholder="Phone Number" name="UserPhNum" id="numberInput" required>
-                <i class='bx bx-phone' ></i>
+                <input type="tel" class="input-field" placeholder="Phone Number" maxlength="12"  pattern="[0-11]{12}" name="UserPhNum" id="numberInput" required>
+                 <span class="error" id="phone-error"></span><br>
+                 <i class='bx bx-phone' ></i>
             </div>
              <div class="input-box">
                 <p id="emailError" class="message" ></p>
@@ -383,6 +387,18 @@
     </div>
 </div>
 <script>
+    function validateForm() {
+        var phoneInput = document.getElementById("numberInput");
+        var phoneError = document.getElementById("phone-error");
+
+        if (!phoneInput.checkValidity()) {
+            phoneError.textContent = "Please enter exactly 10 digits.";
+            return false;
+        } else {
+            phoneError.textContent = "";
+            return true;
+        }
+    }
 
         document.addEventListener('DOMContentLoaded', function() {
         const capitalizeInputs = document.querySelectorAll('.capitalize');

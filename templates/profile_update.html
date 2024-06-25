@@ -340,8 +340,11 @@ document.getElementById('uploadInput').addEventListener('change', function() {
                             <div class="dropdown">
                            <div class="input-container">
                              <select name="UserHandicap" id="UserHandicap">
-                                <option value="✔">✔ Yes</option>
-                                <option value="✘">✘ No</option>
+                                 <script>
+                                for (let i = 0; i <= 54; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                                 }
+                                </script>
                              </select>
                        </div></div></div></div>
                        </div><div></div>

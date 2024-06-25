@@ -28,7 +28,7 @@ UserMName TEXT,
 UserLName TEXT NOT NULL,
 UserGender BOOLEAN,
 UserDOB INTEGER,
-UserHandicap BOOLEAN,
+UserHandicap INTEGER,
 UserPhNum TEXT,
 UserEmail TEXT NOT NULL,
 RoleLevel BOOLEAN NOT NULL,
@@ -47,7 +47,7 @@ nm = str(Encryption.cipher.encrypt(b'Admin').decode("utf-8"))
 ph = str(Encryption.cipher.encrypt(b'111-111-1111').decode("utf-8"))
 email = str(Encryption.cipher.encrypt(b'admin@test.com').decode("utf-8"))
 pwd = str(Encryption.cipher.encrypt(b'test123').decode("utf-8"))
-cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture', UserTeamLead) Values (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "adminfirst", "adminmiddle", "adminlast", "Female", "12/12/2000", "✘", ph, email, 3, pwd, 'static/css/uploads/default.jpeg', False))
+cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture', UserTeamLead) Values (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "adminfirst", "adminmiddle", "adminlast", "Female", "12/12/2000", 0, ph, email, 3, pwd, 'static/css/uploads/default.jpeg', False))
 conn.commit()
 
 # ----- HARDCODE GUEST LOGIN -----
@@ -55,7 +55,7 @@ nm = str(Encryption.cipher.encrypt(b'Guest').decode("utf-8"))
 ph = str(Encryption.cipher.encrypt(b'123-675-7645').decode("utf-8"))
 email = str(Encryption.cipher.encrypt(b'guest@test.com').decode("utf-8"))
 pwd = str(Encryption.cipher.encrypt(b'test123').decode("utf-8"))
-cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture', UserTeamLead) Values (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "g-first", "g-middle", "g-last", "Female", "12/12/2000", "✔", ph, email, 1, pwd, 'static/css/uploads/default.jpeg', False))
+cur.execute("Insert Into UserInfo ('UserName', 'UserFName','UserMName', 'UserLName', 'UserGender', 'UserDOB', 'UserHandicap', 'UserPhNum', 'UserEmail', 'RoleLevel', 'LoginPassword', 'ProfilePicture', UserTeamLead) Values (?,?,?,?,?,?,?,?,?,?,?,?,?)",(nm, "g-first", "g-middle", "g-last", "Female", "12/12/2000", 0, ph, email, 1, pwd, 'static/css/uploads/default.jpeg', False))
 conn.commit()
 
 
@@ -91,10 +91,10 @@ Member1ID TEXT,
 Member2ID TEXT,
 Member3ID TEXT,
 Member4ID TEXT,
-Member1Handicap BOOLEAN,
-Member2Handicap BOOLEAN,
-Member3Handicap BOOLEAN,
-Member4Handicap BOOLEAN,
+Member1Handicap INTEGER,
+Member2Handicap INTEGER,
+Member3Handicap INTEGER,
+Member4Handicap INTEGER,
 StartHole INTEGER,
 Member1Here BOOLEAN,
 Member2Here BOOLEAN,

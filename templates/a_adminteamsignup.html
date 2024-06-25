@@ -35,6 +35,21 @@
             border-radius: 5px;
             display: block;
         }
+         .signup-box {
+            width: 80%; /* Set width of the signup box */
+            margin: 0 auto; /* Center the signup box horizontally */
+            padding-top: 20px; /* Add spacing at the top */
+        }
+
+        .input-box {
+            display: flex; /* Use flexbox to arrange items horizontally */
+            justify-content: flex-end; /* Align items to the right */
+            margin-top: 10px; /* Add spacing between the label and radio buttons */
+        }
+
+        .radio-label {
+            margin-right: 20px; /* Add spacing between radio buttons */
+        }
     </style>
 </head>
     {% with messages = get_flashed_messages() %}
@@ -149,9 +164,12 @@
             </div>
              </div>
             <div class="signup-box">
-                <label><b>Needed Cart(s) Amount:</b><label>
-                     <div class="input-box">
-                <input type="text" placeholder="Cart Amount" name="NeedCart" id="cartInput" autocomplete="off">
+                <label><b>Needed Cart(s) Amount:</b></label>
+                <div class="input-box-radio">
+                    <label><input type="radio" name="NeedCart" value="0"> 0</label>
+                    <label><input type="radio" name="NeedCart" value="1"> 1</label>
+                    <label><input type="radio" name="NeedCart" value="2"> 2</label>
+                </div>
             </div>
              </div>
             <div class="signup-box">
