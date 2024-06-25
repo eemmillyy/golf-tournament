@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, render_template, request, session, flash, redirect, url_for, send_file, jsonify
-from util import util, encrypt, validate_string, format_output, search_images, is_a_contact, get_profilepic
+from util import util, encrypt, validate_string, format_output, allowed_file, upload_file, search_images, is_a_contact, get_profilepic
 import sqlite3 as sql
 import pandas as pd
 import Encryption
@@ -120,22 +120,14 @@ def update_profile():
                 pass
             # upload photo to directory
             if file:
-                # ensure each photo has distinct name ie no duplicates (ex: if 2 hi.jpeg uploaded will result in users having someone else's profile pic)
-                # count the number of files
-                files = os.listdir(current_app.config['UPLOAD_FOLDER'])
-                num_files = len(files)
-                # Split the filename and extension
-                name, ext = os.path.splitext(file.filename)
-                # Construct the new filename with the numeric suffix
-                new_filename = f"{num_files + 1}{ext}"
-                # save photo to directory statics/css/uploads/_____
-                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], new_filename))
-
+                p = upload_file()
+                print("p ", p)
                 # pull most recent uploaded photo
                 files = [os.path.join(current_app.config['UPLOAD_FOLDER'], f) for f in os.listdir(current_app.config['UPLOAD_FOLDER'])
                          if
                          os.path.isfile(os.path.join(current_app.config['UPLOAD_FOLDER'], f))]
                 if files:
+                    print("p ", files)
                     p = max(files, key=os.path.getctime)
                     p = "../" + p
                 else:

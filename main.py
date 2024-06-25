@@ -51,44 +51,47 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-
 # work needing to be done:
 # provided YouTube links for examples / follow along code
 
+# ----- pages to finalize
+# ADMIN - view specific team        / edit sponsor photo & payment activity
+# ADMIN - team & user tables        / finalize table payment information
+# ADMIN - checkin,edit              / finish front end
+# USER  - add user edit             / finish front end
+# ADMIN - Archive                   / search-sort archive & finalize front end
+# ADMIN - dash                      / green total sales box need to be connected
+# USER - usersjoin.html             / redesign
+# USER - usersjoinshow.html         / redesign
+# BOTH - home                       / Change Membership tp storefront
+# BOTH - Search                     / redesign if no result / goes back to home not teamlist
+# BOTH/USER - create team           / checkbox for adding members
+
+
 # ------------------ FRONTEND ------------------
-# both - signup / remember me is fake                                                                    https://www.youtube.com/watch?v=CRvV9nFKoPI
-# both - login forgot password  / route to ask for email, send email, allow for new pass saved!          https://www.youtube.com/watch?v=vutyTx7IaAI
-
-
-# admin create team    // proper form                                                            
-# ADMIN - create team ; better form-show contact info different ; search users by typing             https://www.youtube.com/watch?v=R4owT-LcKOo
-#                                                                                                    https://www.youtube.com/watch?v=n8dqXI8kw_Y
-# USER - usersjoin.html      //// redesign
-# USER - usersjoinshow.html  //// redesign
-# USER - userdash.html       //// checkin satus and names display as list along with cart values
-# USERS - Need sponsor list display
-
-# admin - checkin,edit,delete / maybe make as popup? // back button - instead of route to team list go back to specific team
-# admin - view specific team // sponsor photo & payment activity
-
-# - Ultimately will need to change all front end to be compatible with phones   1. https://www.youtube.com/watch?v=4WvT2cmuZ5M&list=PLL9jEdn7PvoT309qO1E_-fLnfhuw2T9kJ
-
-
-# -------  ALL PAYMENT RELATED ITEMS
-# - TEAMS NEED TO PAY BEFORE entering // ask how they want that handled
-# -if team has not paid pop up on dash (ask how company wants handled - possibly ask team if sponsor paying; if not team captain pays?)
-# -- maybe when creating a team; before routing to join code, route to payments page first
-# both - home / membership link isn't accurate atm... maybe make team payment info page
-# ADMIN - dash                // green total sales box need to be connected
-# ADMIN - create payment logs
-# ADMIN - team, user tables   // finish table information (with payments?)
-# admin - view specific team // add payment activity
-# STRIPE API - make neater connections (removing excess functions)
-
+# BOTH - signup / remember me is fake                                                   →       https://www.youtube.com/watch?v=CRvV9nFKoPI
+# BOTH - login forgot password  / ask for email, send email, allow for new pass saved   →       https://www.youtube.com/watch?v=vutyTx7IaAI
+# BOTH - Create team / needs Non-registered users / finish front end
+#                         ↓  ↓  ↓  ↓  ↓  ↓
+#           1 -  https://www.youtube.com/watch?v=R4owT-LcKOo
+#           2 -  https://www.youtube.com/watch?v=n8dqXI8kw_Y
+# - Change front end to be compatible with phones   1. https://www.youtube.com/watch?v=4WvT2cmuZ5M&list=PLL9jEdn7PvoT309qO1E_-fLnfhuw2T9kJ
 
 # ------------------ BACKEND ------------------
-# ADMIN & USER ///// Search function fixed or all cases (possibly), need routing properly (if 0 results 'non found')
 # USERS - Need auction house
+# USERS - Need sponsor list display
+# DB -    total years active
+# USER -  Captain edit team / delete member not team
+
+# ------- PAYMENT IMPLEMENTATIONS  -----------------
+# - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
+# - if team has not paid pop up on dash (ask how handled - sponsor paying entry?)
+#    ↳  maybe when creating a team; before routing to join code, route to payments page first
+# BOTH - home / membership link isn't accurate atm... maybe make team payment info page
+# ADMIN - create payment logs
+# STRIPE API - make neater connections (removing excess functions main.py)
+
+
 
 # TESTING LINK --- will delete
 @app.route('/new')
@@ -97,7 +100,6 @@ def generate():
         return render_template('signup.html')
     else:
         return render_template('assign1.html')
-
 
 
 # **********************************************************************************************

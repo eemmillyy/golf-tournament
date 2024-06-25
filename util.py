@@ -1,10 +1,13 @@
-from flask import render_template, request, session, jsonify, Blueprint
+from flask import render_template, current_app, request, session, jsonify, Blueprint
 import requests
 import sqlite3 as sql
 import pandas as pd
 import numpy as np
 import Encryption
 import re
+import os
+from werkzeug.utils import secure_filename
+
 
 util = Blueprint('util', __name__)
 
@@ -161,11 +164,6 @@ def reset_cart():
     cartCounter = 0
 
 
-# WORKING - handle file uploads
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
-
-
 # WORKING - get user profile picture
 def get_profilepic():
     nm = session['UserName']
@@ -182,7 +180,6 @@ def get_profilepic():
     photo = ' '.join(map(str, string_representation))
     return photo
 
-
 # WORKING - google api search to get a sponsor photo
 def search_images(query, api_key, cx):
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&cx={cx}&searchType=image&key={api_key}"
@@ -193,6 +190,38 @@ def search_images(query, api_key, cx):
     else:
         image_urls = []  # If no items are found, return an empty list
     return image_urls
+
+
+# WORKING - handle file uploads
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+
+# WORKING - handle secure file uploads
+@util.route('/upload', methods=['POST'])
+def upload_file():
+    if 'picture' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['picture']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    if file and allowed_file(file.filename):
+        files = os.listdir(current_app.config['UPLOAD_FOLDER'])
+        num_files = len(files)
+        # Split the filename and extension
+        name, ext = os.path.splitext(file.filename)
+        # Construct the new filename with the numeric suffix
+        new_filename = f"{num_files + 1}{ext}"
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], new_filename)
+        file.save(filepath)
+        return jsonify({'message': 'File uploaded successfully', 'file_path': filepath}), 200
+    else:
+        return jsonify({'error': 'Invalid file type. Allowed types are: png, jpg, jpeg, gif'}), 400
+
+
 
 # WORKING - get registered users for dropbox population (admin - edit team)
 @util.route('/get_registered_users')
