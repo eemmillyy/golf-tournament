@@ -6,9 +6,8 @@ import Encryption
 import datetime
 import re
 
-
-
 auth = Blueprint('auth', __name__)
+
 
 @auth.route('/')
 def home():

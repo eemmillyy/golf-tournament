@@ -748,6 +748,28 @@ def admin_checkin(TeamId):
 # ADMIN - Update teams
 @admin.route('/updateTeam/<int:TeamId>', methods=['POST'])
 def updateTeamForm(TeamId):
+    if 'UserName' not in session:
+        return redirect(url_for('auth.log_in'))
+
+    nm = session['UserName']
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
+        (encrypt(nm),))
+    rowz = cur.fetchall()
+    if rowz:
+        UserTeamLead = rowz[0]['UserTeamLead']
+    else:
+        UserTeamLead = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+
     if not session.get('logged_in'):
         return render_template('home.html')
 

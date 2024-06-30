@@ -999,6 +999,53 @@ def cap_editTeam():
         return render_template('c-userEditTeam.html', rows=rows)
 
 
+@user.route('/uc_deleteMember', methods=['POST', 'GET'])
+def cap_deleteMember():
+    if 'UserName' not in session:
+        return redirect(url_for('log_in'))
+
+    nm = session['UserName']
+    con = sql.connect('UserInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
+        (encrypt(nm),))
+    rowz = cur.fetchall()
+    if (rowz):
+        UserTeamLead = rowz[0]['UserTeamLead']
+    else:
+        UserTeamLead = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+
+    if not session.get('logged_in'):
+        return render_template('home.html')
+
+    elif not session.get('admin') and UserTeamLead != 1:
+
+        flash('Page not found')
+        return render_template('home.html')
+
+    deleteMembers = request.form.getlist('members')
+    if deleteMembers:
+        with sql.connect('UserInfoDB') as con:
+            cur=con.cursor()
+            for member in deleteMembers:
+                cur.execute("DELETE FROM USER WHERE MemberName1 = ? OR MemberName2 = ? OR MemberName3=? OR MemberName4=?", (member,member,member,member))
+            con.commit()
+
+    try:
+        return render_template('result.html', rows=rowz)
+
+    finally:
+        con.close()
+
+
 @user.route('/uc_addMember', methods=['POST', 'GET'])
 def cap_addMember():
     if not session.get('logged_in'):
@@ -1083,3 +1130,5 @@ def cap_addMember():
             con.close()
 
             return render_template('result.html', UserName=session['UserName'], msg=msg)
+
+
