@@ -237,6 +237,28 @@
                border: none;
                 box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
            }
+           .but-deleteMem {
+               padding: 10px 20px; /* Add padding for some spacing */
+               background-color: #FFA500; /* Background color for the anchor */
+               color: #fff; /* Text color */
+               text-decoration: none; /* Remove default underline */
+               border-radius: 10px; /* Add rounded corners */
+               outline: none;
+               border: none;
+               font-size: 16px;
+           }
+           .but-deleteMem:hover {
+               padding: 10px 20px; /* Add padding for some spacing */
+               background-color: #FFA500; /* Background color for the anchor */
+               color: #fff; /* Text color */
+               text-decoration: none; /* Remove default underline */
+               border-radius: 10px; /* Add rounded corners */
+               outline: none;
+               border: none;
+                box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
+           }
+
+
            .row {
                margin-left: 960px;
                margin-top: 31px;
@@ -498,8 +520,55 @@
                             </div>
 
                         </div>
+
+                    <button id="DelMemButton" class="but-deleteMem">Delete Member</button>
+                        <div id="delMemPop" class="modal">
+                            <div class="modal-content">
+                                <span class="close" id="delMemClose">&times;</span>
+                                <p><form action="/a_DeleteMember" method="POST">
+                                <p><strong>Delete Member</strong></p>
+                                <p>Are you sure you want to delete the selected member(s)?</p>
+                                <br>
+                                <table>
+                                    {% for row in rows %}
+                                        {% if row["MemberName2"] %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="members" value="{{ row["MemberName2"] }}">
+                                                <label>{{ row["MemberName2"] }}</label>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                    {% if row["MemberName3"] %}
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="members" value="{{ row["MemberName3"] }}">
+                                            <label>{{ row["MemberName3"] }}</label>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if row["MemberName4"] %}
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="members" value="{{ row["MemberName4"] }}">
+                                            <label>{{ row["MemberName4"] }}</label>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                </table>
+                        <br>
+                                <button type="submit" class="but-deleteMem">Confirm Delete</button>
+                                </form>
+                            </div>
+                        </div>
+
         </div>
             {% endfor %}
+
+
 
 
   <div class="container-payinfo">
@@ -555,6 +624,26 @@
             addModal.style.display = "none";
         }
     }
+
+    // Handle delMemPop modal
+    var delMemModal = document.getElementById("delMemPop");
+    var delMemBtn = document.getElementById("DelMemButton");
+    var delMemClose = document.getElementById("delMemClose");
+
+    delMemBtn.onclick = function() {
+        delMemModal.style.display = "block";
+    }
+
+    delMemClose.onclick = function() {
+        delMemModal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == delModal) {
+            delMemModal.style.display = "none";
+        }
+    }
+
 </script>
 
 
