@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/signup.css')}}">
     <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
@@ -7,50 +7,73 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>*Admin* Team Sign Up Screen</title>
-    <link rel="stylesheet" href="signup.css">
+
+        <link rel="stylesheet" href="dash.css">
+     <link rel="stylesheet" href="admincreateteam.css">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admincreateteam.css')}}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <style>
-        /* Additional styling for better visibility of the text when typing */
-        input[type="text"] {
-            color: black;
-        }
-         a {
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .foot p {
-            color: gainsboro;
-            margin-top: 430px;
-            padding-left: 2.3rem;
-        }
-         .banner {
-            position: fixed;
-            bottom: 10px;
-            left: 35px; /* Adjust left positioning */
-            color: gainsboro;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-            display: block;
-        }
-         .signup-box {
-            width: 80%; /* Set width of the signup box */
-            margin: 0 auto; /* Center the signup box horizontally */
-            padding-top: 20px; /* Add spacing at the top */
-        }
+<style>
 
-        .input-box {
-            display: flex; /* Use flexbox to arrange items horizontally */
-            justify-content: flex-end; /* Align items to the right */
-            margin-top: 10px; /* Add spacing between the label and radio buttons */
-        }
+    p {
+        font-weight: bold;
+       text-align: center;
+        justify-content: center;
 
-        .radio-label {
-            margin-right: 20px; /* Add spacing between radio buttons */
-        }
-    </style>
+    }
+     .label {
+        font-weight: bold;
+        text-align: center;
+
+
+
+    }
+     .label:hover {
+         font-size: 20px;
+        font-weight: bolder;
+
+    }
+
+.select-wrapper {
+  display: inline-block; /* Ensure the select wrapper doesn't take full width */
+  border: 1px solid #ccc; /* Border color */
+  border-radius: 4px; /* Rounded corners */
+  overflow: hidden; /* Hide overflow to prevent options from being cut off */
+}
+
+select {
+  padding: 0px 0px; /* Adjust padding as needed */
+  font-size: 16px; /* Adjust font size as needed */
+  border: none; /* Remove default border */
+    border-radius: 10px;
+  background-color: #fff; /* Dropdown background color */
+  width: 100%; /* Full width of parent container */
+    height: 30px;
+  box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+select:focus {
+  outline: none; /* Remove focus outline */
+}
+
+/* Style options if needed */
+select option {
+  padding: 8px 10px; /* Adjust padding as needed */
+}
+
+/* Hover and focus styles */
+select:hover,
+select:focus {
+  background-color: #f0f0f0; /* Background color on hover/focus */
+}
+
+/* Disabled style */
+select:disabled {
+  opacity: 0.5; /* Adjust opacity for disabled state */
+}
+
+
+
+</style>
 </head>
     {% with messages = get_flashed_messages() %}
          {% if messages %}
@@ -147,118 +170,225 @@
                 </div>
             </div>
         </header>
+        <div class="container">
+         <form action="{{ url_for('admin.admin_teamSignup') }}"  method="POST">
 
-    <form action="{{ url_for('admin.admin_teamSignup') }}"  method="POST">
-        <div class="wrapper">
-            <div class="signup-box">
-                <label><b>Team Name:</b><label>
-                    <div class="input-box">
-                <input type="text" placeholder="Team Name" name="TeamName" id="teamNameInput" autocomplete="off" required>
-            </div>
-            </div>
-            <div class="signup-box">
-                <label><b>Sponsor Name  (optional):</b><label>
-                    <div class="input-box">
-                <input type="text" placeholder="Sponsor Name" name="SponsorName" id="sponsorNameInput" autocomplete="off">
+        <div class="main-user-info">
+          <div class="user-input-box">
+            <label for="TeamName">Team Name</label>
+            <input type="text"
+                    id="teamNameInput"
+                    name="TeamName"
+                    placeholder="Enter Team Name"/>
+          </div>
+          <div class="user-input-box">
+            <label for="SponsorName">Sponsor Name</label>
+            <input type="text"
+                    id="sponsorNameInput"
+                    name="SponsorName"
+                    placeholder="Optional Sponsor Name"/>
+          </div>
 
-            </div>
-             </div>
-            <div class="signup-box">
-                <label><b>Needed Cart(s) Amount:</b></label>
-                <div class="input-box-radio">
-                    <label><input type="radio" name="NeedCart" value="0"> 0</label>
-                    <label><input type="radio" name="NeedCart" value="1"> 1</label>
-                    <label><input type="radio" name="NeedCart" value="2"> 2</label>
-                </div>
-            </div>
-             </div>
-            <div class="signup-box">
-                <label for="MemberName1"><b>Team Contact:</b><label>
-                     <div class="input-box">
-                        <select name="MemberName1" id="MemberName1">
-                        <option value="Name1">Select A User</option>
-                         {% for row in rows %}
-                            {% if not row['UserTeamId'] %}
-                                <option value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail'] }}, {{ row['ProfilePicture'] }}">
-                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
-                                </option>
-                            {% endif %}
-                          {% endfor %}
-                        </select>
-                     </div>
-            </div>
-            <div class="signup-box">
-                <label><b>Team Member 2:</b><label>
-                     <div class="input-box">
+            <div class="container1">
+     <div class="user-box" id="userBox1">
+          <div class="user-input-box">
+                <label class="memberName" for="MemberName1"><b>Team Captain:</b></label>
+               <label for="showTextCheckbox" class="label">Create New Member</label>
+                   <input hidden="hidden" type="checkbox" id="showTextCheckbox" name="showTextCheckbox">
+               <div id="hiddenText" class="hidden-text"><br><br>
+                          <label for="MemberName1">Member Name</label>
+                             <input type="text"
+                                id="MemberName1"
+                                name="MemberName1"
+                                placeholder="Enter Members First and Last Name"/>
+                          <label for="MemberEmail1">Member Email</label>
+                             <input type="email"
+                                id="MemberEmail1"
+                                name="MemberEmail1"
+                                placeholder="Enter Members Email Address"/>
+                          <label for="Memberhc1">Handicap Level</label>
+                                <div class="dropdown">
+                                <select name="UserHandicap" id="UserHandicap">
+                                <option value="Handicap">Select Handicap Status</option>
+                                 <script>
+                                for (let i = 0; i <= 54; i++) {
+                                    document.write(`<option value="${i}">${i}</option>`);
+                                }
+                            </script>
+                            </select>
+                              </div> </div>
+
+           <div id="newHidden" class="New-hidden">   <p>OR</p><br><br>
+                <select name="MemberName1" id="MemberName1">
+                    <option value="Name1">Select A User</option>
+                    {% for row in rows %}
+                        {% if not row['UserTeamId'] %}
+                            <option value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail'] }}, {{ row['ProfilePicture'] }}">
+                                {{ row['UserFName'] }} {{ row['UserLName'] }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+           </div></div></div>
+
+      <div class="user-box" id="userBox2">
+          <div class="user-input-box">
+            <label class="memberName" for="MemberName2"><b>Member:</b></label>
+          <label for="showTextCheckbox2" class="label"> Create New Member </label>
+                   <input hidden="hidden" type="checkbox" id="showTextCheckbox2" name="showTextCheckbox2">
+                <div id="hiddenText2" class="hidden-text2"><br><br>
+                          <label for="MemberName2">Member Name</label>
+                             <input type="text"
+                                id="MemberName2"
+                                name="MemberName2"
+                                placeholder="Enter Members First and Last Name"/>
+                          <label for="MemberEmail2">Member Email</label>
+                             <input type="email"
+                                id="MemberEmail2"
+                                name="MemberEmail2"
+                                placeholder="Enter Members Email Address"/>
+                          <label for="Memberhc2">Handicap Level</label>
+                                <div class="dropdown">
+                                <select name="UserHandicap" id="UserHandicap">
+                                <option value="Handicap">Select Handicap Status</option>
+                                 <script>
+                                for (let i = 0; i <= 54; i++) {
+                                    document.write(`<option value="${i}">${i}</option>`);
+                                }
+                            </script>
+                            </select>
+                                </div></div>
+
+           <div id="newHidden2" class="New-hidden2">   <p>OR</p><br><br>
                 <select name="MemberName2" id="MemberName2">
-                        <option value="Name2">Select A User</option>
-                         {% for row in rows %}
-                            {% if not row['UserTeamId'] %}
-                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
-                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
-                                </option>
-                            {% endif %}
-                          {% endfor %}
-                        </select>
-            </div>
-             </div>
-            <div class="signup-box">
-                <label><b>Team Member 3:</b><label>
-                     <div class="input-box">
+                    <option value="Name2">Select A User</option>
+                    {% for row in rows %}
+                        {% if not row['UserTeamId'] %}
+                            <option value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail'] }}, {{ row['ProfilePicture'] }}">
+                                {{ row['UserFName'] }} {{ row['UserLName'] }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+           </div>  </div> </div>
+
+        <div class="container1">
+   <div class="user-box" id="userBox3">
+          <div class="user-input-box">
+                  <label class="memberName" for="MemberName3"><b>Member:</b></label>
+           <label for="showTextCheckbox3" class="label"> Create New Member </label>
+                   <input hidden="hidden" type="checkbox" id="showTextCheckbox3" name="showTextCheckbox3">
+                <div id="hiddenText3" class="hidden-text3"> <br><br>
+                          <label for="MemberName3">Member Name</label>
+                             <input type="text"
+                                id="MemberName3"
+                                name="MemberName3"
+                                placeholder="Enter Members First and Last Name"/>
+                          <label for="MemberEmail3">Member Email</label>
+                             <input type="email"
+                                id="MemberEmail3"
+                                name="MemberEmail3"
+                                placeholder="Enter Members Email Address"/>
+                          <label for="Memberhc3">Handicap Level</label>
+                                <div class="dropdown">
+                                <select name="UserHandicap" id="UserHandicap">
+                                <option value="Handicap">Select Handicap Status</option>
+                                 <script>
+                                for (let i = 0; i <= 54; i++) {
+                                    document.write(`<option value="${i}">${i}</option>`);
+                                }
+                            </script>
+                            </select>
+                              </div></div>
+                </div>
+           <div id="newHidden3" class="New-hidden3">    <p>OR</p><br><br>
                 <select name="MemberName3" id="MemberName3">
-                        <option value="Name3">Select A User</option>
-                         {% for row in rows %}
-                            {% if not row['UserTeamId'] %}
-                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
-                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
-                                </option>
-                            {% endif %}
-                          {% endfor %}
-                        </select>
-            </div>
-             </div>
-            <div class="signup-box">
-                <label><b>Team Member 4:</b><label>
-                     <div class="input-box">
+                    <option value="Name3">Select A User</option>
+                    {% for row in rows %}
+                        {% if not row['UserTeamId'] %}
+                            <option value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail'] }}, {{ row['ProfilePicture'] }}">
+                                {{ row['UserFName'] }} {{ row['UserLName'] }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+           </div></div>
+
+       <div class="user-box" id="userBox4">
+       <div class="user-input-box">
+       <label class="memberName" for="MemberName4"><b>Member:</b></label>
+           <label for="showTextCheckbox4" class="label"> Create New Member </label>
+                   <input hidden="hidden" type="checkbox" id="showTextCheckbox4" name="showTextCheckbox4">
+                <div id="hiddenText4" class="hidden-text4"><br><br>
+                          <label for="MemberName4">Member Name</label>
+                             <input type="text"
+                                id="MemberName4"
+                                name="MemberName4"
+                                placeholder="Enter Members First and Last Name"/>
+                          <label for="MemberEmail4">Member Email</label>
+                             <input type="email"
+                                id="MemberEmail4"
+                                name="MemberEmail4"
+                                placeholder="Enter Members Email Address"/>
+                          <label for="Memberhc4">Handicap Level</label>
+                                <div class="dropdown">
+                                <select name="UserHandicap" id="UserHandicap">
+                                <option value="Handicap">Select Handicap Status</option>
+                                 <script>
+                                for (let i = 0; i <= 54; i++) {
+                                    document.write(`<option value="${i}">${i}</option>`);
+                                }
+                            </script>
+                            </select>
+                              </div></div>
+                </div>
+           <div id="newHidden4" class="New-hidden4"> <p>OR</p><br><br>
                 <select name="MemberName4" id="MemberName4">
-                        <option value="Name4">Select A User</option>
-                         {% for row in rows %}
-                            {% if not row['UserTeamId'] %}
-                                <option value=" {{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}">
-                                    {{ row['UserFName'] }} {{ row['UserLName'] }}
-                                </option>
-                            {% endif %}
-                          {% endfor %}
-                        </select>
+                    <option value="Name4">Select A User</option>
+                    {% for row in rows %}
+                        {% if not row['UserTeamId'] %}
+                            <option value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }} {{ row['UserLName'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail'] }}, {{ row['ProfilePicture'] }}">
+                                {{ row['UserFName'] }} {{ row['UserLName'] }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+           </div>
+
+   </div>
+        <div class="gender-details-box">
+          <span class="gender-title">Needed Cart(s) Amount</span>
+          <div class="gender-category">
+            <input type="radio" name="NeedCart" id="0">
+            <label for="0"> 0 </label>
+            <input type="radio" name="NeedCart" id="1">
+            <label for="1"> 1 </label>
+            <input type="radio" name="NeedCart" id="2">
+            <label for="2"> 2 </label>
+          </div>
+        </div>
+        <div class="form-submit-btn">
+          <input type="submit" value="Register" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">
+                </div>
+                </form>
             </div>
-             </div>
+        </div>
 
             <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-       $(document).ready(function(){
-            $('select[name^="MemberName"]').change(function(){
-                var selectedUserId = $(this).val();
-                $('select[name^="MemberName"]').not(this).find('option').each(function(){
-                    if($(this).val() == selectedUserId) {
-                        $(this).remove();
-                    }
-                });
-            });
-       });
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                   $(document).ready(function(){
+                        $('select[name^="MemberName"]').change(function(){
+                            var selectedUserId = $(this).val();
+                            $('select[name^="MemberName"]').not(this).find('option').each(function(){
+                                if($(this).val() == selectedUserId) {
+                                    $(this).remove();
+                                }
+                            });
+                        });
+                   });
 
-
-</script>
-
-
-
-            <button type="submit" class="btn" data-nlok-ref-guid="d0b67cf5-d0c9-4079-9924-376b39eaa947">Register Team</button>
-         </div>
-     </form>
-         </div></div>
-
-    <script>
 
         function showhc1() {
             var checkBox = document.getElementById("Member1Handicap");
@@ -338,6 +468,19 @@
         });
 
 
+
+        // Get the label element
+const label = document.querySelector('.label');
+
+// Add a click event listener to the label
+label.addEventListener('click', function() {
+    // Find the checkbox inside the label
+    const checkbox = this.querySelector('input[type="checkbox"]');
+
+    // Toggle the checkbox state
+    checkbox.checked = !checkbox.checked;
+});
+
         // JavaScript to set focus on input field when clicked
         var inputFields = document.querySelectorAll('input');
         inputFields.forEach(function(input) {
@@ -345,6 +488,53 @@
                 this.focus();
             });
         });
+
+var checkbox = document.getElementById('showTextCheckbox');
+    // Get the div element that will be shown/hidden
+    var hiddenText = document.getElementById('hiddenText');
+    // Add event listener for checkbox change
+    checkbox.addEventListener('change', function() {
+        if (checkbox.checked) {
+            hiddenText.style.display = 'block';  // Show the hidden text
+        } else {
+            hiddenText.style.display = 'none';   // Hide the hidden text
+        }
+    });
+var checkbox = document.getElementById('showTextCheckbox');
+    // Get the div element that will be shown/hidden
+    var newHidden = document.getElementById('newHidden');
+    // Add event listener for checkbox change
+    checkbox.addEventListener('change', function() {
+        if (checkbox.checked) {
+            newHidden.style.display = 'none';  // Show the hidden text
+        } else {
+            newHidden.style.display = 'block';   // Hide the hidden text
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Get all checkboxes and corresponding user-box elements
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    // Add event listeners to each checkbox
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            // Get the parent .user-box of the clicked checkbox
+            var userBox = checkbox.closest('.user-box');
+
+            // Toggle the height of the corresponding .user-box
+            if (checkbox.checked) {
+                userBox.style.height = 'auto';
+            } else {
+                userBox.style.height = '300px'; // Set to default height or adjust as needed
+            }
+        });
+    });
+});
+
+
+
     </script>
 
 </body>

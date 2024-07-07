@@ -27,7 +27,7 @@ def view():
         data = cur.fetchall()
         df = pd.DataFrame(data,
                           columns=['UserName', 'UserFName', 'UserMName', 'UserLName', 'UserGender', 'UserDOB',
-                                   'UserHandicap', 'UserPhNum', 'UserEmail', 'UserTeamId', 'UserTeamYear', 'LoginPassword',
+                                   'UserHandicap', 'UserPhNum', 'UserEmail', 'UserTeamId','UserTeamYear', 'LoginPassword',
                                    'ProfilePicture'])
         con.close()
         # convert to an array

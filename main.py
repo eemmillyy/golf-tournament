@@ -57,9 +57,9 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # ----- pages to finalize
 # ADMIN - view specific team        / edit sponsor photo & payment activity
 # ADMIN - team & user tables        / finalize table payment information
-# ADMIN - checkin,edit              / finish front end
+# ADMIN - edit                      / finish front end
 # USER  - add user edit             / finish front end
-# ADMIN - Archive                   / search-sort archive & finalize front end
+# ADMIN - Archive                   / finalize front end
 # ADMIN - dash                      / green total sales box need to be connected
 # USER - usersjoin.html             / redesign
 # USER - usersjoinshow.html         / redesign
