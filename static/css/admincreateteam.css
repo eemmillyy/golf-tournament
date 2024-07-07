@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+ * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background: url(pic.jpg) no-repeat;
+    background-size: cover;
+}
+
+input[type="text"] {
+    color: black;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.foot p {
+    color: gainsboro;
+    margin-top: 430px;
+    padding-left: 2.3rem;
+}
+
+.banner {
+    position: fixed;
+    bottom: 10px;
+    left: 35px;
+    color: gainsboro;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    display: block;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px; /* Adjust max-width as needed */
+    padding: 70px 0px; /* Increase top and bottom padding for taller form */
+    margin: 0 28px;
+    border-radius: 10px;
+
+}
+
+.form-title {
+    font-size: 26px;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 6px;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+    border-bottom: solid 1px white;
+}
+
+
+
+
+
+.main-user-info {
+      flex: 1 1 calc(50% - 10px); /* Take up half the width, minus the gap */
+    min-width: 200px; /* Optional: Prevent the boxes from becoming too small */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: -50px;
+    height: 600px;
+}
+
+.user-input-box:nth-child(2n) {
+    justify-content: end;
+}
+
+.user-input-box {
+    display: flex;
+    flex-wrap: wrap;
+    width: 48%; /* Adjust width for better spacing */
+    padding-bottom: 30px; /* Increase bottom padding for taller input boxes */
+}
+
+.user-input-box label {
+    width: 100%;
+    color: black;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 5px 0;
+    white-space: nowrap;
+}
+
+.user-input-box input {
+    height: 50px; /* Increase input height for taller input boxes */
+    width: 100%; /* Adjust width for better spacing */
+    border-radius: 15px;
+    outline: none;
+    border: 1px solid grey;
+    padding: 0 10px;
+     text-align: center;
+}
+.gender-title {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    border-bottom: 1px solid white;
+}
+
+.gender-category {
+    margin: 15px 0;
+    color: white;
+}
+
+.gender-category label {
+    padding: 0 20px 0 5px;
+}
+
+.gender-category label,
+.gender-category input,
+.form-submit-btn input {
+    cursor: pointer;
+}
+
+.form-submit-btn{
+    margin-top: 40px;
+}
+
+.form-submit-btn input{
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 20px;
+    padding: 10px;
+    border:none;
+    border-radius: 3px;
+    color: rgb(209, 209, 209);
+    background: rgba(63, 114, 76, 0.7);
+}
+
+.form-submit-btn input:hover{
+    background: rgba(56, 204, 93, 0.7);
+    color: rgb(255, 255, 255);
+}
+#newMemberFields1 {
+    display: none;
+}
+  .container1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* Optional: Adjust as per your layout needs */
+}
+
+.user-box {
+    width: 49%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items horizontally */
+    justify-content: left; /* Center items vertically */
+    background-color: whitesmoke;
+    box-shadow: inset 0px 0px 2px 2px gray;
+    padding: 20px;
+    margin-bottom: 10px;
+    height: auto; /* Allow box to expand vertically */
+}
+
+   .memberName {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: larger;
+    width: 200%;
+    }
+      .memberName b {
+
+       font-size: larger;
+
+
+    }
+
+@media(max-width: 600px) {
+    .container {
+        min-width: 280px;
+        flex-wrap: wrap; /* Allows items to wrap onto new lines */
+    }
+
+    .user-input-box {
+        margin-bottom: 12px;
+        width: 100%;
+    }
+
+    .user-input-box:nth-child(2n) {
+        justify-content: space-between;
+    }
+
+    .gender-category {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .main-user-info {
+        max-height: 380px;
+        overflow: auto;
+    }
+
+    .main-user-info::-webkit-scrollbar {
+        width: 0;
+    }
+}
+
+
+    /* Show the hidden text when checkbox is checked */
+    #showTextCheckbox:checked + #hiddenText,
+    #showTextCheckbox2:checked + #hiddenText2,
+    #showTextCheckbox3:checked + #hiddenText3,
+    #showTextCheckbox4:checked + #hiddenText4
+    {
+        display: block;
+        justify-content: left;
+        margin-left: -70px;
+        margin-bottom: 10px;
+    }
+    #showTextCheckbox:checked ~ #newHidden,
+    #showTextCheckbox2:checked ~ #newHidden2,
+    #showTextCheckbox3:checked ~ #newHidden3,
+    #showTextCheckbox4:checked ~ #newHidden4
+    {
+        display: none;
+    }
+    /* Hide the hidden text by default */
+    .hidden-text,
+    .hidden-text2,
+    .hidden-text3,
+    .hidden-text4
+    {
+        display: none;
+    }
+    /* Hide the hidden text by default */
+    .New-hidden,
+    .New-hidden2,
+    .New-hidden3,
+    .New-hidden4 {
+        display: block;
+    }
+

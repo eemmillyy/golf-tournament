@@ -377,6 +377,29 @@
               width: 30%;
               border-radius: 15px;
               text-align: center;
+                font-size: 20px;
+            }
+            .modal-content-e {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 30%;
+              border-radius: 15px;
+              text-align: left;
+                font-size: 20px;
+            }
+              input {
+                  margin-bottom: 10px;
+                  size: 50px;
+                  border-radius: 10px;
+                  text-align: center;
+                  margin-left: 15px;
+                  border-width: 1px;
+                  font-size: 15px;
+            }
+            p {
+                text-align: center;
             }
 
             /* The Close Button */
@@ -393,6 +416,11 @@
               text-decoration: none;
               cursor: pointer;
             }
+            .center {
+                margin-top: 20px;
+                text-align: center;
+            }
+
     </style>
 </head>
 <body>
@@ -565,7 +593,7 @@
 
         <button id="EditButton" class="but-edit">Edit</button>
         <div id="editPop" class="modal">
-            <div class="modal-content">
+            <div class="modal-content-e">
                 <span class="close">&times;</span>
                 <p><form action="/updateTeam/{{ row["TeamId"] }}" method="POST">
                 <p><strong>Edit {{ row['TeamName'] }} Information</strong></p>
@@ -573,7 +601,7 @@
                 {% for row in rows %}
 
 
-                <br><label for="TeamName">Team Name:</label>
+                <br><br><label for="TeamName">Team Name:</label>
                 <input type="text" name="TeamName" value="{{ row['TeamName'] }}" size="30" />
                 <br><label for="SponsorName">Sponsor:</label>
                 <input type="text" name="SponsorName" value="{{ row['SponsorName'] }}" size="30" />
@@ -583,27 +611,17 @@
 
 <br>
              <label for="Member1Name">Member One Name:</label>
+                     <select id="MemberName1" name="MemberName1">
+                    <option value="">Add Member</option>
+                </select>
 
-    {% if row['MemberName1'] %}
-        <input type="text" name="MemberName1" value="{{ row['MemberName1'] }}" readonly>
-    {% else %}
-        <input type="text" name="MemberName1" placeholder="Type or Select...">
-        <select name="MemberName1Select" onchange="this.previousElementSibling.value = this.value">
-            <option value="">Add Member</option>
-            {% for row in rows1 %}
-                {% if not row['UserTeamId'] %}
-                    <option value="{{ row['UserFName'] }} {{ row['UserLName'] }}">
-                        {{ row['UserFName'] }} {{ row['UserLName'] }}
-                    </option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    {% endif %}
     <input type="checkbox" name="Member1Custom" onchange="toggleCustomInput(this)">
     <label for="Member1Custom">Custom</label>
     <div id="Member1CustomInput" style="display: none;">
-        <input type="text" name="Member1CustomName" placeholder="Name">
+        <input type="text" name="Member1CustomFName" placeholder="First Name">
+          <input type="text" name="Member1CustomLName" placeholder="Last Name">
         <input type="email" name="Member1CustomEmail" placeholder="Email">
+         <input type="number" name="Member1Customnumber" placeholder="Phone Number">
     </div>
 
 
@@ -636,22 +654,26 @@
     {% endif %}
 
 
-        <div class="hc">
-        <label for="Member1Handicap, Member2Handicap, Member3Handicap, Member4Handicap">Handicapped?</label>
-            </div>
+
             <div class="hcinput">
-                {% if not row['MemberName1'] is none or row['MemberName1'] == "None" %}
-                    <br>{{ row['MemberName1'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member1Handicap" value="{{ row['Member1Handicap'] }}"
-                    {% if row['Member1Handicap' == "✔"] or row['Member1Handicap' == " ✔"] or row['Member1Handicap'] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
+
+                    <br>{{ row['MemberName1'] }} handicap status: </br>
+
+                             <select name="Member1Handicap" id="Member1Handicap">
+                                 <script>
+                                for (let i = 0; i <= 54; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                                 }
+                                </script>
+                             </select>
+
+
+
+
+
 
                 {% if not row['MemberName2'] is none or row['MemberName2'] == "None" %}
-                <br>{{ row['MemberName2'] }} is handicapped?: </br>
+                <br>{{ row['MemberName2'] }} handicapped status: </br>
                     <input type="checkbox" name="Member2Handicap" value="{{ row['Member2Handicap'] }}"
                     {% if row['Member2Handicap'] == "✔" or row['Member2Handicap' == " ✔"] %}
                         checked
@@ -682,11 +704,20 @@
         </div>
 
         <script>
-        function updateHandicapValue(checkbox) {
-        if (!checkbox.checked) {
-            checkbox.value = "None";
-            }
+
+
+         // Original handicap status stored in a variable or retrieved from a source
+    var originalHandicap = "{{ row['Member1Handicap'] }}";
+    // Find the select element
+    var selectElement = document.getElementById("Member1Handicap");
+
+    // Loop through options and select the one matching the original handicap status
+    for (var i = 0; i < selectElement.options.length; i++) {
+        if (selectElement.options[i].value === originalHandicap) {
+            selectElement.options[i].selected = true;
+            break;
         }
+    }
         </script>
 
 
@@ -694,25 +725,23 @@
         <input type="text" name="StartHole" value="{{ row['StartHole'] }}">
 
         <br><label for="ContactFName">Contact First Name:</label>
-        <input type="text" name="ContactFName" value="{{ row['ContactFName'] }}">
+        <input type="text" name="ContactFName" value="{{ row['ContactFName'] }}" readonly>
 
         <br><label for="ContactLName">Contact Last Name:</label>
-        <input type="text" name="ContactLName" value="{{ row['ContactLName'] }}">
+        <input type="text" name="ContactLName" value="{{ row['ContactLName'] }}" readonly>
 
         <br><label for="Contact Number">Contact Number:</label>
-        <input type="text" name="ContactPhNum" value="{{ row['ContactPhNum'] }}">
+        <input type="text" name="ContactPhNum" value="{{ row['ContactPhNum'] }}" readonly>
 
         <br><label for="ContactEmail">Contact Email:</label>
-        <input type="text" name="ContactEmail" value="{{ row['ContactEmail'] }}">
-        <input type="submit" name="Update" value="Update Team">
+        <input type="text" name="ContactEmail" value="{{ row['ContactEmail'] }}" readonly>
+                    <div class="center">
+             <button type="submit" class="but-edit">Confirm Edits</button></div>
 
     </form>
     {% endfor %}
 {% endif %}
-
-                <br>
-                <button type="submit" class="but-edit">Confirm Edits</button>
-            </form></p>
+</p>
             </div>
         </div>
 
@@ -721,14 +750,58 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
 
-
                 <p><form action="/admincheckin/{{ row["TeamId"] }}" method="POST">
-                <p><strong>Check In Team</strong></p>
-
-                <p>Check In {{ row["TeamName"] }} Information</p>
+                <p><strong>Check In {{ row["TeamName"] }}'s Team</strong></p>
                 <br>
-                <button type="submit" class="but-check">Confirm Check In</button>
-            </form></p>
+
+                {% for row in rows %}
+                    <div class="check">
+                        <label class="checkbox-label" for="Member1Here">Is {{ row["MemberName1"] }} here:</label>
+                         <input type="checkbox" name="Member1Here" value="{{ row['Member1Here'] }}">
+                    </div>
+
+                    <div class="check">
+                    {% if row["MemberName2"] %}
+                        <label class="checkbox-label" for="Member2Here">Is {{ row["MemberName2"] }} here:</label>
+                        <input type="checkbox" name="Member2Here" value="{{ row['Member2Here'] }}">
+                    {% endif %}
+                    </div>
+
+                    <div class="check">
+                       {% if row["MemberName3"] %}
+                        <label class="checkbox-label" for="Member3Here">Is {{ row["MemberName3"] }} here:</label>
+                        <input type="checkbox" name="Member3Here" value="{{ row['Member3Here'] }}">
+                     {% endif %}
+                    </div>
+
+                    <div class="check">
+                       {% if row["MemberName4"] %}
+                        <label class="checkbox-label" for="Member4Here">Is {{ row["MemberName4"] }} here:</label>
+                        <input type="checkbox" name="Member4Here" value="{{ row['Member4Here'] }}">
+                     {% endif %}
+                    </div><br>
+
+                    {% if session['cart2'] %}
+                        <div>
+                        <label for="AsgnCart1"> Assign Cart 1</label>
+                        <input type="text" name="AsgnCart1" value="{{ row['AsgnCart1'] }}"></div>
+                        <div>
+                        <label for="AsgnCart2"> Assign Cart 2</label>
+                        <input type="text" name="AsgnCart2" value="{{ row['AsgnCart2'] }}"></div>
+                    {% endif %}
+                    {% if session['cart1'] %}
+                        <p><label for="AsgnCart1"> Assign Cart 1</label></p>
+                        <input type="text" name="AsgnCart1" value="{{ row['AsgnCart1'] }}">
+                    {% endif %}
+                    {% if session['cart0'] %}
+                        <div>
+                        <label> No Needed Carts</label></div>
+                    {% endif %}<br><br>
+                    <button type="submit" class="but-check">Confirm Check In</button>
+                </form>
+                {% endfor %}
+
+         </p>
             </div>
         </div>
 
@@ -849,7 +922,7 @@ xhr.send();
 
  function populateDropdowns(data) {
     // Define an array of dropdown IDs
-    var dropdownIds = ['MemberName2', 'MemberName3', 'MemberName4'];
+    var dropdownIds = ['MemberName1','MemberName2', 'MemberName3', 'MemberName4'];
 
     // Iterate over the dropdown IDs
     for (var j = 0; j < dropdownIds.length; j++) {

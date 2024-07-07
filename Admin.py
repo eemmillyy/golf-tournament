@@ -305,6 +305,22 @@ def showOneTeam(TeamId):
             final += ele
         print("final", final)
         con.close()
+        session['cart2'] = False
+        session['cart1'] = False
+        session['cart0'] = False
+
+        ans = count_carts(TeamId)
+        print(ans)
+        if ans == 2:
+            session['cart2'] = True
+            print("got 2")
+        elif ans == 1:
+             session['cart1'] = True
+             print("got 1")
+        else:
+            session['cart0'] = True
+            print("got 0")
+        con.close()
         # pull picture pathfile to html
         photo = get_profilepic()
         return render_template("/a_viewTeamSelected.html", rows=rows, final=final, UserName=session['UserName'],
