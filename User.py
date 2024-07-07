@@ -1002,7 +1002,7 @@ def cap_editTeam():
 @user.route('/uc_deleteMember', methods=['POST', 'GET'])
 def cap_deleteMember():
     if 'UserName' not in session:
-        return redirect(url_for('log_in'))
+        return redirect(url_for('auth.log_in'))
 
     nm = session['UserName']
     con = sql.connect('UserInfoDB.db')
@@ -1012,7 +1012,8 @@ def cap_deleteMember():
         "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
         (encrypt(nm),))
     rowz = cur.fetchall()
-    if (rowz):
+
+    if rowz:
         UserTeamLead = rowz[0]['UserTeamLead']
     else:
         UserTeamLead = None
@@ -1027,16 +1028,33 @@ def cap_deleteMember():
         return render_template('home.html')
 
     elif not session.get('admin') and UserTeamLead != 1:
-
         flash('Page not found')
         return render_template('home.html')
 
     deleteMembers = request.form.getlist('members')
     if deleteMembers:
-        with sql.connect('UserInfoDB') as con:
-            cur=con.cursor()
+        with sql.connect('TeamInfoDB.db') as con:
+            cur = con.cursor()
             for member in deleteMembers:
-                cur.execute("DELETE FROM USER WHERE MemberName1 = ? OR MemberName2 = ? OR MemberName3=? OR MemberName4=?", (member,member,member,member))
+                cur.execute("UPDATE TeamInfo SET "
+            "MemberName2 = CASE WHEN MemberName2 = ? THEN NULL ELSE MemberName2 END, "
+            "Member2Handicap = CASE WHEN MemberName2 = ? THEN NULL ELSE Member2Handicap END, "
+            "Member2ID = CASE WHEN MemberName2 = ? THEN NULL ELSE Member2ID END, "                      
+            "MemberName3 = CASE WHEN MemberName3 = ? THEN NULL ELSE MemberName3 END, "
+            "Member3ID = CASE WHEN MemberName3 = ? THEN NULL ELSE Member3ID END, "   
+            "Member3Handicap = CASE WHEN MemberName3 = ? THEN NULL ELSE Member3Handicap END, "                
+            "MemberName4 = CASE WHEN MemberName4 = ? THEN NULL ELSE MemberName4 END,"
+            "Member4ID = CASE WHEN MemberName4 = ? THEN NULL ELSE Member4ID END,"
+            "Member4Handicap = CASE WHEN MemberName4 = ? THEN NULL ELSE Member4Handicap END",
+            (member, member, member, member, member, member, member, member, member))
+
+                splitName = member.split()
+                con3 = sql.connect('UserInfoDB.db')
+                cur3 = con3.cursor()
+                cur3.execute("DELETE FROM UserInfo WHERE UserLName = ? AND UserName IS NULL", (splitName[1],))
+                con3.commit()
+
+            cur.execute("UPDATE TeamInfo SET MemberCount = MemberCount - ?", (len(deleteMembers),))
             con.commit()
 
     try:
@@ -1044,6 +1062,7 @@ def cap_deleteMember():
 
     finally:
         con.close()
+        con3.close()
 
 
 @user.route('/uc_addMember', methods=['POST', 'GET'])

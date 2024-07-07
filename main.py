@@ -81,7 +81,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # USERS - Need auction house
 # USERS - Need sponsor list display
 # DB -    total years active
-# USER -  Captain edit team / delete member not team
 
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
@@ -90,8 +89,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # BOTH - home / membership link isn't accurate atm... maybe make team payment info page
 # ADMIN - create payment logs
 # STRIPE API - make neater connections (removing excess functions main.py)
-
-
 
 # TESTING LINK --- will delete
 @app.route('/new')
