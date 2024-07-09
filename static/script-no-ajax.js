@@ -1,18 +1,31 @@
 var stripe = Stripe(checkout_public_key);
 
+// Checkout buttons to select from
 const button = document.querySelector('#buy_now_btn');
-const button = document.querySelector('#buy_now_btn2');
+const button2 = document.querySelector('#buy_now_btn2');
 
-button.addEventListener('click', event => {
+// Function to handle the Stripe payment redirection with error catcher to alert the user if error occurs
+const handleStripePayment = (sessionId) => {
     stripe.redirectToCheckout({
-        // Make the id field from the Checkout Session creation API response
-        // available to this file, so you can provide it as parameter here
-        // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-        sessionId: checkout_session_id
+        sessionId: sessionId
     }).then(function (result) {
-        // If `redirectToCheckout` fails due to a browser or network
-        // error, display the localized error message to your customer
-        // using `result.error.message`.
+        if (result.error) {
+            alert(result.error.message);
+        }
+    }).catch(function (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
     });
-})
+};
 
+// Event listener to the first button
+button.addEventListener('click', function () {
+    const sessionId = 'checkout_session_id'; // Checkout session ID
+    handleStripePayment(sessionId);
+});
+
+// Event listener to the second button
+button2.addEventListener('click', function () {
+    const sessionId = 'checkout_session_id'; // Checkout session ID
+    handleStripePayment(sessionId);
+});
