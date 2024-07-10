@@ -57,19 +57,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # ----- pages to finalize
 # ADMIN - view specific team        / edit sponsor photo & payment activity
 # ADMIN - team & user tables        / finalize table payment information
-# ADMIN - edit                      / finish front end
-# USER  - add user edit             / finish front end
-# ADMIN - Archive                   / finalize front end
+# ADMIN - edit team                 / finish front end
+# USER  - edit team                 / finish front end
 # ADMIN - dash                      / green total sales box need to be connected
 # USER - usersjoin.html             / redesign
 # USER - usersjoinshow.html         / redesign
 # BOTH - home                       / Change Membership tp storefront
-# BOTH - Search                     / redesign if no result / goes back to home not teamlist
+# USER - Search                     / redesign if no result
 # BOTH/USER - create team           / checkbox for adding members
 
 
 # ------------------ FRONTEND ------------------
-# BOTH - signup / remember me is fake                                                   →       https://www.youtube.com/watch?v=CRvV9nFKoPI
 # BOTH - login forgot password  / ask for email, send email, allow for new pass saved   →       https://www.youtube.com/watch?v=vutyTx7IaAI
 # BOTH - Create team / needs Non-registered users / finish front end
 #                         ↓  ↓  ↓  ↓  ↓  ↓
@@ -78,9 +76,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # - Change front end to be compatible with phones   1. https://www.youtube.com/watch?v=4WvT2cmuZ5M&list=PLL9jEdn7PvoT309qO1E_-fLnfhuw2T9kJ
 
 # ------------------ BACKEND ------------------
-# USERS - Need auction house
 # USERS - Need sponsor list display
 # DB -    total years active
+# USER -  Captain edit team
+
 
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
