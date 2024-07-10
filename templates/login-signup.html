@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Ludiflex | Login & Registration</title>
@@ -309,7 +309,7 @@
                 </div>
                 <div class="input-box">
                     <div class="move">
-                     <input type="text" class="input-field" placeholder="Date of Birth" name="UserDOB" id="UserDOB" required>
+                     <input type="text" class="input-field" placeholder="Date of Birth" maxlength="10" name="UserDOB" id="UserDOB" required>
                 <i class='bx bx-calendar'></i>
                     </div>
                 </div>
@@ -354,7 +354,8 @@
 
              <div class="input-box">
                 <p id="numberError" class="message" ></p>
-                <input type="tel" class="input-field" placeholder="Phone Number" maxlength="12"  pattern="[0-11]{12}" name="UserPhNum" id="numberInput" required>
+                 <input type="tel" class="input-field" placeholder="Phone Number" maxlength="12" pattern="\d{3}-\d{3}-\d{4}" name="UserPhNum" id="numberInput" required>
+
                  <span class="error" id="phone-error"></span><br>
                  <i class='bx bx-phone' ></i>
             </div>
@@ -387,6 +388,7 @@
     </div>
 </div>
 <script>
+
     function validateForm() {
         var phoneInput = document.getElementById("numberInput");
         var phoneError = document.getElementById("phone-error");
@@ -400,7 +402,7 @@
         }
     }
 
-        document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const capitalizeInputs = document.querySelectorAll('.capitalize');
 
         capitalizeInputs.forEach(function(input) {
@@ -529,20 +531,8 @@
     });
     </script>
      <script>
-         // add dashes to phone number
-        const numberInput = document.getElementById('numberInput');
 
-        numberInput.addEventListener('input', function() {
-            let phoneNumber = numberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
-            if (phoneNumber.length > 3 && phoneNumber.length <= 6) {
-                phoneNumber = phoneNumber.replace(/(\d{3})(\d{1,3})/, '$1-$2'); // Format: xxx-xxx
-            } else if (phoneNumber.length > 6) {
-                phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{1,4})/, '$1-$2-$3'); // Format: xxx-xxx-xxxx
-            }
-            numberInput.value = phoneNumber;
-        });
-
-     // add slashes to DOB
+   // add slashes to DOB
         const dobInput = document.getElementById('UserDOB');
         dobInput.addEventListener('input', function() {
             let dob = dobInput.value.replace(/\D/g, '');
@@ -553,7 +543,27 @@
             }
             dobInput.value = dob;
         });
+
+
+     // add dashes to phone number
+        const numberInput = document.getElementById('numberInput');
+
+        numberInput.addEventListener('input', function() {
+            let phoneNumber = numberInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (phoneNumber.length > 3 && phoneNumber.length <= 6) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{1,3})/, '$1-$2'); // Format: xxx-xxx
+            } else if (phoneNumber.length > 6) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{1,4})/, '$1-$2-$3'); // Format: xxx-xxx-xxxx
+            }
+             // Limit to 12 characters (including dashes)
+            if (phoneNumber.length > 12) {
+                phoneNumber = phoneNumber.slice(0, 12);
+            }
+            numberInput.value = phoneNumber;
+        });
     </script>
+
+
 
       <script src="{{ url_for('static', filename='signupbox.js') }}"></script>
 </body>

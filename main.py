@@ -81,7 +81,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # USERS - Need auction house
 # USERS - Need sponsor list display
 # DB -    total years active
-# USER -  Captain edit team / delete member not team
+# USER -  Captain edit team
 
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)

@@ -181,6 +181,7 @@ def sign_up():
             session['UserName'] = str(Encryption.cipher.decrypt(session['UserName']))
         finally:
             return render_template('dashboard-OLD.html', UserName=session['UserName'])
+
 # USER - Add new user to SQL table - USERINFO  DB
 @user.route('/adduser', methods=['POST', 'GET'])
 def adduser():
@@ -196,6 +197,7 @@ def adduser():
             gen = request.form['UserGender']
             dob = request.form['UserDOB']
             uhc = request.form['UserHandicap']
+            print("l", uhc)
             pn = request.form['UserPhNum']
             email = request.form['UserEmail']
             if request.form.get('RoleLevel'):
@@ -327,7 +329,6 @@ def userteamsignups():
         print(string)
         word = 'None'
         if word not in string:
-            print('success')
             return render_template('u_teamsignupfull.html', UserName=session['UserName'], photo=photo,
                                    UserTeamLead=UserTeamLead)
         # else pull db info - get user info as team contact info
@@ -1002,7 +1003,7 @@ def cap_editTeam():
 @user.route('/uc_deleteMember', methods=['POST', 'GET'])
 def cap_deleteMember():
     if 'UserName' not in session:
-        return redirect(url_for('log_in'))
+        return redirect(url_for('auth.log_in'))
 
     nm = session['UserName']
     con = sql.connect('UserInfoDB.db')
@@ -1012,7 +1013,8 @@ def cap_deleteMember():
         "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
         (encrypt(nm),))
     rowz = cur.fetchall()
-    if (rowz):
+
+    if rowz:
         UserTeamLead = rowz[0]['UserTeamLead']
     else:
         UserTeamLead = None
@@ -1027,16 +1029,85 @@ def cap_deleteMember():
         return render_template('home.html')
 
     elif not session.get('admin') and UserTeamLead != 1:
-
         flash('Page not found')
         return render_template('home.html')
 
+    print("hey working......")
+    con = sql.connect('TeamInfoDB.db')
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute(
+        "SELECT MemberName2, MemberName3, MemberName4 FROM TeamInfo WHERE TeamId = ?",
+        (UserTeamLead,))
+    rowz = cur.fetchall()
+
+    if rowz:
+        MemberName2 = rowz[0]['MemberName2']
+        MemberName3 = rowz[0]['MemberName3']
+        MemberName4 = rowz[0]['MemberName4']
+    else:
+        MemberName2 = None
+        MemberName3 = None
+        MemberName4 = None
+
+    rowzz = []
+    for row in rowz:
+        newRow = dict(row)
+        rowzz.append(newRow)
+    con.close()
+    print("ll ", MemberName2)
+    print("ll ", MemberName3)
+    print("llz ", MemberName4)
+
     deleteMembers = request.form.getlist('members')
     if deleteMembers:
-        with sql.connect('UserInfoDB') as con:
-            cur=con.cursor()
+        with sql.connect('TeamInfoDB.db') as con:
+            cur = con.cursor()
             for member in deleteMembers:
-                cur.execute("DELETE FROM USER WHERE MemberName1 = ? OR MemberName2 = ? OR MemberName3=? OR MemberName4=?", (member,member,member,member))
+                print("p ", member)
+                if member == MemberName2:
+                    print("jiiiiiii")
+                    cur.execute(
+                        "UPDATE TeamInfo SET "
+                        "MemberName2 = MemberName3, "
+                        "Member2Handicap = Member3Handicap, "
+                        "Member2ID = Member3ID, "
+                        "MemberName3 = MemberName4, "
+                        "Member3ID = Member4ID, "
+                        "Member3Handicap = Member4Handicap, "
+                        "MemberName4 = NULL, "
+                        "Member4ID = NULL, "
+                        "Member4Handicap = NULL "
+                        "WHERE MemberName2 = ?",
+                        (member,))
+                elif member == MemberName3:
+                    cur.execute(
+                        "UPDATE TeamInfo SET "
+                        "MemberName3 = MemberName4, "
+                        "Member3ID = Member4ID, "
+                        "Member3Handicap = Member4Handicap, "
+                        "MemberName4 = NULL, "
+                        "Member4ID = NULL, "
+                        "Member4Handicap = NULL "
+                        "WHERE MemberName3 = ?",
+                        (member,))
+                elif member == MemberName4:
+                    cur.execute(
+                        "UPDATE TeamInfo SET "
+                        "MemberName4 = NULL, "
+                        "Member4ID = NULL, "
+                        "Member4Handicap = NULL "
+                        "WHERE MemberName4 = ?",
+                        (member,))
+
+                # Delete from UserInfo table based on last name
+                splitName = member.split()
+                con3 = sql.connect('UserInfoDB.db')
+                cur3 = con3.cursor()
+                cur3.execute("DELETE FROM UserInfo WHERE UserLName = ? AND UserName IS NULL", (splitName[1],))
+
+            # Update MemberCount in TeamInfo table
+            cur.execute("UPDATE TeamInfo SET MemberCount = MemberCount - ?", (len(deleteMembers),))
             con.commit()
 
     try:
@@ -1044,6 +1115,7 @@ def cap_deleteMember():
 
     finally:
         con.close()
+        con3.close()
 
 
 @user.route('/uc_addMember', methods=['POST', 'GET'])
@@ -1130,5 +1202,3 @@ def cap_addMember():
             con.close()
 
             return render_template('result.html', UserName=session['UserName'], msg=msg)
-
-
