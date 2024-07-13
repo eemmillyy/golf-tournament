@@ -1,5 +1,6 @@
 import google
 from flask import Flask, render_template, request, session, redirect, url_for
+from flask_mail import Mail, Message
 from Login import auth
 from util import util, encrypt, get_profilepic
 from User import user
@@ -36,6 +37,14 @@ app.register_blueprint(both)
 counter = 0
 #cartCounter = 0
 
+app.config['MAIL_SERVER'] = 'localhost'  # MailHog SMTP server address
+app.config['MAIL_PORT'] = 1025  # MailHog SMTP port number
+app.config['MAIL_USE_TLS'] = False  # Disable TLS encryption for MailHog
+app.config['MAIL_USERNAME'] = None  # No username required for MailHog
+app.config['MAIL_PASSWORD'] = None  # No password required for MailHog
+mail = Mail(app)
+
+
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
 app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
@@ -56,32 +65,21 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ----- pages to finalize
 # ADMIN - view specific team        / edit sponsor photo & payment activity
-# ADMIN - team & user tables        / finalize table payment information
 # ADMIN - edit                      / finish front end
 # USER  - add user edit             / finish front end
-# ADMIN - Archive                   / finalize front end
-# ADMIN - dash                      / green total sales box need to be connected
 # USER - usersjoin.html             / redesign
 # USER - usersjoinshow.html         / redesign
-# BOTH - home                       / Change Membership tp storefront
-# BOTH - Search                     / redesign if no result / goes back to home not teamlist
-# BOTH/USER - create team           / checkbox for adding members
 
 
 # ------------------ FRONTEND ------------------
-# BOTH - signup / remember me is fake                                                   →       https://www.youtube.com/watch?v=CRvV9nFKoPI
 # BOTH - login forgot password  / ask for email, send email, allow for new pass saved   →       https://www.youtube.com/watch?v=vutyTx7IaAI
-# BOTH - Create team / needs Non-registered users / finish front end
-#                         ↓  ↓  ↓  ↓  ↓  ↓
-#           1 -  https://www.youtube.com/watch?v=R4owT-LcKOo
-#           2 -  https://www.youtube.com/watch?v=n8dqXI8kw_Y
 # - Change front end to be compatible with phones   1. https://www.youtube.com/watch?v=4WvT2cmuZ5M&list=PLL9jEdn7PvoT309qO1E_-fLnfhuw2T9kJ
 
 # ------------------ BACKEND ------------------
-# USERS - Need auction house
 # USERS - Need sponsor list display
-# DB -    total years active
 # USER -  Captain edit team
+# Admin - create team           / connect backend
+
 
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
@@ -90,8 +88,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # BOTH - home / membership link isn't accurate atm... maybe make team payment info page
 # ADMIN - create payment logs
 # STRIPE API - make neater connections (removing excess functions main.py)
-
-
+# ADMIN - team & user tables        / finalize table payment information
+# ADMIN - dash                      / green total sales box need to be connected
 
 # TESTING LINK --- will delete
 @app.route('/new')
@@ -136,6 +134,36 @@ def index():
 
     return render_template('index.html', UserName=nm, photo=photo, UserTeamLead=UserTeamLead)
 
+
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    event = None
+    endpoint = 'whsec_350dcfe0e6582330fa9a00903e963813c53d134b6678eaeecc2d0f8ed2ec73c5'
+    payload = request.data
+    sig_header = request.headers['STRIPE_SIGNATURE']
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint
+        )
+    except ValueError as e:
+        # Invalid payload
+        raise e
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        raise e
+
+    # Handle the event
+    if event['type'] == 'balance.available':
+      balance = event['data']['object']
+    elif event['type'] == 'checkout.session.completed':
+      session = event['data']['object']
+    # ... handle other event types
+    else:
+      print('Unhandled event type {}'.format(event['type']))
+
+    return jsonify(success=True)
 
 @app.route('/stripe_pay')
 def stripe_pay():
@@ -410,6 +438,36 @@ def stripe_webhook():
         print(line_items['data'][0]['description'])
 
     return {}
+
+
+@app.route('/webhookss', methods=['POST'])
+def webhookss():
+    event = None
+    endpoint_secret = 'whsec_350dcfe0e6582330fa9a00903e963813c53d134b6678eaeecc2d0f8ed2ec73c5'
+    payload = request.data
+    sig_header = request.headers['STRIPE_SIGNATURE']
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        raise e
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        raise e
+
+    # Handle the event
+    if event['type'] == 'balance.available':
+      balance = event['data']['object']
+    elif event['type'] == 'checkout.session.completed':
+      session = event['data']['object']
+    # ... handle other event types
+    else:
+      print('Unhandled event type {}'.format(event['type']))
+
+    return jsonify(success=True)
 
 
 

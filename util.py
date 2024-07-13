@@ -1,4 +1,5 @@
 from flask import render_template, current_app, request, session, jsonify, Blueprint
+from flask_mail import Mail, Message
 import requests
 import sqlite3 as sql
 import pandas as pd
@@ -17,6 +18,23 @@ cartCounter = 0
 def construction():
     return render_template('construction.html')
 
+
+@util.route('/send_email/<string:UserEmail>')
+def send_email(UserEmail):
+    try:
+        mail = current_app.extensions.get('mail')
+        if mail is None:
+            raise RuntimeError('Mail extension is not registered.')
+
+        msg = Message(subject='Hello from Flask-Mail',
+                      sender=current_app.config.get('MAIL_USERNAME'),
+                      recipients=[UserEmail])  # List of recipient(s)
+        msg.body = 'This is a test email sent from Flask-Mail'
+
+        mail.send(msg)
+        return 'Email sent successfully!'
+    except Exception as e:
+        return str(e)
 
 # WORKING - validates input is an integer between the min-max range
 def validate_int(value, min_value, max_value):
@@ -191,6 +209,18 @@ def search_images(query, api_key, cx):
         image_urls = []  # If no items are found, return an empty list
     return image_urls
 
+
+# WORKING - google api choose different sponsor photo
+@util.route('/choose_new_images')
+def choose_new_images(query, api_key, cx):
+    url = f"https://www.googleapis.com/customsearch/v1?q={query}&cx={cx}&searchType=image&key={api_key}"
+    response = requests.get(url)
+    data = response.json()
+    if 'items' in data:
+        image_urls = [item['link'] for item in data['items']]
+    else:
+        image_urls = []  # If no items are found, return an empty list
+    return image_urls
 
 # WORKING - handle file uploads
 def allowed_file(filename):

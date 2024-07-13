@@ -187,6 +187,7 @@
             </ul>
          {% endif %}
     {% endwith %}
+
 <input type="checkbox" id="nav-toggle">
     <div class="sidebar">
        <div class="sidebar-brand">
@@ -281,10 +282,11 @@
 
      </div></div>
 </body>
+    {% if team != None %}
     <div class="top-box">
        <div class="table">
          <div id="team-info">
-            {% if team != None %}
+
                  <div class="right">
                     <p>If you want to update or delete your team, <br> contact your local advisors.<br>
                     ⛳    Email: <a href="mailto:mylynnhavenrotary@gmail.com">mylynnhavenrotary@gmail.com</a>  :  Phone: <a href="tel:(850) 248-0701">(850) 248-0701 </a>    ⛳</p>
@@ -297,17 +299,10 @@
                 <div class="left">
                 <p>Members: Abagail Kristen</p>
                 </div>
-
-
-
-
-                {% else %}
-                Create your New Team Now!
-                <a href="{{ url_for('user.user_teamSignup') }}" class="but">New Team</a>
-            <br> ( route to create team form popup)
-                 {% endif %}
-        </div>
+ </div>
     </div>
+                 {% endif %}
+
      <div class="bottom-box">
 <main class="table" id="customers_table">
 

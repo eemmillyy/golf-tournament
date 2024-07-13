@@ -326,6 +326,10 @@
           text-decoration: none;
           cursor: pointer;
         }
+label {
+    display: block; /* Make labels block-level */
+    margin-bottom: 5px; /* Adjust margin below labels */
+}
     </style>
 </head>
 <body>
@@ -497,8 +501,15 @@
                                 <input type="text" placeholder="Last Name" name="MemberLName" id="MemberLName" autocomplete="off">
                                 <p>Enter Member Email:</p>
                                 <input type="text" placeholder="Email" name="MemberEmail" id="MemberEmail" autocomplete="off">
-                                <p>Enter Member Handicap:</p>
-                                <input type="text" placeholder="Handicap (Number 0-54)" name="MemberHCap" id="MemberHCap" autocomplete="off">
+                                <h3> Add Member</h3><br><br>
+                                <div class="form-container">
+                                    <div class="input-box">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" id="MemberFName" name="MemberFName" placeholder="Enter Members First Name" autocomplete="off" required>
+                                    </div>
+                                    <div class="input-box">
+                                    <label for="MemberLName">Last Name</label>
+                                    <input type="text" id="MemberLName" name="MemberLName" placeholder="Enter Members Last Name" autocomplete="off" required>
                                 <br>
                                 <button type="submit" class="but-check">Add Member</button>
 
@@ -526,11 +537,15 @@
                             <div class="modal-content">
                                 <span class="close" id="delMemClose">&times;</span>
                                 <p><form action="/a_DeleteMember" method="POST">
+                                <p><form action="/uc_deleteMember" method="POST">
                                 <p><strong>Delete Member</strong></p>
                                 <p>Are you sure you want to delete the selected member(s)?</p>
                                 <br>
                                 <table>
                                     {% for row in rows %}
+                                         {% if not row["MemberName2"] %}
+                                            <br> <strong>NO MEMBERS TO DELETE</strong>
+                                            {% endif %}
                                         {% if row["MemberName2"] %}
                                         <tr>
                                             <td>

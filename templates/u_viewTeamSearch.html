@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <link rel="stylesheet" href="../static/css/viewtable.css">
-
+        <link rel="stylesheet" href="../static/css/viewer.css">
+    <link rel="stylesheet" href="../static/css/tableone.css">
     <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
@@ -14,11 +15,13 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+
         }
         table {
             border-collapse: collapse;
             width: 100%;
             margin-top: 20px;
+            background-color: white;
         }
         th, td {
             border: 1px solid #ddd;
@@ -115,6 +118,30 @@
                 font-size: 41px;
                 color: black;
               }
+
+h2 {
+    margin-top: 20px; /* Adjust top margin of the Back button */
+    text-align: center; /* Align center for button */
+}
+
+h2 a {
+    display: inline-block;
+    background-color: #4CAF50; /* Example button background color */
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+h2 a:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+.under {
+    margin-top: 200px;
+    margin-right: 100px;
+}
+
     </style>
 </head>
 <body>
@@ -129,6 +156,20 @@
     {% endwith %}
 
     {% if session['logged_in'] and session['user'] %}
+
+        {% if not rows %}
+            <div class="modal-content-none">
+            <div class="center">
+            <h1 class="higher">No Results Found</h1>
+                 <h1 class="second">No Results Found</h1><br><br>
+                 <p>The information you're seeking is unavailable.
+                     <br>Please check your spelling or try again later.</p>
+                <br><br><br><br>
+                <h2><a href="/u_allteamlist">Back</a></h2>
+            </div></div>
+        {% endif %}
+
+      {% if rows %}
         <table>
             <thead>
                 <tr>
@@ -160,11 +201,12 @@
                         {% endif %}
                     </td>
                     <td>{{ row["StartHole"] }}</td>
-
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-    {% endif %}    {% endif %}
+           <div class="under"><h2><a href="/u_allteamlist">Back</a></h2></div>
+        {% endif %}{% endif %}
 </body>
+   <script src="../static/js/table.js"></script>
 </html>

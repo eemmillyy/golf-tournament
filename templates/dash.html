@@ -116,7 +116,7 @@
                     <span>Create Team</span></a>
                 </li>
                 <li>
-                    <a href="/new"><span class="las la-file-invoice-dollar"></span>
+                    <a href="/webhookss"><span class="las la-file-invoice-dollar"></span>
                     <span>Payment Logs</span></a>
                 </li>
                  <li>
@@ -241,7 +241,7 @@
                              <body>
                                     {% if session['logged_in'] and session['admin'] %}
                                         {% if not rows %}
-                                            Currently No Registered Teams
+                                            <strong>Currently No Registered Teams</strong>
                                         {% endif %}
                                       {% for row in rows %}
                                         <div class="team">

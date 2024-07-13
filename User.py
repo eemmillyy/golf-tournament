@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, url_for
-from util import encrypt, validate_string, format_output, search_images, get_profilepic
+from util import encrypt, validate_string, format_output, search_images, get_profilepic, send_email
 from secret_keys import GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
 import sqlite3 as sql
 import Encryption
@@ -377,26 +377,16 @@ def user_teamSignup():
                 cpn = word[4].strip()
                 ce = word[5].strip()
                 pic = word[6].strip()
-                print(m1id)
-                print(m1hc)
-                print(mn1)
-                print(cfn)
-                print(cln)
-                print(cpn)
-                print(ce)
-                print(pic)
                 # search google for logo of sponsor
                 query = request.form['SponsorName']
                 query += ' logo'
                 api_key = GOOGLE_API_KEY
                 cx = GOOGLE_ACCOUNT_KEY
                 image_urls = search_images(query, api_key, cx)
-                print(image_urls)
                 if image_urls:
-                    spic = image_urls[1]
+                    sponpic = image_urls[1]
                 else:
-                    spic = None
-                print(spic)
+                    sponpic = None
                 # get current year
                 year = datetime.datetime.now().year
                 # pull db info - get first available start hole
@@ -451,7 +441,7 @@ def user_teamSignup():
                         cur = con.cursor()
                         cur.execute(
                             "INSERT INTO TeamInfo (TeamName, SponsorName, SponsorPhoto, NeedCart, MemberName1, Member1ID, Member1Handicap, StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                            (tnm, snm, spic, nc, mn1, m1id, m1hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln),
+                            (tnm, snm, sponpic, nc, mn1, m1id, m1hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln),
                              encrypt(cpn), encrypt(ce), pic, code, 1, year))
                         con.commit()
 
@@ -464,10 +454,73 @@ def user_teamSignup():
                 con.rollback()
             finally:
                 con.close()
-                return redirect('joincode')
+                return redirect('entryfee')
         else:
             flash('Page not found')
             return render_template('userdash.html')
+
+#  USER - Routes user to payment verification
+# USER - Routes user to make a payment
+
+
+@user.route('/entryfee', methods=['POST', 'GET'])
+def entryfee():
+    if not session.get('logged_in'):
+        return render_template('home.html')
+    else:
+        nm = session['UserName']
+        # pull db info - get most recently created team
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute(
+            "SELECT TeamId FROM TeamInfo WHERE TeamId =(SELECT max(TeamId) FROM TeamInfo)")
+        num = cur.fetchall()
+        val = num[0]
+        lastTeam = val['TeamId']
+        con.close()
+        # Generate current year for team
+        year = datetime.datetime.now().year
+        # update db info - pull team-id to user db
+        with sql.connect("UserInfoDB.db") as con:
+            cur = con.cursor()
+            cur.execute("UPDATE UserInfo SET UserTeamId = ?, UserTeamYear = ? WHERE UserName = ?",
+                        (lastTeam, year, encrypt(nm)))
+            con.commit()
+        con.close()
+        # pull db info - check team-id in user db
+        con = sql.connect('UserInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute(
+            "SELECT UserTeamId, UserEmail FROM UserInfo WHERE UserName = ?", (encrypt(nm),))
+        rows1 = cur.fetchall()
+        rows = []
+        for row in rows1:
+            newRow = dict(row)
+            newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+            rows.append(newRow)
+        print("theseee: ", rows)
+        con.close()
+
+        # Assuming there is only one dictionary in the list, you can directly access it
+        if rows:
+            user_team_id = rows[0].get('UserTeamId')
+            user_email = rows[0].get('UserEmail')
+
+            print(f"User Team ID: {user_team_id}")
+            print(f"User Email: {user_email}")
+            email = send_email(user_email)
+            print(email)
+
+        else:
+            print("No data found")
+
+        return redirect('joincode')
+
+    # announcement about entry fee split among memebrs, as they join they will recive emails to pay entry fee.
+
+    # send email
 
 
 # USER - Routes user to send team join code
