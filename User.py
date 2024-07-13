@@ -1117,6 +1117,7 @@ def cap_deleteMember():
         with sql.connect('TeamInfoDB.db') as con:
             cur = con.cursor()
             for member in deleteMembers:
+              
                 print("p ", member)
                 if member == MemberName2:
                     print("jiiiiiii")
@@ -1153,15 +1154,16 @@ def cap_deleteMember():
                         "WHERE MemberName4 = ?",
                         (member,))
 
-                # Delete from UserInfo table based on last name
                 splitName = member.split()
                 con3 = sql.connect('UserInfoDB.db')
                 cur3 = con3.cursor()
                 cur3.execute("DELETE FROM UserInfo WHERE UserLName = ? AND UserName IS NULL", (splitName[1],))
 
+
             # Update MemberCount in TeamInfo table
             cur.execute("UPDATE TeamInfo SET MemberCount = MemberCount - ?", (len(deleteMembers),))
             con.commit()
+            con3.commit()
 
     try:
         return render_template('result.html', rows=rowz)

@@ -81,6 +81,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Admin - create team           / connect backend
 
 
+
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
 # - if team has not paid pop up on dash (ask how handled - sponsor paying entry?)
