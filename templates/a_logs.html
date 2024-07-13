@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Payment Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logs {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stripe Payment Logs</h1>
+
+        <div class="logs">
+            <h2>Recent Logs</h2>
+            <pre id="logsContent">
+                <!-- Logs will be dynamically updated here -->
+            </pre>
+        </div>
+
+        <h2>Stripe Integration</h2>
+        <!-- Your Stripe integration form or elements can go here -->
+        <form id="paymentForm">
+            <label for="cardElement">
+                Credit or debit card
+            </label>
+            <div id="cardElement">
+                <!-- Stripe Elements Placeholder -->
+            </div>
+            <button id="submitPayment">Pay</button>
+        </form>
+    </div>
+
+    <!-- Include Stripe.js and your own JavaScript for Stripe integration -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Replace with your actual Stripe publishable key
+        var stripe = Stripe('pk_test_...');
+        var elements = stripe.elements();
+
+        // Create an instance of the card Element
+        var card = elements.create('card');
+
+        // Add an instance of the card Element into the `cardElement` div
+        card.mount('#cardElement');
+
+        // Handle form submission and send payment request to Stripe
+        var form = document.getElementById('paymentForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    // Inform the user if there was an error
+                    var errorElement = document.getElementById('cardErrors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Send the token to your server
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        // Handle the token from Stripe and send to your server
+        function stripeTokenHandler(token) {
+            // Log token data or send to your server for processing
+            console.log(token);
+
+            // Example: Display token in the logs
+            var logsContent = document.getElementById('logsContent');
+            logsContent.textContent = JSON.stringify(token, null, 2);
+        }
+    </script>
+</body>
+   <script src="https://js.stripe.com/v3/"></script>
+</html>

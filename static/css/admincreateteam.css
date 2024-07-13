@@ -104,19 +104,21 @@ a:hover {
     border-radius: 15px;
     outline: none;
     border: 1px solid grey;
-    padding: 0 10px;
-     text-align: center;
+    text-align: center;
+
 }
 .gender-title {
-    color: white;
+    margin-left: 50px;
+    color: black;
     font-size: 24px;
     font-weight: 600;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid black;
 }
 
 .gender-category {
-    margin: 15px 0;
-    color: white;
+    margin-left: 50px;
+    margin-top: 15px;
+    color: black;
 }
 
 .gender-category label {
@@ -135,18 +137,20 @@ a:hover {
 
 .form-submit-btn input{
     display: block;
-    width: 100%;
-    margin-top: 10px;
+    margin-right: 200px;
+    margin-left: -170px;
+    width: 200%;
+    margin-top: -5px;
     font-size: 20px;
     padding: 10px;
     border:none;
     border-radius: 3px;
     color: rgb(209, 209, 209);
-    background: rgba(63, 114, 76, 0.7);
+    background: rgba(63, 114, 76, 0.9);
 }
 
 .form-submit-btn input:hover{
-    background: rgba(56, 204, 93, 0.7);
+    background: rgba(56, 204, 93, 0.9);
     color: rgb(255, 255, 255);
 }
 #newMemberFields1 {
@@ -163,7 +167,7 @@ a:hover {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center items horizontally */
-    justify-content: left; /* Center items vertically */
+    justify-content: center; /* Center items vertically */
     background-color: whitesmoke;
     box-shadow: inset 0px 0px 2px 2px gray;
     padding: 20px;
@@ -173,10 +177,8 @@ a:hover {
 
    .memberName {
     text-align: center;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    padding: 20px;
-    font-size: larger;
+    border-radius: 1px;
+    font-size: 20px;
     width: 200%;
     }
       .memberName b {
@@ -218,6 +220,22 @@ a:hover {
 }
 
 
+.New-hidden,
+.New-hidden2,
+    .New-hidden3,
+    .New-hidden4 {
+    text-align: center;
+    margin-left: 15px;
+    margin-top: 15px;
+    margin-bottom: -10px;
+}
+ .hidden-text,
+    .hidden-text2,
+    .hidden-text3,
+    .hidden-text4
+    {
+       margin-top: -25px;
+ }
     /* Show the hidden text when checkbox is checked */
     #showTextCheckbox:checked + #hiddenText,
     #showTextCheckbox2:checked + #hiddenText2,
@@ -225,9 +243,10 @@ a:hover {
     #showTextCheckbox4:checked + #hiddenText4
     {
         display: block;
-        justify-content: left;
-        margin-left: -70px;
-        margin-bottom: 10px;
+         text-align: center;
+        justify-content: center;
+
+
     }
     #showTextCheckbox:checked ~ #newHidden,
     #showTextCheckbox2:checked ~ #newHidden2,
@@ -242,6 +261,7 @@ a:hover {
     .hidden-text3,
     .hidden-text4
     {
+
         display: none;
     }
     /* Hide the hidden text by default */
@@ -250,5 +270,7 @@ a:hover {
     .New-hidden3,
     .New-hidden4 {
         display: block;
+         text-align: center;
+        justify-content: center;
     }
 

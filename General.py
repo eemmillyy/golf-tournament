@@ -231,8 +231,8 @@ def searchTeamName():
                 return render_template("a_viewTeamSelected.html", rows=rows, UserName=session['UserName'],
                                        result=result)
             if session.get('user'):
-                return render_template("u_viewTeamQuick.html", rows=rows, UserName=session['UserName'], result=result)
+                return render_template("u_viewTeamSearch.html", rows=rows, UserName=session['UserName'], result=result)
 
     except Exception as e:
         flash("Search Error")
-        return render_template('dash.html')
+        return render_template('login-signup.html')

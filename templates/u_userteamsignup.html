@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>*User* Team Sign Up Screen</title>
     <link rel="stylesheet" href="signup.css">
+      <link rel="stylesheet" href="admincreateteam.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         /* Additional styling for better visibility of the text when typing */
@@ -136,10 +137,17 @@
             </div>
              </div>
             <div class="signup-box">
-                <label><b>Needed Cart(s) Amount:</b><label>
-                     <div class="input-box">
-                <input type="text" placeholder="Cart Amount" name="NeedCart" id="cartInput" autocomplete="off">
-            </div>
+                <div class="gender-details-box">
+          <span class="gender-title">Needed Cart(s) Amount</span>
+          <div class="gender-category">
+            <input type="radio" name="NeedCart" id="0" value="0">
+            <label for="0"> 0 </label>
+            <input type="radio" name="NeedCart" id="1" value="1">
+            <label for="1"> 1 </label>
+            <input type="radio" name="NeedCart" id="2" value="2">
+            <label for="2"> 2 </label>
+          </div>
+        </div>
              </div>
              {% for row in rows %}
             <input type="text" name="MemberName1" value="{{ row['UserId'] }}, {{ row['UserHandicap'] }}, {{ row['UserFName'] }}, {{ row['UserLName'] }}, {{ row['UserPhNum'] }}, {{ row['UserEmail']}}, ../{{ photo }}" id="memberName1Input" style="display:none">

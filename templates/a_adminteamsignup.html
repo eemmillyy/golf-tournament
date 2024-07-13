@@ -21,17 +21,41 @@
 
     }
      .label {
-        font-weight: bold;
-        text-align: center;
-
-
+         text-align: center;
+         font-weight: bold;
+         border-style: solid;
+         box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2); /* White glow shadow */
+         border-width: 2px;
+         border-color: gray;
+        border-radius: 20px;
+        display: inline-block;
+        padding: 5px;
+        box-sizing: border-box;
 
     }
      .label:hover {
          font-size: 20px;
-        font-weight: bolder;
+         background-color: gray;
+         border-style: solid;
+         border-width: 2px;
+         border-color: dimgray;
+          box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3); /* White glow shadow */
+          padding: 5px;
+         color: white;
 
     }
+
+     input {
+           background-color: #eee;
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.3); /* White glow shadow */
+    border: none;
+    margin: 8px 0;
+
+    font-size: 14px;
+    border-radius: 10px;
+
+    outline: none;
+     }
 
 .select-wrapper {
   display: inline-block; /* Ensure the select wrapper doesn't take full width */
@@ -39,9 +63,12 @@
   border-radius: 4px; /* Rounded corners */
   overflow: hidden; /* Hide overflow to prevent options from being cut off */
 }
+.select {
+    margin-top: 20px;
+}
 
 select {
-  padding: 0px 0px; /* Adjust padding as needed */
+    margin-top: -30px;
   font-size: 16px; /* Adjust font size as needed */
   border: none; /* Remove default border */
     border-radius: 10px;
@@ -70,7 +97,6 @@ select:focus {
 select:disabled {
   opacity: 0.5; /* Adjust opacity for disabled state */
 }
-
 
 
 </style>
@@ -192,24 +218,25 @@ select:disabled {
             <div class="container1">
      <div class="user-box" id="userBox1">
           <div class="user-input-box">
-                <label class="memberName" for="MemberName1"><b>Team Captain:</b></label>
-               <label for="showTextCheckbox" class="label">Create New Member</label>
+                <label class="memberName" for="MemName1"><b>Team Captain:</b></label>
+               <label for="showTextCheckbox" class="label">Create Member</label>
                    <input hidden="hidden" type="checkbox" id="showTextCheckbox" name="showTextCheckbox">
                <div id="hiddenText" class="hidden-text"><br><br>
-                          <label for="MemberName1">Member Name</label>
                              <input type="text"
-                                id="MemberName1"
-                                name="MemberName1"
-                                placeholder="Enter Members First and Last Name"/>
-                          <label for="MemberEmail1">Member Email</label>
+                                id="MemberFullName1"
+                                name="MemberFullName1"
+                                placeholder="Full Name"/>
                              <input type="email"
                                 id="MemberEmail1"
                                 name="MemberEmail1"
-                                placeholder="Enter Members Email Address"/>
-                          <label for="Memberhc1">Handicap Level</label>
+                                placeholder="Email Address"/>
+                             <input type="phone"
+                                id="MemberPhone1"
+                                name="MemberPhone1"
+                                placeholder="Phone Number"/>
                                 <div class="dropdown">
-                                <select name="UserHandicap" id="UserHandicap">
-                                <option value="Handicap">Select Handicap Status</option>
+                                <select name="Member1Handicap" id="Member1Handicap" class="select">
+                                <option value="M1Handicap">Select Handicap Status</option>
                                  <script>
                                 for (let i = 0; i <= 54; i++) {
                                     document.write(`<option value="${i}">${i}</option>`);
@@ -233,31 +260,28 @@ select:disabled {
 
       <div class="user-box" id="userBox2">
           <div class="user-input-box">
-            <label class="memberName" for="MemberName2"><b>Member:</b></label>
-          <label for="showTextCheckbox2" class="label"> Create New Member </label>
+             <label class="memberName" for="MemberName2"><b>Member:</b></label>
+               <label for="showTextCheckbox2" class="label">Create Member</label>
                    <input hidden="hidden" type="checkbox" id="showTextCheckbox2" name="showTextCheckbox2">
-                <div id="hiddenText2" class="hidden-text2"><br><br>
-                          <label for="MemberName2">Member Name</label>
+               <div id="hiddenText2" class="hidden-text2"><br><br>
                              <input type="text"
                                 id="MemberName2"
                                 name="MemberName2"
-                                placeholder="Enter Members First and Last Name"/>
-                          <label for="MemberEmail2">Member Email</label>
+                                placeholder="Full Name"/>
                              <input type="email"
                                 id="MemberEmail2"
                                 name="MemberEmail2"
-                                placeholder="Enter Members Email Address"/>
-                          <label for="Memberhc2">Handicap Level</label>
+                                placeholder="Email Address"/>
                                 <div class="dropdown">
-                                <select name="UserHandicap" id="UserHandicap">
-                                <option value="Handicap">Select Handicap Status</option>
+                                <select name="Member2Handicap" id="Member2Handicap" class="select">
+                                <option value="M2Handicap">Select Handicap Status</option>
                                  <script>
                                 for (let i = 0; i <= 54; i++) {
                                     document.write(`<option value="${i}">${i}</option>`);
                                 }
                             </script>
                             </select>
-                                </div></div>
+                              </div> </div>
 
            <div id="newHidden2" class="New-hidden2">   <p>OR</p><br><br>
                 <select name="MemberName2" id="MemberName2">
@@ -270,38 +294,35 @@ select:disabled {
                         {% endif %}
                     {% endfor %}
                 </select>
-           </div>  </div> </div>
+           </div></div></div>
 
         <div class="container1">
    <div class="user-box" id="userBox3">
           <div class="user-input-box">
                   <label class="memberName" for="MemberName3"><b>Member:</b></label>
-           <label for="showTextCheckbox3" class="label"> Create New Member </label>
+               <label for="showTextCheckbox3" class="label">Create Member</label>
                    <input hidden="hidden" type="checkbox" id="showTextCheckbox3" name="showTextCheckbox3">
-                <div id="hiddenText3" class="hidden-text3"> <br><br>
-                          <label for="MemberName3">Member Name</label>
+               <div id="hiddenText3" class="hidden-text3"><br><br>
                              <input type="text"
                                 id="MemberName3"
                                 name="MemberName3"
-                                placeholder="Enter Members First and Last Name"/>
-                          <label for="MemberEmail3">Member Email</label>
+                                placeholder="Full Name"/>
                              <input type="email"
                                 id="MemberEmail3"
                                 name="MemberEmail3"
-                                placeholder="Enter Members Email Address"/>
-                          <label for="Memberhc3">Handicap Level</label>
+                                placeholder="Email Address"/>
                                 <div class="dropdown">
-                                <select name="UserHandicap" id="UserHandicap">
-                                <option value="Handicap">Select Handicap Status</option>
+                                <select name="Member3Handicap" id="Member3Handicap" class="select">
+                                <option value="M3Handicap">Select Handicap Status</option>
                                  <script>
                                 for (let i = 0; i <= 54; i++) {
                                     document.write(`<option value="${i}">${i}</option>`);
                                 }
                             </script>
                             </select>
-                              </div></div>
-                </div>
-           <div id="newHidden3" class="New-hidden3">    <p>OR</p><br><br>
+                              </div> </div>
+
+           <div id="newHidden3" class="New-hidden3">   <p>OR</p><br><br>
                 <select name="MemberName3" id="MemberName3">
                     <option value="Name3">Select A User</option>
                     {% for row in rows %}
@@ -312,37 +333,34 @@ select:disabled {
                         {% endif %}
                     {% endfor %}
                 </select>
-           </div></div>
+           </div></div></div>
 
        <div class="user-box" id="userBox4">
        <div class="user-input-box">
        <label class="memberName" for="MemberName4"><b>Member:</b></label>
-           <label for="showTextCheckbox4" class="label"> Create New Member </label>
+               <label for="showTextCheckbox4" class="label">Create Member</label>
                    <input hidden="hidden" type="checkbox" id="showTextCheckbox4" name="showTextCheckbox4">
-                <div id="hiddenText4" class="hidden-text4"><br><br>
-                          <label for="MemberName4">Member Name</label>
+               <div id="hiddenText4" class="hidden-text4"><br><br>
                              <input type="text"
                                 id="MemberName4"
                                 name="MemberName4"
-                                placeholder="Enter Members First and Last Name"/>
-                          <label for="MemberEmail4">Member Email</label>
+                                placeholder="Full Name"/>
                              <input type="email"
                                 id="MemberEmail4"
                                 name="MemberEmail4"
-                                placeholder="Enter Members Email Address"/>
-                          <label for="Memberhc4">Handicap Level</label>
+                                placeholder="Email Address"/>
                                 <div class="dropdown">
-                                <select name="UserHandicap" id="UserHandicap">
-                                <option value="Handicap">Select Handicap Status</option>
+                                <select name="Member4Handicap" id="Member4Handicap" class="select">
+                                <option value="M4Handicap">Select Handicap Status</option>
                                  <script>
                                 for (let i = 0; i <= 54; i++) {
                                     document.write(`<option value="${i}">${i}</option>`);
                                 }
                             </script>
                             </select>
-                              </div></div>
-                </div>
-           <div id="newHidden4" class="New-hidden4"> <p>OR</p><br><br>
+                              </div> </div>
+
+           <div id="newHidden4" class="New-hidden4">   <p>OR</p><br><br>
                 <select name="MemberName4" id="MemberName4">
                     <option value="Name4">Select A User</option>
                     {% for row in rows %}
@@ -353,9 +371,7 @@ select:disabled {
                         {% endif %}
                     {% endfor %}
                 </select>
-           </div>
-
-   </div>
+           </div></div></div>
         <div class="gender-details-box">
           <span class="gender-title">Needed Cart(s) Amount</span>
           <div class="gender-category">
