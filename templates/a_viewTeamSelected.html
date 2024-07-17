@@ -389,6 +389,17 @@
               text-align: left;
                 font-size: 20px;
             }
+            .modal-content-none{
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 30%;
+                height: 400px;
+              border-radius: 15px;
+              text-align: center;
+                font-size: 20px;
+            }
               input {
                   margin-bottom: 10px;
                   size: 50px;
@@ -420,6 +431,20 @@
                 margin-top: 20px;
                 text-align: center;
             }
+            .higher {
+                margin-top: 00px;
+                color: lightgrey;
+                  font-size: 50px;
+            }
+            .center {
+                justify-content: center;
+            }
+            .second {
+                 margin-top: -32px;
+                margin-left: 7px;
+                font-size: 41px;
+                color: black;
+              }
 
     </style>
 </head>
@@ -429,12 +454,15 @@
                 Viewing Team Info <span class="las la-info-circle"></span>
             </h2>
 
-            <div class="user-wrapper">
+             <div class="user-wrapper">
                  <a href="{{ url_for('both.view') }}">
                 <img src="../{{ photo }}" height="50" width="50">
                  </a>
                 <div>
-                    <a href="{{ url_for('both.view') }}"><h4> {{UserName}} </h4></a>
+                    <a href="{{ url_for('both.view') }}">
+
+                        <h4> {{UserName}} </h4>
+                    </a>
                 </div>
             </div>
         </header>
@@ -451,10 +479,15 @@
 
 {% if session['logged_in'] and session['admin'] %}
     {% if not rows %}
-        <div>
-        <h1>No Results Found</h1>
+        <div class="modal-content-none">
+        <div class="center">
+        <h1 class="higher">No Results Found</h1>
+             <h1 class="second">No Results Found</h1><br><br>
+             <p>The information you're seeking is unavailable.
+                 <br>Please check your spelling or try again later.</p>
+            <br><br><br><br>
             <h2><a href="/allteamlist">Back</a></h2>
-        </div>
+        </div></div>
     {% endif %}
 
 
@@ -610,9 +643,9 @@
                 <input type="text" name="NeedCart" value="{{ row['NeedCart'] }}">
 
 <br>
-             <label for="Member1Name">Member One Name:</label>
+             <label for="Member1Name">Member 1 Name:</label>
                      <select id="MemberName1" name="MemberName1">
-                    <option value="">Add Member</option>
+                    <option value="">{{ row['MemberName1'] }}</option>
                 </select>
 
     <input type="checkbox" name="Member1Custom" onchange="toggleCustomInput(this)">
@@ -621,104 +654,71 @@
         <input type="text" name="Member1CustomFName" placeholder="First Name">
           <input type="text" name="Member1CustomLName" placeholder="Last Name">
         <input type="email" name="Member1CustomEmail" placeholder="Email">
-         <input type="number" name="Member1Customnumber" placeholder="Phone Number">
+         <input type="tel" name="Member1Customnumber" placeholder="Phone Number">
+    <input type="number" name="Member1CustomHc" placeholder="Handicap (0-54)" >
     </div>
 
 
 
-     <br><label for="Member2Name">Member Two Name:</label>
+     <br><label for="Member2Name">Member 2 Name:</label>
     {% if row['MemberName2'] == none or row['MemberName2'] == "None" %}
     <select id="MemberName2" name="MemberName2">
         <option value="">Add Member</option>
     </select>
     {% else %}
-        <input type="text" name="MemberName2" value="{{ row['MemberName2'] }}">
-    {% endif %}
+         <select name="MemberName2" id="MemberName2" >
+          <option value=""> {{ row['MemberName2'] }}</option>
+           </select>
 
-     <br><label for="Member3Name">Member Three Name:</label>
+    {% endif %}
+     <input type="checkbox" name="Member2Custom" onchange="toggleCustomInput(this)">
+    <label for="Member2Custom">Custom</label>
+    <div id="Member2CustomInput" style="display: none;">
+        <input type="text" name="Member2CustomFName" placeholder="First Name">
+        <input type="text" name="Member2CustomLName" placeholder="Last Name">
+        <input type="email" name="Member2ustomEmail" placeholder="Email">
+        <input type="number" name="Member2CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+     <br><label for="Member3Name">Member 3 Name:</label>
     {% if row['MemberName3'] == none or row['MemberName3'] == "None" %}
     <select id="MemberName3" name="MemberName3">
         <option value="">Add Member</option>
     </select>
     {% else %}
-        <input type="text" name="MemberName3" value="{{ row['MemberName3'] }}">
+       <select name="MemberName3" id="MemberName3" >
+          <option value=""> {{ row['MemberName3'] }}</option>
+           </select>
     {% endif %}
+    <input type="checkbox" name="Member3Custom" onchange="toggleCustomInput(this)">
+    <label for="Member3Custom">Custom</label>
+    <div id="Member3CustomInput" style="display: none;">
+        <input type="text" name="Member3CustomFName" placeholder="First Name">
+        <input type="text" name="Member3CustomLName" placeholder="Last Name">
+        <input type="email" name="Member3ustomEmail" placeholder="Email">
+        <input type="number" name="Member3CustomHc" placeholder="Handicap (0-54)" >
+    </div>
 
-    <br><label for="Member4Name">Member Four Name:</label>
+    <br><label for="Member4Name">Member 4 Name:</label>
     {% if row['MemberName4'] == none or row['MemberName4'] == "None" %}
     <select id="MemberName4" name="MemberName4">
         <option value="">Add Member</option>
     </select>
     {% else %}
-        <input type="text" name="MemberName4" value="{{ row['MemberName4'] }}">
+       <select name="MemberName4" id="MemberName4" >
+          <option value=""> {{ row['MemberName4'] }}</option>
+           </select>
     {% endif %}
+   <input type="checkbox" name="Member4Custom" onchange="toggleCustomInput(this)">
+    <label for="Member4Custom">Custom</label>
+    <div id="Member4CustomInput" style="display: none;">
+        <input type="text" name="Member4CustomFName" placeholder="First Name">
+        <input type="text" name="Member4CustomLName" placeholder="Last Name">
+        <input type="email" name="Member4CustomEmail" placeholder="Email">
+        <input type="number" name="Member4CustomHc" placeholder="Handicap (0-54)" >
+    </div>
 
 
-
-            <div class="hcinput">
-
-                    <br>{{ row['MemberName1'] }} handicap status: </br>
-
-                             <select name="Member1Handicap" id="Member1Handicap">
-                                 <script>
-                                for (let i = 0; i <= 54; i++) {
-                                document.write(`<option value="${i}">${i}</option>`);
-                                 }
-                                </script>
-                             </select>
-
-
-
-
-
-
-                {% if not row['MemberName2'] is none or row['MemberName2'] == "None" %}
-                <br>{{ row['MemberName2'] }} handicapped status: </br>
-                    <input type="checkbox" name="Member2Handicap" value="{{ row['Member2Handicap'] }}"
-                    {% if row['Member2Handicap'] == "✔" or row['Member2Handicap' == " ✔"] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-
-                {% if not row['MemberName3'] is none or row['MemberName3'] == "None" %}
-                <br>{{ row['MemberName3'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member3Handicap" value="{{ row['Member3Handicap'] }}"
-                    {% if row['Member3Handicap'] == "✔" or row['Member3Handicap' == " ✔"] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-
-                {% if not row['MemberName4'] is none or row['MemberName4'] == "None" %}
-                <br>{{ row['MemberName4'] }} is handicapped?: </br>
-                    <input type="checkbox" name="Member4Handicap" value="{{ row['Member4Handicap'] }}"
-                    {% if row['Member4Handicap'] == "✔" or row['Member4Handicap' == " ✔"] %}
-                        checked
-                    {% endif %}
-                    onclick="updateHandicapValue(this)"
-                    >
-                {% endif %}
-        </div>
-
-        <script>
-
-
-         // Original handicap status stored in a variable or retrieved from a source
-    var originalHandicap = "{{ row['Member1Handicap'] }}";
-    // Find the select element
-    var selectElement = document.getElementById("Member1Handicap");
-
-    // Loop through options and select the one matching the original handicap status
-    for (var i = 0; i < selectElement.options.length; i++) {
-        if (selectElement.options[i].value === originalHandicap) {
-            selectElement.options[i].selected = true;
-            break;
-        }
-    }
-        </script>
 
 
         <br><label for="Start Hole">Starting Hole:</label>
@@ -834,6 +834,9 @@
     <img src="{{ row['SponsorPhoto'] }}" alt="" height="320" width="390" class="sponsor_picture">
     <div class="sponsor-text">
      <p>{{ row['TeamName'] }} is sponsored by:<br><br><strong>{{ row['SponsorName'] }}</strong></p>
+        <br>
+        <br>
+        <a class="editpic" href="search_p"></a>
 
 
     </div>
@@ -898,10 +901,10 @@
     var customInput = checkbox.nextElementSibling.nextElementSibling;
     if (checkbox.checked) {
         customInput.style.display = 'block';
-        checkbox.previousElementSibling.style.display = 'none'; // Hide the select dropdown
+        checkbox.previousElementSibling.style.pointerEvents = 'none';// Hide the select dropdown
     } else {
         customInput.style.display = 'none';
-        checkbox.previousElementSibling.style.display = 'block'; // Show the select dropdown
+        checkbox.previousElementSibling.style.pointerEvents = 'auto';
     }
 }
 </script>

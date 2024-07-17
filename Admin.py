@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, url_for
-from util import cartCounter, encrypt, validate_string, format_output, search_images, get_profilepic, reset_cart, count_carts
+from util import cartCounter, encrypt, validate_string, format_output, search_images, get_profilepic, reset_cart, count_carts, total
 from collections import defaultdict
 from secret_keys import GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
 import sqlite3 as sql
@@ -20,6 +20,8 @@ def dash():
         return render_template('home.html')
     # get current year
     current_year = datetime.datetime.now().year
+    # get total
+    current_total = total()
     # pull db info - quick team view
     con = sql.connect("TeamInfoDB.db")
     con.row_factory = sql.Row
@@ -86,7 +88,7 @@ def dash():
     photo = get_profilepic()
     # ^get^ and return all information from SQL DB that needs to be shown on dash screen
     return render_template("dash.html", rows=rows, UserName=session['UserName'], i=i, AllCartsNeeded=AllCartsNeeded,
-                           checkedin=checkedin, all=all, photo=photo)
+                           checkedin=checkedin, all=all, photo=photo, current_total=current_total)
 
 # **********************************************************************************************
 #                                       FOR ADMINS                         lines: 1264-2224    *
@@ -449,50 +451,81 @@ def admin_teamSignup():
                 tnm = request.form['TeamName']
                 snm = request.form['SponsorName']
                 nc = request.form['NeedCart']
-
                 m1info = request.form['MemberName1']
-                word = m1info.split(',')
-                m1id = word[0].strip()
-                m1hc = word[1]
-                mn1 = word[2].strip()
-                cfn = word[3].strip()
-                cln = word[4].strip()
-                cpn = word[5].strip()
-                ce = word[6].strip()
-                cp = word[7].strip()
-                memberCount += 1
-                print(m1id)
-                print(m1hc)
-                print(mn1)
-                print(cfn)
-                print(cln)
-                print(cpn)
-                print(ce)
-                print(cp)
+                if m1info != "Name1":
+                    word = m1info.split(',')
+                    m1id = word[0].strip()
+                    m1hc = word[1]
+                    mn1 = word[2].strip()
+                    cfn = word[3].strip()
+                    cln = word[4].strip()
+                    cpn = word[5].strip()
+                    ce = word[6].strip()
+                    cp = word[7].strip()
+                    memberCount += 1
+                    print(m1id)
+                    print(m1hc)
+                    print(mn1)
+                    print(cfn)
+                    print(cln)
+                    print(cpn)
+                    print(ce)
+                    print(cp)
+                else:
+                    # USER NEEDS ID HERE
+                    mn1 = request.form.get('MemberFullName1')
+                    ce = request.form.get('MemberEmail1')
+                    cpn = request.form.get('MemberPhone1')
+                    m1hc = int(request.form.get('Member1Handicap'))
+                    cp = "../static/css/uploads/default.jpeg"
+                    if len(mn1) > 1:
+                        cfn = mn1[0].strip()  # Get the first element
+                        cln = mn1[-1].strip()  # Get the last element
+                        print(cfn)
+                        print(cln)
 
                 m2info = request.form['MemberName2']
                 word = m2info.split(',')
-                if len(word) >= 3:
-                    m2id = word[0].strip()
-                    m2hc = word[1]
-                    mn2 = word[2].strip()
-                    memberCount += 1
+                if m2info != "Name2":
+                    if len(word) >= 3:
+                        m2id = word[0].strip()
+                        m2hc = word[1]
+                        mn2 = word[2].strip()
+                        m2e = word[8].strip()
+                        memberCount += 1
+                else:
+                    # USER NEEDS ID HERE
+                    mn2 = request.form.get('MemberFullName2')
+                    m2e = request.form.get('MemberEmail2')
+                    m2hc = int(request.form.get('Member2Handicap'))
 
                 m3info = request.form['MemberName3']
                 word = m3info.split(',')
-                if len(word) >= 3:
-                    m3id = word[0].strip()
-                    m3hc = word[1]
-                    mn3 = word[2].strip()
-                    memberCount += 1
+                if m3info != "Name3":
+                    if len(word) >= 3:
+                        m3id = word[0].strip()
+                        m3hc = word[1]
+                        mn3 = word[2].strip()
+                        memberCount += 1
+                else:
+                    # USER NEEDS ID HERE
+                    mn3 = request.form.get('MemberFullName3')
+                    m3e = request.form.get('MemberEmail3')
+                    m3hc = int(request.form.get('Member3Handicap'))
 
                 m4info = request.form['MemberName4']
                 word = m4info.split(',')
-                if len(word) >= 3:
-                    m4id = word[0].strip()
-                    m4hc = word[1]
-                    mn4 = word[2].strip()
-                    memberCount += 1
+                if m4info != "Name4":
+                    if len(word) >= 3:
+                        m4id = word[0].strip()
+                        m4hc = word[1]
+                        mn4 = word[2].strip()
+                        memberCount += 1
+                else:
+                    # USER NEEDS ID HERE
+                    mn4 = request.form.get('MemberFullName4')
+                    m4e = request.form.get('MemberEmail4')
+                    m4hc = int(request.form.get('Member4Handicap'))
 
                 # search google for logo of sponsor
                 query = request.form['SponsorName']
@@ -502,10 +535,10 @@ def admin_teamSignup():
                 image_urls = search_images(query, api_key, cx)
                 print(image_urls)
                 if image_urls:
-                 spic = image_urls[1]
+                 sponpic = image_urls[1]
                 else:
-                    spic = None
-                print(spic)
+                    sponpic = None
+                print(sponpic)
                 # get current year
                 year = datetime.datetime.now().year
                 # get start hole
@@ -548,10 +581,6 @@ def admin_teamSignup():
                     valid_input = False
                     err_string = err_string + "<br>You cannot enter in an empty contact first name."
 
-                if (int(nc) <= -1) or (int(nc) >= 3):
-                    valid_input = False
-                    err_string = err_string + "<br>You cannot enter in an empty cart."
-
                 if not validate_string(cln):
                     valid_input = False
                     err_string = err_string + "<br>You can not enter in an empty contact last name."
@@ -569,6 +598,7 @@ def admin_teamSignup():
                         return render_template("result.html", msg=format_output(err_string))
 
                 if valid_input:
+
                     with sql.connect("TeamInfoDB.db") as con:
                         cur = con.cursor()
                         cur.execute(
@@ -576,7 +606,7 @@ def admin_teamSignup():
                             " MemberName3, MemberName4, Member1ID, Member2ID, Member3ID, Member4ID, Member1Handicap,"
                             " Member2Handicap, Member3Handicap, Member4Handicap, StartHole, Member1Here, Member2Here,"
                             " Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                            (tnm, snm, spic, nc, mn1, mn2, mn3, mn4, m1id, m2id, m3id, m4id, m1hc, m2hc,
+                            (tnm, snm, sponpic, nc, mn1, mn2, mn3, mn4, m1id, m2id, m3id, m4id, m1hc, m2hc,
                              m3hc, m4hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln), encrypt(cpn), encrypt(ce), cp,
                              code, memberCount, year))
 
@@ -764,28 +794,6 @@ def admin_checkin(TeamId):
 # ADMIN - Update teams
 @admin.route('/updateTeam/<int:TeamId>', methods=['POST'])
 def updateTeamForm(TeamId):
-    if 'UserName' not in session:
-        return redirect(url_for('auth.log_in'))
-
-    nm = session['UserName']
-    con = sql.connect('UserInfoDB.db')
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    cur.execute(
-        "SELECT UserTeamId, UserTeamLead FROM UserInfo WHERE UserName = ?",
-        (encrypt(nm),))
-    rowz = cur.fetchall()
-    if rowz:
-        UserTeamLead = rowz[0]['UserTeamLead']
-    else:
-        UserTeamLead = None
-
-    rowzz = []
-    for row in rowz:
-        newRow = dict(row)
-        rowzz.append(newRow)
-    con.close()
-
     if not session.get('logged_in'):
         return render_template('home.html')
 
@@ -1255,8 +1263,8 @@ def a_ReviveTeam(TeamId):
         mc = int(mc_list[0])
         snm_list = [d['SponsorName'] for d in rowz]
         snm = str(snm_list[0])
-        spic_list = [d['SponsorPhoto'] for d in rowz]
-        spic = str(spic_list[0])
+        sponpic_list = [d['SponsorPhoto'] for d in rowz]
+        sponpic = str(sponpic_list[0])
         nc_list = [d['NeedCart'] for d in rowz]
         nc = int(nc_list[0])
         mn1_list = [d['MemberName1'] for d in rowz]
@@ -1340,7 +1348,7 @@ def a_ReviveTeam(TeamId):
                 "MemberName2, Member2ID, Member2Handicap, MemberName3, Member3ID, Member3Handicap, MemberName4, Member4ID, Member4Handicap,"
                 " StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail,"
                 " ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (tnm, snm, spic, nc, mn1, m1id, m1hc, mn2, m2id, m2hc, mn3, m3id, m3hc, mn4, m4id, m4hc, sh, m1h, m2h, m3h, m4h, encrypt(cfn), encrypt(cln),
+                (tnm, snm, sponpic, nc, mn1, m1id, m1hc, mn2, m2id, m2hc, mn3, m3id, m3hc, mn4, m4id, m4hc, sh, m1h, m2h, m3h, m4h, encrypt(cfn), encrypt(cln),
                  encrypt(cpn), encrypt(ce), pic, code, mc, year))
             con.commit()
         # pull info - team db info

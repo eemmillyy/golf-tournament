@@ -287,6 +287,16 @@
           border-radius: 15px;
           text-align: center;
         }
+        .modal-content-e {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 30%;
+              border-radius: 15px;
+              text-align: left;
+                font-size: 20px;
+            }
         .modal2 {
           display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
@@ -326,6 +336,28 @@
           text-decoration: none;
           cursor: pointer;
         }
+        .near {
+            white-space: nowrap;
+            text-align: left;
+        }
+        .form-container {
+            display: inherit;
+
+    justify-content: space-between; /* Distribute columns evenly */
+    margin-left: -300px;
+    max-width: 200px; /* Adjust max-width as needed */
+}
+
+.column {
+    flex: 1; /* Each column takes up equal space */
+    margin-right: 20px; /* Adjust margin between columns */
+}
+
+.input-box {
+    margin-bottom: 15px; /* Adjust margin between input boxes */
+    white-space: nowrap;
+}
+
 label {
     display: block; /* Make labels block-level */
     margin-bottom: 5px; /* Adjust margin below labels */
@@ -442,22 +474,22 @@ label {
 
                         {% if row["MemberName1"] %}
                        <td>
-                             <p>{{ row["MemberName1"] }} </br> <br> </br><br> here: {{ row["Member1Here"] }}</br><br> HCAP: {{ row["Member1Handicap"] }}</br></p>
+                             <p>{{ row["MemberName1"] }} </br> <br> <br><br> here: {{ row["Member1Here"] }}</br><br> HCAP: {{ row["Member1Handicap"] }}</br></p>
                        </td>
                        {% endif %}
                        {% if row["MemberName2"] %}
                         <td>
-                            <p>{{ row["MemberName2"] }} </br> <br> </br><br> here: {{ row["Member2Here"] }}</br><br> HCAP: {{ row["Member2Handicap"] }}</br></p>
+                            <p>{{ row["MemberName2"] }} </br> <br> <br><br> here: {{ row["Member2Here"] }}</br><br> HCAP: {{ row["Member2Handicap"] }}</br></p>
                         </td>
                        {% endif %}
                        {% if row["MemberName3"] %}
                         <td>
-                            <p>{{ row["MemberName3"] }} </br> <br> </br><br> here: {{ row["Member3Here"] }}</br><br> HCAP: {{ row["Member3Handicap"] }}</br></p>
+                            <p>{{ row["MemberName3"] }} </br> <br> <br><br> here: {{ row["Member3Here"] }}</br><br> HCAP: {{ row["Member3Handicap"] }}</br></p>
                         </td>
                        {% endif %}
                        {% if row["MemberName4"] %}
                         <td>
-                            <p>{{ row["MemberName4"] }} </br> <br> </br><br> here: {{ row["Member4Here"] }}</br><br> HCAP: {{ row["Member4Handicap"] }}</br></p>
+                            <p>{{ row["MemberName4"] }} </br> <br> <br><br> here: {{ row["Member4Here"] }}</br><br> HCAP: {{ row["Member4Handicap"] }}</br></p>
                         </td>
                        {% endif %}
                        <td>{{ row["StartHole"] }}</td>
@@ -486,7 +518,128 @@ label {
             </table>
         </section>
     <div class="row">
-                    <td><a href="{{ url_for('user.edit_TeamForm', TeamId=row['TeamId']) }}" class="but-edit">Edit</a></td>
+
+          <button id="EditButton" class="but-edit">Edit</button>
+        <div id="editPop" class="modal">
+            <div class="modal-content-e">
+                <span class="close">&times;</span>
+                <p><form action="/updateTeam/{{ row["TeamId"] }}" method="POST">
+                <p><strong>Edit {{ row['TeamName'] }} Information</strong></p>
+                {% if session['logged_in'] %}
+                {% for row in rows %}
+
+
+                <br><br><label for="TeamName">Team Name:</label>
+                <input type="text" name="TeamName" value="{{ row['TeamName'] }}" size="30" />
+                <br><label for="SponsorName">Sponsor:</label>
+                <input type="text" name="SponsorName" value="{{ row['SponsorName'] }}" size="30" />
+
+                <br><label for="Cart">Need Cart?:</label>
+                <input type="text" name="NeedCart" value="{{ row['NeedCart'] }}">
+
+<br>
+             <label for="Member1Name">Member 1 Name:</label>
+                     <select id="MemberName1" name="MemberName1">
+                    <option value="">{{ row['MemberName1'] }}</option>
+                </select>
+
+    <input type="checkbox" name="Member1Custom" onchange="toggleCustomInput(this)">
+    <label for="Member1Custom">Custom</label>
+    <div id="Member1CustomInput" style="display: none;">
+        <input type="text" name="Member1CustomFName" placeholder="First Name">
+          <input type="text" name="Member1CustomLName" placeholder="Last Name">
+        <input type="email" name="Member1CustomEmail" placeholder="Email">
+         <input type="tel" name="Member1Customnumber" placeholder="Phone Number">
+    <input type="number" name="Member1CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+
+
+     <br><label for="Member2Name">Member 2 Name:</label>
+    {% if row['MemberName2'] == none or row['MemberName2'] == "None" %}
+    <select id="MemberName2" name="MemberName2">
+        <option value="">Add Member</option>
+    </select>
+    {% else %}
+         <select name="MemberName2" id="MemberName2" >
+          <option value=""> {{ row['MemberName2'] }}</option>
+           </select>
+
+    {% endif %}
+     <input type="checkbox" name="Member2Custom" onchange="toggleCustomInput(this)">
+    <label for="Member2Custom">Custom</label>
+    <div id="Member2CustomInput" style="display: none;">
+        <input type="text" name="Member2CustomFName" placeholder="First Name">
+        <input type="text" name="Member2CustomLName" placeholder="Last Name">
+        <input type="email" name="Member2ustomEmail" placeholder="Email">
+        <input type="number" name="Member2CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+     <br><label for="Member3Name">Member 3 Name:</label>
+    {% if row['MemberName3'] == none or row['MemberName3'] == "None" %}
+    <select id="MemberName3" name="MemberName3">
+        <option value="">Add Member</option>
+    </select>
+    {% else %}
+       <select name="MemberName3" id="MemberName3" >
+          <option value=""> {{ row['MemberName3'] }}</option>
+           </select>
+    {% endif %}
+    <input type="checkbox" name="Member3Custom" onchange="toggleCustomInput(this)">
+    <label for="Member3Custom">Custom</label>
+    <div id="Member3CustomInput" style="display: none;">
+        <input type="text" name="Member3CustomFName" placeholder="First Name">
+        <input type="text" name="Member3CustomLName" placeholder="Last Name">
+        <input type="email" name="Member3ustomEmail" placeholder="Email">
+        <input type="number" name="Member3CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+    <br><label for="Member4Name">Member 4 Name:</label>
+    {% if row['MemberName4'] == none or row['MemberName4'] == "None" %}
+    <select id="MemberName4" name="MemberName4">
+        <option value="">Add Member</option>
+    </select>
+    {% else %}
+       <select name="MemberName4" id="MemberName4" >
+          <option value=""> {{ row['MemberName4'] }}</option>
+           </select>
+    {% endif %}
+   <input type="checkbox" name="Member4Custom" onchange="toggleCustomInput(this)">
+    <label for="Member4Custom">Custom</label>
+    <div id="Member4CustomInput" style="display: none;">
+        <input type="text" name="Member4CustomFName" placeholder="First Name">
+        <input type="text" name="Member4CustomLName" placeholder="Last Name">
+        <input type="email" name="Member4CustomEmail" placeholder="Email">
+        <input type="number" name="Member4CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+
+
+
+        <br><label for="Start Hole">Starting Hole:</label>
+        <input type="text" name="StartHole" value="{{ row['StartHole'] }}">
+
+        <br><label for="ContactFName">Contact First Name:</label>
+        <input type="text" name="ContactFName" value="{{ row['ContactFName'] }}" readonly>
+
+        <br><label for="ContactLName">Contact Last Name:</label>
+        <input type="text" name="ContactLName" value="{{ row['ContactLName'] }}" readonly>
+
+        <br><label for="Contact Number">Contact Number:</label>
+        <input type="text" name="ContactPhNum" value="{{ row['ContactPhNum'] }}" readonly>
+
+        <br><label for="ContactEmail">Contact Email:</label>
+        <input type="text" name="ContactEmail" value="{{ row['ContactEmail'] }}" readonly>
+                    <div class="center">
+             <button type="submit" class="but-edit">Confirm Edits</button></div>
+
+    </form>
+    {% endfor %}
+{% endif %}
+</p>
+            </div>
+        </div>
+
 
                     <button id="addMButton" class="but-check">Add Member</button>
                         <div id="addPop" class="modal">
@@ -494,15 +647,10 @@ label {
                             <div class="modal-content">
                                 <span class="close" id="addClose">&times;</span>
                                 <p><form action="/uc_addMember" method="POST">
-                                <p><strong>Add Member</strong></p>
-                                <p>Enter Member First Name:</p>
-                                <input type="text" placeholder="First Name" name="MemberFName" id="MemberFName" autocomplete="off">
-                                <p>Enter Member Last Name:</p>
-                                <input type="text" placeholder="Last Name" name="MemberLName" id="MemberLName" autocomplete="off">
-                                <p>Enter Member Email:</p>
-                                <input type="text" placeholder="Email" name="MemberEmail" id="MemberEmail" autocomplete="off">
                                 <h3> Add Member</h3><br><br>
                                 <div class="form-container">
+                                <div class="column">
+
                                     <div class="input-box">
                                         <label for="firstName">First Name</label>
                                         <input type="text" id="MemberFName" name="MemberFName" placeholder="Enter Members First Name" autocomplete="off" required>
@@ -510,6 +658,18 @@ label {
                                     <div class="input-box">
                                     <label for="MemberLName">Last Name</label>
                                     <input type="text" id="MemberLName" name="MemberLName" placeholder="Enter Members Last Name" autocomplete="off" required>
+                                </div>
+                            </div>
+                                <div class="input-box">
+                                    <label for="MemberEmail">Email</label>
+                                    <input type="email" id="MemberEmail" name="MemberEmail"  placeholder="Enter Members Email" autocomplete="off" required>
+                                </div>
+                                <div class="input-box">
+                                    <label for="MemberHCap">Handicap Status</label>
+                                    <input type="text" id="MemberHCap" name="MemberHCap"  placeholder="Enter Members Handicap Status (0-54)" autocomplete="off" required>
+                                </div>
+                            </div>
+
                                 <br>
                                 <button type="submit" class="but-check">Add Member</button>
 
@@ -657,6 +817,23 @@ label {
             delMemModal.style.display = "none";
         }
     }
+
+     // edit button pop-up
+        var editModal = document.getElementById("editPop");
+        var editBtn = document.getElementById("EditButton");
+        var editClose = editModal.getElementsByClassName("close")[0];
+        editBtn.onclick = function(){
+            editModal.style.display = "block";
+        }
+        editClose.onclick = function(){
+            editModal.style.display = "none";
+        }
+        window.onclick = function(event){
+            if (event.target == editModal){
+                editModal.style.display = "none";
+            }
+        }
+
 
 </script>
 
