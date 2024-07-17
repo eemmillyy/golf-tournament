@@ -1,8 +1,9 @@
+import flask
 import google
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
 from flask_mail import Mail, Message
 from Login import auth
-from util import util, encrypt, get_profilepic
+from util import util, encrypt, get_profilepic, webhookss
 from User import user
 from Admin import admin
 from General import both
@@ -65,40 +66,28 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # ----- pages to finalize
 # ADMIN - view specific team        / edit sponsor photo & payment activity
-# ADMIN - edit                      / finish front end
-# USER  - add user edit             / finish front end
 # USER - usersjoin.html             / redesign
 # USER - usersjoinshow.html         / redesign
-
+# USER -  Captain edit team         / front end
 
 # ------------------ FRONTEND ------------------
 # BOTH - login forgot password  / ask for email, send email, allow for new pass saved   →       https://www.youtube.com/watch?v=vutyTx7IaAI
 # - Change front end to be compatible with phones   1. https://www.youtube.com/watch?v=4WvT2cmuZ5M&list=PLL9jEdn7PvoT309qO1E_-fLnfhuw2T9kJ
 
 # ------------------ BACKEND ------------------
-# USERS - Need sponsor list display
-# USER -  Captain edit team
 # Admin - create team           / connect backend
-
-
 
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
 # - if team has not paid pop up on dash (ask how handled - sponsor paying entry?)
 #    ↳  maybe when creating a team; before routing to join code, route to payments page first
-# BOTH - home / membership link isn't accurate atm... maybe make team payment info page
-# ADMIN - create payment logs
-# STRIPE API - make neater connections (removing excess functions main.py)
-# ADMIN - team & user tables        / finalize table payment information
-# ADMIN - dash                      / green total sales box need to be connected
 
-# TESTING LINK --- will delete
-@app.route('/new')
-def generate():
-    if not session.get('logged_in'):
-        return render_template('signup.html')
-    else:
-        return render_template('assign1.html')
+
+
+
+
+
+
 
 
 # **********************************************************************************************
@@ -135,36 +124,6 @@ def index():
 
     return render_template('index.html', UserName=nm, photo=photo, UserTeamLead=UserTeamLead)
 
-
-
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    event = None
-    endpoint = 'whsec_350dcfe0e6582330fa9a00903e963813c53d134b6678eaeecc2d0f8ed2ec73c5'
-    payload = request.data
-    sig_header = request.headers['STRIPE_SIGNATURE']
-
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint
-        )
-    except ValueError as e:
-        # Invalid payload
-        raise e
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        raise e
-
-    # Handle the event
-    if event['type'] == 'balance.available':
-      balance = event['data']['object']
-    elif event['type'] == 'checkout.session.completed':
-      session = event['data']['object']
-    # ... handle other event types
-    else:
-      print('Unhandled event type {}'.format(event['type']))
-
-    return jsonify(success=True)
 
 @app.route('/stripe_pay')
 def stripe_pay():
@@ -440,35 +399,6 @@ def stripe_webhook():
 
     return {}
 
-
-@app.route('/webhookss', methods=['POST'])
-def webhookss():
-    event = None
-    endpoint_secret = 'whsec_350dcfe0e6582330fa9a00903e963813c53d134b6678eaeecc2d0f8ed2ec73c5'
-    payload = request.data
-    sig_header = request.headers['STRIPE_SIGNATURE']
-
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError as e:
-        # Invalid payload
-        raise e
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        raise e
-
-    # Handle the event
-    if event['type'] == 'balance.available':
-      balance = event['data']['object']
-    elif event['type'] == 'checkout.session.completed':
-      session = event['data']['object']
-    # ... handle other event types
-    else:
-      print('Unhandled event type {}'.format(event['type']))
-
-    return jsonify(success=True)
 
 
 

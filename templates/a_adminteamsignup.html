@@ -142,7 +142,7 @@ select:disabled {
                     <span>Create Team</span></a>
                 </li>
                  <li>
-                    <a href="/new"><span class="las la-file-invoice-dollar"></span>
+                    <a href="/logs"><span class="las la-file-invoice-dollar"></span>
                     <span>Payment Logs</span></a>
                 </li>
                 <li>
@@ -548,6 +548,94 @@ var checkbox = document.getElementById('showTextCheckbox');
         });
     });
 });
+
+
+
+
+    // Send an AJAX request to the backend to check phone number availability
+    $(document).ready(function() {
+        $('#MemberPhone1').on('input', function() {
+            var number = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/check_ph-number',
+                data: { 'number': number },
+                success: function(response) {
+                    if (response.status === 'error') {
+                        $('#numberError').text(response.message);
+                        $('#numberInput').addClass('invalid');
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#numberError').text('');
+                        $('#numberInput').removeClass('invalid');
+                        $('#submitButton').prop('disabled', false);
+                    }
+                }
+            });
+        });
+        $('form').submit(function(event) {
+            if ($('#submitButton').prop('disabled')) {
+                event.preventDefault();
+            }
+         });
+    });
+
+      // Send an AJAX request to the backend to check email availability
+    $(document).ready(function() {
+        $('#emailInput').on('input', function() {
+            var email = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: '/check_email',
+                data: { 'email': email },
+                success: function(response) {
+                    if (response.status === 'error') {
+                        $('#emailError').text(response.message);
+                        $('#emailInput').addClass('invalid');
+                        $('#submitButton').prop('disabled', true);
+                    } else {
+                        $('#emailError').text('');
+                        $('#emailInput').removeClass('invalid');
+                        $('#submitButton').prop('disabled', false);
+                    }
+                }
+            });
+        });
+        $('form').submit(function(event) {
+            if ($('#submitButton').prop('disabled')) {
+                event.preventDefault();
+            }
+         });
+    });
+     // add slashes to DOB
+        const dobInput = document.getElementById('UserDOB');
+        dobInput.addEventListener('input', function() {
+            let dob = dobInput.value.replace(/\D/g, '');
+            if (dob.length > 2 && dob.length <= 4) {
+                dob = dob.replace(/^(\d{2})(\d{1,2})/, '$1/$2');
+            } else if (dob.length > 4) {
+                dob = dob.replace(/^(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3');
+            }
+            dobInput.value = dob;
+        });
+
+
+     // add dashes to phone number
+        const MemberPhone1 = document.getElementById('MemberPhone1');
+
+        MemberPhone1.addEventListener('input', function() {
+            let phoneNumber = MemberPhone1.value.replace(/\D/g, ''); // Remove non-numeric characters
+            if (phoneNumber.length > 3 && phoneNumber.length <= 6) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{1,3})/, '$1-$2'); // Format: xxx-xxx
+            } else if (phoneNumber.length > 6) {
+                phoneNumber = phoneNumber.replace(/(\d{3})(\d{3})(\d{1,4})/, '$1-$2-$3'); // Format: xxx-xxx-xxxx
+            }
+             // Limit to 12 characters (including dashes)
+            if (phoneNumber.length > 12) {
+                phoneNumber = phoneNumber.slice(0, 12);
+            }
+            MemberPhone1.value = phoneNumber;
+        });
 
 
 

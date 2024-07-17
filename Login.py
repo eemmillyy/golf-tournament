@@ -1,4 +1,5 @@
 from flask import render_template, request, session, flash, Blueprint
+from util import total
 import sqlite3 as sql
 import pandas as pd
 import numpy as np
@@ -6,9 +7,9 @@ import Encryption
 import datetime
 import re
 
+
+
 auth = Blueprint('auth', __name__)
-
-
 @auth.route('/')
 def home():
     if not session.get('logged_in'):
@@ -18,6 +19,7 @@ def home():
     if session.get('admin'):
         # get current year
         current_year = datetime.datetime.now().year
+        current_total = total()
         # pull db info - quick team view
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
@@ -84,7 +86,7 @@ def home():
         photo = get_profilepic()
         # ^get^ and return all information from SQL DB that needs to be shown on dash screen
         return render_template('dash.html', rows=rows, UserName=session['UserName'], i=i,
-                               AllCartsNeeded=AllCartsNeeded, checkedin=checkedin, all=all, photo=photo)
+                               AllCartsNeeded=AllCartsNeeded, checkedin=checkedin, all=all, photo=photo, current_total=current_total)
 
     #  ----------------------------------- USER DASH  ------------------------------------
     elif session.get('user'):

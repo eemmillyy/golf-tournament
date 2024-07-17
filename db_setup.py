@@ -120,3 +120,26 @@ conn.close()
 print('Connection closed.')
 
 
+
+# ******************************************************
+# Connect to SQLITE Database - just holds total        *
+# ******************************************************
+conn = sqlite3.connect('TotalDB.db')
+cur = conn.cursor()
+try:
+    conn.execute('''DROP TABLE Total''')
+    conn.commit()
+    print('Total table dropped.')
+except:
+    print('Total table does not exist')
+
+cur.execute('''CREATE TABLE Total(
+Total INTEGER);''')
+
+# save changes
+conn.commit()
+print('Total Table created.')
+
+# close database connection
+conn.close()
+print('Connection closed.')
