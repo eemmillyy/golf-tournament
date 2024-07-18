@@ -400,8 +400,6 @@ def stripe_webhook():
     return {}
 
 
-
-
 if __name__ == '__main__':
     # needed for session
     app.secret_key = os.urandom(12)

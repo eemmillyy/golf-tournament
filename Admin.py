@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, url_for
-from util import cartCounter, encrypt, validate_string, format_output, search_images, get_profilepic, reset_cart, count_carts, total
+from util import cartCounter, encrypt, validate_string, format_output, search_images, get_profilepic, reset_cart, \
+    count_carts, total
 from collections import defaultdict
 from secret_keys import GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
 import sqlite3 as sql
@@ -26,7 +27,7 @@ def dash():
     con = sql.connect("TeamInfoDB.db")
     con.row_factory = sql.Row
     cur = con.cursor()
-    cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year, ))
+    cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year,))
     rows1 = cur.fetchall()
     rows = []
     i = 0
@@ -89,6 +90,7 @@ def dash():
     # ^get^ and return all information from SQL DB that needs to be shown on dash screen
     return render_template("dash.html", rows=rows, UserName=session['UserName'], i=i, AllCartsNeeded=AllCartsNeeded,
                            checkedin=checkedin, all=all, photo=photo, current_total=current_total)
+
 
 # **********************************************************************************************
 #                                       FOR ADMINS                         lines: 1264-2224    *
@@ -185,7 +187,9 @@ def team_Contacts():
             con = sql.connect("TeamInfoDB.db")
             con.row_factory = sql.Row
             cur = con.cursor()
-            cur.execute('SELECT TeamId, MemberName1, MemberName2, MemberName3, MemberName4, Member1Here, Member2Here, Member3Here, Member4Here, TeamName, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto FROM TeamInfo WHERE Year = ?', (current_year, ))
+            cur.execute(
+                'SELECT TeamId, MemberName1, MemberName2, MemberName3, MemberName4, Member1Here, Member2Here, Member3Here, Member4Here, TeamName, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto FROM TeamInfo WHERE Year = ?',
+                (current_year,))
 
             rows1 = cur.fetchall()
             rows = []
@@ -220,7 +224,7 @@ def admin_teamlist():
             con = sql.connect("TeamInfoDB.db")
             con.row_factory = sql.Row
             cur = con.cursor()
-            cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year, ))
+            cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (current_year,))
             rows1 = cur.fetchall()
             rows = []
 
@@ -317,8 +321,8 @@ def showOneTeam(TeamId):
             session['cart2'] = True
             print("got 2")
         elif ans == 1:
-             session['cart1'] = True
-             print("got 1")
+            session['cart1'] = True
+            print("got 1")
         else:
             session['cart0'] = True
             print("got 0")
@@ -478,11 +482,21 @@ def admin_teamSignup():
                     cpn = request.form.get('MemberPhone1')
                     m1hc = int(request.form.get('Member1Handicap'))
                     cp = "../static/css/uploads/default.jpeg"
+                    memberCount += 1
                     if len(mn1) > 1:
-                        cfn = mn1[0].strip()  # Get the first element
-                        cln = mn1[-1].strip()  # Get the last element
+                        cfn, cln = mn1.split(' ', 1)
                         print(cfn)
                         print(cln)
+
+                    with sql.connect("UserInfoDB.db") as con3:
+                        cur = con3.cursor()
+                        cur.execute(
+                            "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap','UserPhNum', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?,?)",
+                            (cfn, cln, m1hc, cpn, ce, 1, 1))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                        result = cur.fetchone()
+                        m1id = result[0]
+                        con3.commit()
 
                 m2info = request.form['MemberName2']
                 word = m2info.split(',')
@@ -491,13 +505,33 @@ def admin_teamSignup():
                         m2id = word[0].strip()
                         m2hc = word[1]
                         mn2 = word[2].strip()
-                        m2e = word[8].strip()
+                        m2e = word[6].strip()
                         memberCount += 1
-                else:
+
+                        print(m2id)
+                        print(m2hc)
+
+                elif m2info == "Name2" and request.form.get('MemberFullName2') != "":
                     # USER NEEDS ID HERE
                     mn2 = request.form.get('MemberFullName2')
                     m2e = request.form.get('MemberEmail2')
                     m2hc = int(request.form.get('Member2Handicap'))
+                    memberCount += 1
+
+                    if len(mn2) > 1:
+                        cfn, cln = mn2.split(' ', 1)
+                        print(cfn)
+                        print(cln)
+
+                    with sql.connect("UserInfoDB.db") as con3:
+                        cur = con3.cursor()
+                        cur.execute(
+                            "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?)",
+                            (cfn, cln, m2hc, m2e, 1, 0))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                        result = cur.fetchone()
+                        m2id = result[0]
+                        con3.commit()
 
                 m3info = request.form['MemberName3']
                 word = m3info.split(',')
@@ -507,11 +541,29 @@ def admin_teamSignup():
                         m3hc = word[1]
                         mn3 = word[2].strip()
                         memberCount += 1
-                else:
+
+                elif m3info == "Name3" and request.form.get('MemberFullName3') != "":
                     # USER NEEDS ID HERE
                     mn3 = request.form.get('MemberFullName3')
                     m3e = request.form.get('MemberEmail3')
                     m3hc = int(request.form.get('Member3Handicap'))
+                    memberCount += 1
+
+                    if len(mn3) > 1:
+                        cfn, cln = mn3.split(' ', 1)
+                        print(cfn)
+                        print(cln)
+
+                    with sql.connect("UserInfoDB.db") as con3:
+                        cur = con3.cursor()
+                        cur.execute(
+                            "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?)",
+                            (cfn, cln, m3hc, m3e, 1, 0))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                        result = cur.fetchone()
+                        m3id = result[0]
+                        con3.commit()
+
 
                 m4info = request.form['MemberName4']
                 word = m4info.split(',')
@@ -521,11 +573,27 @@ def admin_teamSignup():
                         m4hc = word[1]
                         mn4 = word[2].strip()
                         memberCount += 1
-                else:
+                elif m4info == "Name4" and request.form.get('MemberFullName4') != "":
                     # USER NEEDS ID HERE
                     mn4 = request.form.get('MemberFullName4')
                     m4e = request.form.get('MemberEmail4')
                     m4hc = int(request.form.get('Member4Handicap'))
+                    memberCount += 1
+
+                    if len(mn4) > 1:
+                        cfn, cln = mn4.split(' ', 1)
+                        print(cfn)
+                        print(cln)
+
+                    with sql.connect("UserInfoDB.db") as con3:
+                        cur = con3.cursor()
+                        cur.execute(
+                            "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?)",
+                            (cfn, cln, m4hc, m4e, 1, 0))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                        result = cur.fetchone()
+                        m4id = result[0]
+                        con3.commit()
 
                 # search google for logo of sponsor
                 query = request.form['SponsorName']
@@ -535,7 +603,7 @@ def admin_teamSignup():
                 image_urls = search_images(query, api_key, cx)
                 print(image_urls)
                 if image_urls:
-                 sponpic = image_urls[1]
+                    sponpic = image_urls[1]
                 else:
                     sponpic = None
                 print(sponpic)
@@ -545,7 +613,7 @@ def admin_teamSignup():
                 con = sql.connect('TeamInfoDB.db')
                 con.row_factory = sql.Row
                 cur = con.cursor()
-                cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year, ))  # get list of all holes
+                cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year,))  # get list of all holes
                 data = cur.fetchall()
 
                 con.close()
@@ -570,7 +638,7 @@ def admin_teamSignup():
                 code = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
 
                 # Get current year for team
-                #year = 2023
+                # year = 2023
                 year = datetime.datetime.now().year
 
                 if not validate_string(tnm):
@@ -598,7 +666,6 @@ def admin_teamSignup():
                         return render_template("result.html", msg=format_output(err_string))
 
                 if valid_input:
-
                     with sql.connect("TeamInfoDB.db") as con:
                         cur = con.cursor()
                         cur.execute(
@@ -607,8 +674,8 @@ def admin_teamSignup():
                             " Member2Handicap, Member3Handicap, Member4Handicap, StartHole, Member1Here, Member2Here,"
                             " Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail, ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                             (tnm, snm, sponpic, nc, mn1, mn2, mn3, mn4, m1id, m2id, m3id, m4id, m1hc, m2hc,
-                             m3hc, m4hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln), encrypt(cpn), encrypt(ce), cp,
-                             code, memberCount, year))
+                             m3hc, m4hc, sh, "✘", "✘", "✘", "✘", encrypt(cfn), encrypt(cln), encrypt(cpn), encrypt(ce),
+                             cp, code, memberCount, year))
 
                         con.commit()
 
@@ -625,7 +692,8 @@ def admin_teamSignup():
                     cur3 = con3.cursor()
                     cur3.execute("UPDATE UserInfo SET UserTeamId = ?,  UserTeamYear = ? WHERE UserId IN (?,?,?,?)",
                                  (id[0], cur_year[0], m1id, m2id, m3id, m4id))
-
+                    cur3.execute("UPDATE UserInfo SET UserTeamLead = ? WHERE UserId IN (?)",
+                                 (1, m1id))
                     con3.commit()
                     con3.close()
                     con2.close()
@@ -868,7 +936,6 @@ def updateTeamForm(TeamId):
 
         memberCount = infoRows['MemberCount']
         newMemberCount = 0
-
 
         oldMem2ID = infoRows['Member2ID']
         oldMem3ID = infoRows['Member3ID']
@@ -1228,7 +1295,8 @@ def showArchive():
         con.close()
         # pull picture pathfile to html
         photo = get_profilepic()
-        return render_template("/a_teamArchive.html", rows=rows, sorted_teams=sorted_teams, UserName=session['UserName'], photo=photo)
+        return render_template("/a_teamArchive.html", rows=rows, sorted_teams=sorted_teams,
+                               UserName=session['UserName'], photo=photo)
 
 
 # ADMIN - Revive a team from Archive
@@ -1319,7 +1387,7 @@ def a_ReviveTeam(TeamId):
         con = sql.connect('TeamInfoDB.db')
         con.row_factory = sql.Row
         cur = con.cursor()
-        cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year, ))  # get list of all holes
+        cur.execute("SELECT StartHole FROM TeamInfo WHERE Year = ?", (year,))  # get list of all holes
         data = cur.fetchall()
 
         con.close()
@@ -1348,14 +1416,17 @@ def a_ReviveTeam(TeamId):
                 "MemberName2, Member2ID, Member2Handicap, MemberName3, Member3ID, Member3Handicap, MemberName4, Member4ID, Member4Handicap,"
                 " StartHole, Member1Here, Member2Here, Member3Here, Member4Here, ContactFName, ContactLName, ContactPhNum, ContactEmail,"
                 " ContactPhoto, JoinCode, MemberCount, Year) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                (tnm, snm, sponpic, nc, mn1, m1id, m1hc, mn2, m2id, m2hc, mn3, m3id, m3hc, mn4, m4id, m4hc, sh, m1h, m2h, m3h, m4h, encrypt(cfn), encrypt(cln),
-                 encrypt(cpn), encrypt(ce), pic, code, mc, year))
+                (
+                    tnm, snm, sponpic, nc, mn1, m1id, m1hc, mn2, m2id, m2hc, mn3, m3id, m3hc, mn4, m4id, m4hc, sh, m1h,
+                    m2h,
+                    m3h, m4h, encrypt(cfn), encrypt(cln),
+                    encrypt(cpn), encrypt(ce), pic, code, mc, year))
             con.commit()
         # pull info - team db info
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
         cur = con.cursor()
-        cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (year, ))
+        cur.execute('SELECT * FROM TeamInfo WHERE Year = ?', (year,))
         rows1 = cur.fetchall()
         rows = []
         for row in rows1:
