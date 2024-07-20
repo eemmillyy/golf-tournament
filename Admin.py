@@ -885,7 +885,7 @@ def updateTeamForm(TeamId):
     if not session.get('logged_in'):
         return render_template('home.html')
 
-    elif not session.get('admin') and UserTeamLead != 1:
+    elif not session.get('admin') and session['UserTeamLead'] != 1:
         flash('Page not found')
         return render_template('home.html')
     try:
@@ -893,7 +893,7 @@ def updateTeamForm(TeamId):
         con.row_factory = sql.Row
         cur = con.cursor()
         cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
-
+        print(TeamId)
         rows1 = cur.fetchall()
         rows = []
 
@@ -1084,6 +1084,7 @@ def updateTeamForm(TeamId):
 
         con = sql.connect('TeamInfoDB.db')
         cur = con.cursor()
+        print("Look here", mn1)
         cur.execute("UPDATE TeamInfo SET TeamName = ?, SponsorName = ?, NeedCart = ?, MemberName1 = ?, MemberName2 = ?,"
                     " MemberName3 = ?, MemberName4 = ?, Member2ID = ?, Member3ID = ?, Member4ID = ?, Member1Handicap = ?, Member2Handicap = ?, Member3Handicap = ?, Member4Handicap = ?, StartHole = ?, ContactFName = ?, ContactLName = ?, ContactPhNum = ?, "
                     "ContactEmail = ?, MemberCount = ? WHERE TeamId = ?",

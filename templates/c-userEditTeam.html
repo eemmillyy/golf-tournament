@@ -687,7 +687,7 @@
             <div class="modal-content-e">
             <div class="container">
                 <span class="close">&times;</span>
-                <p><form action="/updateTeam/{{ row["TeamId"] }}" method="POST">
+                <p><form action="/c-updateTeam/{{ row['TeamId'] }}" method="POST">
                 <p><strong>Edit {{ row['TeamName'] }} Information</strong></p>
                 {% if session['logged_in'] %}
                 {% for row in rows %}
@@ -700,84 +700,6 @@
 
                 <br><label for="Cart">Need Cart?:</label>
                 <input type="text" name="NeedCart" value="{{ row['NeedCart'] }}">
-
-<br>
-             <label for="Member1Name">Member 1 Name:</label>
-                     <select id="MemberName1" name="MemberName1">
-                    <option value="">{{ row['MemberName1'] }}</option>
-                </select>
-
-    <input type="checkbox" name="Member1Custom" onchange="toggleCustomInput(this)">
-    <label class="custom" for="Member1Custom">Custom</label>
-    <div id="Member1CustomInput" style="display: none;">
-        <input type="text" name="Member1CustomFName" placeholder="First Name">
-          <input type="text" name="Member1CustomLName" placeholder="Last Name">
-        <input type="email" name="Member1CustomEmail" placeholder="Email">
-         <input type="tel" name="Member1Customnumber" placeholder="Phone Number">
-    <input type="number" name="Member1CustomHc" placeholder="Handicap (0-54)" >
-    </div>
-
-
-
-     <br><label for="Member2Name">Member 2 Name:</label>
-    {% if row['MemberName2'] == none or row['MemberName2'] == "None" %}
-    <select id="MemberName2" name="MemberName2">
-        <option value="">Add Member</option>
-    </select>
-    {% else %}
-         <select name="MemberName2" id="MemberName2" >
-          <option value=""> {{ row['MemberName2'] }}</option>
-           </select>
-
-    {% endif %}
-     <input type="checkbox" name="Member2Custom" onchange="toggleCustomInput(this)">
-    <label class="custom" for="Member2Custom">Custom</label>
-    <div id="Member2CustomInput" style="display: none;">
-        <input type="text" name="Member2CustomFName" placeholder="First Name">
-        <input type="text" name="Member2CustomLName" placeholder="Last Name">
-        <input type="email" name="Member2ustomEmail" placeholder="Email">
-        <input type="number" name="Member2CustomHc" placeholder="Handicap (0-54)" >
-    </div>
-
-     <br><label for="Member3Name">Member 3 Name:</label>
-    {% if row['MemberName3'] == none or row['MemberName3'] == "None" %}
-    <select id="MemberName3" name="MemberName3">
-        <option value="">Add Member</option>
-    </select>
-    {% else %}
-       <select name="MemberName3" id="MemberName3" >
-          <option value=""> {{ row['MemberName3'] }}</option>
-           </select>
-    {% endif %}
-    <input type="checkbox" name="Member3Custom" onchange="toggleCustomInput(this)">
-    <label  class="custom" for="Member3Custom">Custom</label>
-    <div id="Member3CustomInput" style="display: none;">
-        <input type="text" name="Member3CustomFName" placeholder="First Name">
-        <input type="text" name="Member3CustomLName" placeholder="Last Name">
-        <input type="email" name="Member3ustomEmail" placeholder="Email">
-        <input type="number" name="Member3CustomHc" placeholder="Handicap (0-54)" >
-    </div>
-
-    <br><label for="Member4Name">Member 4 Name:</label>
-    {% if row['MemberName4'] == none or row['MemberName4'] == "None" %}
-    <select id="MemberName4" name="MemberName4">
-        <option value="">Add Member</option>
-    </select>
-    {% else %}
-       <select name="MemberName4" id="MemberName4" >
-          <option value=""> {{ row['MemberName4'] }}</option>
-           </select>
-    {% endif %}
-   <input type="checkbox" name="Member4Custom" onchange="toggleCustomInput(this)">
-    <label class="custom" for="Member4Custom">Custom</label>
-    <div id="Member4CustomInput" style="display: none;">
-        <input type="text" name="Member4CustomFName" placeholder="First Name">
-        <input type="text" name="Member4CustomLName" placeholder="Last Name">
-        <input type="email" name="Member4CustomEmail" placeholder="Email">
-        <input type="number" name="Member4CustomHc" placeholder="Handicap (0-54)" >
-    </div>
-
-
 
 
         <br><label for="Start Hole">Starting Hole:</label>

@@ -1,4 +1,4 @@
-from flask import render_template, request, session, flash, Blueprint
+from flask import render_template, request, session, flash, Blueprint, current_app
 from util import total
 import sqlite3 as sql
 import pandas as pd
@@ -105,6 +105,7 @@ def home():
             if (rowz):
                 UserTeamId = rowz[0]['UserTeamId']
                 UserTeamLead = rowz[0]['UserTeamLead']
+                session['UserTeamLead'] = rowz[0]['UserTeamLead']
             else:
                 UserTeamId = None
                 UserTeamLead = None

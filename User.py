@@ -1259,3 +1259,102 @@ def cap_addMember():
             con.close()
 
             return render_template('result.html', UserName=session['UserName'], msg=msg)
+
+@user.route('/c-updateTeam/<int:TeamId>', methods=['POST'])
+def cupdateTeamForm(TeamId):
+    if not session.get('logged_in'):
+        return render_template('home.html')
+
+    elif not session['UserTeamLead'] != 1:
+        flash('Page not found')
+        return render_template('home.html')
+    try:
+        con = sql.connect('TeamInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM TeamInfo WHERE TeamId = ?", (TeamId,))
+        print(TeamId)
+        rows1 = cur.fetchall()
+        rows = []
+        print("fail 1")
+        for row in rows1:
+            newRow = dict(row)
+            newRow['ContactFName'] = str(Encryption.cipher.decrypt(row['ContactFName']))
+            newRow['ContactLName'] = str(Encryption.cipher.decrypt(row['ContactLName']))
+            newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
+            newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
+            rows.append(newRow)
+        con.close()
+        print("fail 2")
+        con = sql.connect("TeamInfoDB.db")
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute('SELECT TeamName FROM TeamInfo WHERE TeamId = ?', (TeamId,))
+        counter = cur.fetchall()
+        count = []
+        for cnt in counter:
+            newRow = dict(cnt)
+            count.append(newRow)
+        string = ',:'.join(str(x) for x in count)
+        print(string)
+        splitter = string.split("{'TeamName': '")
+        strr = ""
+        print(splitter)
+        for ele in splitter:
+            strr += ele
+        new = []
+        for char in strr:
+            if char.isalnum():
+                new.append(str(char))
+        split = new
+        print(split)
+        final = ""
+        for ele in split:
+            final += ele
+        print("final", final)
+        con.close()
+        print("fail 3")
+        con = sql.connect('UserInfoDB.db')
+        con.row_factory = sql.Row
+        cur = con.cursor()
+        cur.execute("SELECT * FROM UserInfo WHERE RoleLevel = 1")
+
+        rows2 = cur.fetchall()
+        rows1 = []
+        for row in rows2:
+            newRow = dict(row)
+            # newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
+            newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+            rows1.append(newRow)
+        con.close()
+        print("fail 4")
+        conNew = sql.connect("TeamInfoDB.db")
+        conNew.row_factory = sql.Row
+        cur = conNew.cursor()
+        cur.execute('SELECT MemberCount, Member1ID, Member2ID, Member3ID, Member4ID FROM TeamInfo WHERE TeamId = ?',
+                    (TeamId,))
+        infoRows = cur.fetchone()
+
+        newTeamName = request.form['TeamName']
+        newSponsorName = request.form['SponsorName']
+        newNeedCart = request.form['NeedCart']
+
+        newStartHole = request.form['StartHole']
+
+        print("fail 5")
+        con = sql.connect('TeamInfoDB.db')
+        cur = con.cursor()
+        cur.execute("UPDATE TeamInfo SET TeamName = ?, SponsorName = ?, NeedCart = ?, StartHole = ? WHERE TeamId = ?",
+                    (newTeamName, newSponsorName, newNeedCart, newStartHole, TeamId))
+        con.commit()
+        # Handle custom member input for Member 1
+
+        flash("Successfully Updated Team")
+        return render_template('result.html')
+    except Exception as e:
+        print("An error occurred:", e)
+        return render_template('a_viewTeamSelected.html')
+    finally:
+        #con3.close()
+        con.close()
+        #conNew.close()
