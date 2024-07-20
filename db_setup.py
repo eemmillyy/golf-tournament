@@ -36,6 +36,7 @@ LoginPassword TEXT,
 UserTeamId INTEGER,
 UserTeamYear INTEGER,
 ProfilePicture BLOB,
+TotalSpent INTEGER,
 UserTeamLead BOOLEAN);''')
 
 

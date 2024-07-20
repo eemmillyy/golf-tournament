@@ -1,5 +1,6 @@
 from flask import render_template, current_app, request, session, jsonify, Blueprint
 from flask_mail import Mail, Message
+from secret_keys import STRIPE_ENDPOINT_SECRETE
 import requests
 import sqlite3 as sql
 import pandas as pd
@@ -24,32 +25,21 @@ def total():
     for event in events.auto_paging_iter():
         if event['type'] == 'checkout.session.completed':
             session = event['data']['object']
-
             payment_event = {
                 'amount': '${:.2f}'.format(session['amount_total'] / 100),  # Convert cents to dollars
             }
             payment_events.append(payment_event)
-            print("heyyyyyy ", payment_events)
-
-        # Add more conditions for other event types if needed
     amounts = []
-
-    # Iterate through each dictionary in entries
     for entry in payment_events:
         # Extract the numeric amount without the '$' sign
         amount = entry['amount'].replace('$', '')
-        # Append the extracted amount to the list
         amounts.append(amount)
 
-    # Print the extracted amounts
-    print("this", amounts)
     total = 0.00  # Initialize total to 0.0
 
-    # Iterate through each amount in the list
     for amount_str in amounts:
         # Convert amount from string to float (or decimal)
         amount_float = float(amount_str)
-        # Add the converted amount to the total
         total += amount_float
     print(total)
     con = sql.connect('TotalDB.db')
@@ -59,7 +49,6 @@ def total():
     rowz = cur.fetchall()
     print(rowz)
     if (rowz == "[ ]"):
-        print("Make 0000000")
         cur.execute(
             "UPDATE Total SET Total = ?",(0, ))
         con.commit()
@@ -73,7 +62,7 @@ def total():
 def webhookss():
     payload = request.data
     sig_header = request.headers.get('Stripe-Signature')
-    endpoint_secret = 'whsec_uXWcvrx6XQmqrSxOnyqAlQfZl8L3FZU7'
+    endpoint_secret = STRIPE_ENDPOINT_SECRETE
 
     # Verify the signature
     try:
@@ -94,7 +83,9 @@ def webhookss():
         session = event['data']['object']
         # Log or process the session object
         print('Payment received. Session ID:', session['id'])
+        print("hioooooooo")
         # You can log more details or update your database here
+
 
     # Handle other event types if needed
     elif event['type'] == 'payment_intent.succeeded':
@@ -113,7 +104,6 @@ def logs():
     try:
         # Fetch payment events from Stripe
         events = stripe.Event.list(type='checkout.session.completed', limit=10)
-
         hook = webhookss()
         print(hook)
         # Process the events and create a list of dictionaries for the template
@@ -122,32 +112,22 @@ def logs():
             if event['type'] == 'checkout.session.completed':
                 session = event['data']['object']
                 payment_event = {
-                    'date': session['created'],  # Assuming created timestamp is the date
-                    'type': 'Checkout',  # You can customize based on event type
+                    'date': session['created'],
+                    'type': 'Checkout',
                     'id': session['id'],
                     'name': session['customer'],
                     'amount': '${:.2f}'.format(session['amount_total'] / 100),  # Convert cents to dollars
-                    'status': 'Success',  # Assuming session completed means success
+                    'status': 'Success',
                 }
                 payment_events.append(payment_event)
                 print(payment_events)
         return render_template('a_logs.html', payment_events=payment_events)
-
     except stripe.error.StripeError as e:
         # Handle Stripe API errors
-        # print("e er error" )
         error_msg = str(e)
         return jsonify(success=False, error=error_msg), 500
 
 
-
-
-
-
-
-@util.route('/construction')
-def construction():
-    return render_template('construction.html')
 
 
 @util.route('/send_email/<string:UserEmail>')
