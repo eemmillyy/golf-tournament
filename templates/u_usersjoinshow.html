@@ -10,15 +10,42 @@
     <link rel="stylesheet" href="signup.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
+        i {
+                margin-bottom: 20px;
+                margin-top: 10px;
+            }
         /* Additional styling for better visibility of the text when typing */
         input[type="text"] {
             color: black;
+            font-size: large;
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px 60px;
+            margin-top: 5px;
+
+        }
+        input[type="submit"] {
+            margin-top: 20px;
+            padding: 12px 30px;
+            margin-bottom: 20px;
+             font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            background-color: cornflowerblue;
+            border-style: hidden;
+             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+
+        }
+         input[type="submit"]:hover {
+            background-color: royalblue;
+            border-style: hidden;
+             font-size: 19px;
+             box-shadow: 3px 3px 7px rgba(0,0,0,0.2);
+
         }
          a {
             text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
+             color: black;
         }
          .foot p {
             color: gainsboro;
@@ -26,7 +53,8 @@
             padding-left: 2.3rem;
         }
          .box {
-             background-color: grey;
+              background-color: rgba(0, 0, 0, 0.1);
+             border-radius: 15px;
              display: grid;
              text-decoration-style: solid;
              font-size: larger;
@@ -45,12 +73,15 @@
          }
 
          .box2 {
-             background-color: grey;
+             background-color: rgba(0, 0, 0, 0.1);
+             border-radius: 15px;
              display: grid;
              text-decoration-style: solid;
              font-size: larger;
              text-align: center;
-             margin-top: 50px;
+             margin-top: 40px;
+             padding-bottom: 10px;
+             padding-top: 10px;
 
          }
             .banner {
@@ -63,6 +94,48 @@
             border-radius: 5px;
             display: block;
         }
+            .back {
+                float: left;
+                 margin-top: 20px;
+            padding: 12px 30px;
+            margin-bottom: 20px;
+             font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            background-color: rgba(227,57,0, 0.8);
+            border-style: hidden;
+             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+
+            }
+             .back:hover {
+            background-color: rgba(199,50,1, 0.8);
+            border-style: hidden;
+             box-shadow: 3px 3px 7px rgba(0,0,0,0.2);
+
+        }
+            .join {
+                float: right;
+                margin-top: 20px;
+                padding: 12px 30px;
+                margin-bottom: 20px;
+                font-size: 18px;
+                font-weight: bold;
+                border-radius: 10px;
+                background-color: mediumseagreen;
+                border-style: hidden;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            }
+             .join:hover {
+            background-color: seagreen;
+            border-style: hidden;
+             box-shadow: 3px 3px 7px rgba(0,0,0,0.2);
+
+        }
+            .center {
+                text-align: center;
+
+
+            }
     </style>
 <body>
     {% with messages = get_flashed_messages() %}
@@ -190,8 +263,21 @@
         </table>
     {% endif %}
 </div>
-    <a href="/userteamjoin"> Join This Team</a>
-    <a href="/userdash">Back to Home</a>
+            <a href="/userdash" class="back">Back to Home</a>
+            <a href="/userteamjoin" class="join"> Join This Team</a>
+               {% for row in rows %}
+                    <tr><div class="center">
+                    {% if row['ContactPhoto'] != None %}
+                    <td><img src="{{ row['SponsorPhoto'] }}" alt="">
+                    {% endif %}
+                    {% if row['SponsorPhoto'] == None %}
+                    <td><img src="../static/css/uploads/default.jpeg">
+                    {% endif %}
+</div>
+                    </tr>
+                {% endfor %}
+
+
  </div>
 </body>
 </html>

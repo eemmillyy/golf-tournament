@@ -630,9 +630,9 @@
                 <span class="close">&times;</span>
                 <p><form action="/updateTeam/{{ row["TeamId"] }}" method="POST">
                 <p><strong>Edit {{ row['TeamName'] }} Information</strong></p>
-
                 {% if session['logged_in'] and session['admin'] %}
                 {% for row in rows %}
+
 
                 <br><br><label for="TeamName">Team Name:</label>
                 <input type="text" name="TeamName" value="{{ row['TeamName'] }}" size="30" />
@@ -654,7 +654,7 @@
         <input type="text" name="Member1CustomFName" placeholder="First Name">
           <input type="text" name="Member1CustomLName" placeholder="Last Name">
         <input type="email" name="Member1CustomEmail" placeholder="Email">
-         <input type="tel" name="Member1CustomNumber" placeholder="Phone Number">
+         <input type="tel" name="Member1Customnumber" placeholder="Phone Number">
     <input type="number" name="Member1CustomHc" placeholder="Handicap (0-54)" >
     </div>
 
@@ -741,7 +741,6 @@
     </form>
     {% endfor %}
 {% endif %}
-</p>
             </div>
         </div>
 

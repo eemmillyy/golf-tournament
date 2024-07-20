@@ -62,31 +62,17 @@ if not os.path.exists(UPLOAD_FOLDER):
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # work needing to be done:
-# provided YouTube links for examples / follow along code
+
 
 # ----- pages to finalize
 # ADMIN - view specific team        / edit sponsor photo & payment activity
-# USER - usersjoin.html             / redesign
-# USER - usersjoinshow.html         / redesign
-# USER -  Captain edit team         / front end
-
-# ------------------ FRONTEND ------------------
 # BOTH - login forgot password  / ask for email, send email, allow for new pass saved   →       https://www.youtube.com/watch?v=vutyTx7IaAI
-# - Change front end to be compatible with phones   1. https://www.youtube.com/watch?v=4WvT2cmuZ5M&list=PLL9jEdn7PvoT309qO1E_-fLnfhuw2T9kJ
-
-# ------------------ BACKEND ------------------
 # Admin - create team           / connect backend
 
 # ------- PAYMENT IMPLEMENTATIONS  -----------------
 # - TEAMS NEED TO PAY BEFORE entering (how handled... through email?) (wanting entire team pay same price)
 # - if team has not paid pop up on dash (ask how handled - sponsor paying entry?)
 #    ↳  maybe when creating a team; before routing to join code, route to payments page first
-
-
-
-
-
-
 
 
 

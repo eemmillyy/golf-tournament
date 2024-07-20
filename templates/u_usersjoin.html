@@ -13,6 +13,31 @@
         /* Additional styling for better visibility of the text when typing */
         input[type="text"] {
             color: black;
+            font-size: large;
+            border-radius: 10px;
+            text-align: center;
+            padding: 5px 60px;
+            margin-top: 5px;
+
+        }
+        input[type="submit"] {
+            margin-top: 20px;
+            padding: 12px 30px;
+            margin-bottom: 20px;
+             font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            background-color: cornflowerblue;
+            border-style: hidden;
+             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+
+        }
+         input[type="submit"]:hover {
+            background-color: royalblue;
+            border-style: hidden;
+             font-size: 19px;
+             box-shadow: 3px 3px 7px rgba(0,0,0,0.2);
+
         }
          a {
             text-decoration: none;
@@ -26,11 +51,12 @@
             padding-left: 2.3rem;
         }
          .box {
-             background-color: grey;
+             background-color: rgba(0, 0, 0, 0.1);
              display: grid;
              text-decoration-style: solid;
              font-size: larger;
              text-align: center;
+             border-radius: 15px;
 
          }
          .pic-box{
@@ -53,6 +79,10 @@
             border-radius: 5px;
             display: block;
         }
+            i {
+                margin-bottom: 20px;
+                margin-top: 10px;
+            }
     </style>
 <body>
     {% with messages = get_flashed_messages() %}
@@ -137,11 +167,11 @@
             </div>
         </header>
     <div class="box">
-         <i> Please enter the TeamCode provided by your Team Leader</i>
+         <i> Please Enter The TeamCode Provided By Your Team Leader</i>
 
         {% if session['logged_in'] and session['user'] %}
         <form action = "{{ url_for('user.userjoin') }}" method="POST">
-            <h3>Search for Team</h3>
+            <h3>Search Team Codes</h3>
             <input type="text" name="JoinCode" ><br>
             <input type="submit" name="Search" ><br>
         </form>
