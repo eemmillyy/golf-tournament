@@ -1212,6 +1212,9 @@ def cap_addMember():
         cur.execute("SELECT MemberCount FROM TeamInfo WHERE TeamId = ?", (tid,))
         result2 = cur.fetchone()
         memc = result2[0]
+        cur.execute("SELECT Year FROM TeamInfo WHERE TeamId = ?", (tid,))
+        cur_year = cur.fetchone()
+        con.commit()
 
         member_added = False
 
@@ -1246,7 +1249,7 @@ def cap_addMember():
             con = sql.connect('UserInfoDB.db')
             con.row_factory = sql.Row
             cur = con.cursor()
-            cur.execute("UPDATE UserInfo SET UserTeamId = ? WHERE UserId = ?", (tid, memID))
+            cur.execute("UPDATE UserInfo SET UserTeamId = ?, UserTeamYear=? WHERE UserId = ?", (tid,cur_year[0], memID))
             con.commit()
             msg = "You have successfully joined this team!"
             con.close()

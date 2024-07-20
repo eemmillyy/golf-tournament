@@ -409,8 +409,21 @@ def teamsignup():
         rows = []
         for row in rows1:
             newRow = dict(row)
-            newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
-            newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+            try:
+                if row['UserPhNum'] is not None:
+                    newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
+                else:
+                    newRow['UserPhNum'] = row['UserPhNum']
+
+                if row['UserEmail'] is not None:
+                    newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+                else:
+                    newRow['UserEmail'] = row['UserPhNum']
+
+            except Exception as e:
+                print(f"Error processing row {row}: {e}")
+                newRow['UserPhNum'] = None
+                newRow['UserEmail'] = None
             rows.append(newRow)
         con.close()
         # pull picture pathfile to html
@@ -436,9 +449,21 @@ def admin_teamSignup():
         rows = []
         for row in rows1:
             newRow = dict(row)
-            newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
-            newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
-            rows.append(newRow)
+            try:
+                if row['UserPhNum'] is not None:
+                    newRow['UserPhNum'] = str(Encryption.cipher.decrypt(row['UserPhNum']))
+                else:
+                    newRow['UserPhNum'] = None
+
+                if row['UserEmail'] is not None:
+                    newRow['UserEmail'] = str(Encryption.cipher.decrypt(row['UserEmail']))
+                else:
+                    newRow['UserEmail'] = None
+
+            except Exception as e:
+                print(f"Error processing row {row}: {e}")
+                newRow['UserPhNum'] = None
+                newRow['UserEmail'] = None
         con.close()
 
         valid_input = True
@@ -479,7 +504,8 @@ def admin_teamSignup():
                     # USER NEEDS ID HERE
                     mn1 = request.form.get('MemberFullName1')
                     ce = request.form.get('MemberEmail1')
-                    cpn = request.form.get('MemberPhone1')
+                    cpnOne = request.form.get('MemberPhone1')
+                    cpn = f"{cpnOne[:3]}-{cpnOne[3:6]}-{cpnOne[6:]}"
                     m1hc = int(request.form.get('Member1Handicap'))
                     cp = "../static/css/uploads/default.jpeg"
                     memberCount += 1
@@ -519,16 +545,14 @@ def admin_teamSignup():
                     memberCount += 1
 
                     if len(mn2) > 1:
-                        cfn, cln = mn2.split(' ', 1)
-                        print(cfn)
-                        print(cln)
+                        m2fn, m2ln = mn2.split(' ', 1)
 
                     with sql.connect("UserInfoDB.db") as con3:
                         cur = con3.cursor()
                         cur.execute(
                             "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?)",
-                            (cfn, cln, m2hc, m2e, 1, 0))
-                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                            (m2fn, m2ln, m2hc, m2e, 1, 0))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (m2ln,))
                         result = cur.fetchone()
                         m2id = result[0]
                         con3.commit()
@@ -550,16 +574,14 @@ def admin_teamSignup():
                     memberCount += 1
 
                     if len(mn3) > 1:
-                        cfn, cln = mn3.split(' ', 1)
-                        print(cfn)
-                        print(cln)
+                        m3fn, m3ln = mn3.split(' ', 1)
 
                     with sql.connect("UserInfoDB.db") as con3:
                         cur = con3.cursor()
                         cur.execute(
                             "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?)",
-                            (cfn, cln, m3hc, m3e, 1, 0))
-                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                            (m3fn, m3ln, m3hc, m3e, 1, 0))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (m3ln,))
                         result = cur.fetchone()
                         m3id = result[0]
                         con3.commit()
@@ -581,16 +603,14 @@ def admin_teamSignup():
                     memberCount += 1
 
                     if len(mn4) > 1:
-                        cfn, cln = mn4.split(' ', 1)
-                        print(cfn)
-                        print(cln)
+                        m4fn, m4ln = mn4.split(' ', 1)
 
                     with sql.connect("UserInfoDB.db") as con3:
                         cur = con3.cursor()
                         cur.execute(
                             "Insert Into UserInfo ('UserFName', 'UserLName', 'UserHandicap', 'UserEmail', 'RoleLevel', 'UserTeamLead') Values (?,?,?,?,?,?)",
-                            (cfn, cln, m4hc, m4e, 1, 0))
-                        cur.execute("Select UserId from UserInfo where UserLName = ?", (cln,))
+                            (m4fn, m4ln, m4hc, m4e, 1, 0))
+                        cur.execute("Select UserId from UserInfo where UserLName = ?", (m4ln,))
                         result = cur.fetchone()
                         m4id = result[0]
                         con3.commit()
@@ -884,8 +904,8 @@ def updateTeamForm(TeamId):
             newRow['ContactPhNum'] = str(Encryption.cipher.decrypt(row['ContactPhNum']))
             newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
             rows.append(newRow)
-
         con.close()
+
         con = sql.connect("TeamInfoDB.db")
         con.row_factory = sql.Row
         cur = con.cursor()
@@ -930,7 +950,7 @@ def updateTeamForm(TeamId):
         conNew = sql.connect("TeamInfoDB.db")
         conNew.row_factory = sql.Row
         cur = conNew.cursor()
-        cur.execute('SELECT MemberCount, Member1ID,Member2ID, Member3ID, Member4ID FROM TeamInfo WHERE TeamId = ?',
+        cur.execute('SELECT MemberCount, Member1ID, Member2ID, Member3ID, Member4ID FROM TeamInfo WHERE TeamId = ?',
                     (TeamId,))
         infoRows = cur.fetchone()
 
@@ -1092,9 +1112,9 @@ def updateTeamForm(TeamId):
         print("An error occurred:", e)
         return render_template('a_viewTeamSelected.html')
     finally:
-        con3.close()
+        #con3.close()
         con.close()
-        conNew.close()
+        #conNew.close()
 
 
 # ADMIN - directs admin to delete team
