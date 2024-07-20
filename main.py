@@ -13,7 +13,7 @@ from io import BytesIO
 import hmac, hashlib
 from secrets import compare_digest
 from collections import defaultdict
-from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
+from secret_keys import STRIPE_SECRET_KEYS, STRIPE_PUBLIC_KEYS, STRIPE_ENDPOINT_SECRETE, GOOGLE_API_KEY, GOOGLE_ACCOUNT_KEY
 import sqlite3 as sql
 import pandas as pd
 import numpy as np
@@ -49,6 +49,7 @@ mail = Mail(app)
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
 app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
+app.config['STRIPE_ENDPOINT_SECRETE'] = STRIPE_SECRET_KEYS
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 app.config['GOOGLE_API_KEY'] = GOOGLE_API_KEY
@@ -84,9 +85,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def index():
     if 'UserName' not in session:
         return redirect(url_for('log_in'))
-
     nm = session['UserName']
-
     con = sql.connect('UserInfoDB.db')
     con.row_factory = sql.Row
     cur = con.cursor()
@@ -98,16 +97,13 @@ def index():
         UserTeamLead = rowz[0]['UserTeamLead']
     else:
         UserTeamLead = None
-
     rowzz = []
     for row in rowz:
         newRow = dict(row)
         rowzz.append(newRow)
     con.close()
-
     # pull picture pathfile to html
     photo = get_profilepic()
-
     return render_template('index.html', UserName=nm, photo=photo, UserTeamLead=UserTeamLead)
 
 
@@ -348,6 +344,11 @@ def stripe_pay13():
 
 @app.route('/thanks')
 def thanks():
+    nm = session['UserName']
+    print("noooo Here")
+    print(nm)
+    total = spent(nm)
+    print(total)
     return render_template('thanks.html')
 
 
@@ -384,6 +385,53 @@ def stripe_webhook():
         print(line_items['data'][0]['description'])
 
     return {}
+
+# WORKING - spent in total
+def spent(nm):
+    print(nm)
+    # Fetch payment events from Stripe
+    events = stripe.Event.list(type='checkout.session.completed', limit=10)
+    # Process the events and create a list of dictionaries for the template
+    payment_events = []
+    for event in events:
+        if event['type'] == 'checkout.session.completed':
+            session = event['data']['object']
+            payment_event = {
+                'amount': '${:.2f}'.format(session['amount_total'] / 100),  # Convert cents to dollars
+            }
+            payment_events.append(payment_event)
+    amounts = []
+    print(payment_events)
+    latest = payment_events[0]
+    print(latest)
+    amount_str = latest['amount'].replace('$', '')
+    total = float(amount_str)
+    print(total)
+
+    con = sql.connect('UserInfoDB.db')
+    print("catch it")
+    cur = con.cursor()
+    cur.execute('SELECT TotalSpent FROM UserInfo WHERE UserName = ?', (encrypt(nm), ))
+    rows1 = cur.fetchall()
+    for row in rows1:
+        amount = row[0]
+        print("Total amount spent:", amount)
+
+    print("hiiii", amount)
+    if amount is None:
+        print('Matchhinggg')
+        payments = total
+        cur.execute(
+            "UPDATE UserInfo SET TotalSpent = ? WHERE UserName = ?",(payments, encrypt(nm)))
+        con.commit()
+    else:
+        print('matched hereeee')
+        amount = rows1[0]
+        payments = amount + total
+        cur.execute(
+            "UPDATE UserInfo SET TotalSpent = ? WHERE UserName = ?", (payments, encrypt(nm)))
+        con.commit()
+    return payments
 
 
 if __name__ == '__main__':

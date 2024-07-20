@@ -234,7 +234,7 @@
                         <th> Name <span class="icon-arrow">&UpArrow;</span></th>
                         <th> Handicap Status <span class="icon-arrow">&UpArrow;</span></th>
                         <th> Team Status <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Entree Paid <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> Payments <span class="icon-arrow">&UpArrow;</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -263,7 +263,11 @@
                                        <td><p class="status delivered" >id: {{row["UserTeamId"]}}</p></td>
                                     {% endif %}
                             {% endif %}
-                        <td> <strong> $128.90 </strong></td>
+                    {% if row['TotalSpent'] == None  %}
+                              <td> <strong> $0 </strong></td>
+                     {% else %}
+                        <td> <strong> ${{ row['TotalSpent'] }}</strong></td>
+                          {% endif %}
                     </tr>
                 {% endfor %}
                 {% endif %}
