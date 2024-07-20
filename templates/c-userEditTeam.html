@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <style>
-        body {
+          body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
@@ -21,18 +21,125 @@
         .container-payinfo {
           display: flex;
         }
+        .container-pay {
+             background-color: white;
+              margin-left: 65px;
+              margin-right: 5px;
+              margin-top: -30px;
+              border-radius: 25px;
+              background-color: rgba(260, 260, 260, 0.5);
+              backdrop-filter: blur(7px);
+              box-shadow: 0 .4rem .8rem #0005;
+              border-radius: .8rem;
+              -webkit-backface-visibility: hidden;
+              -moz-backface-visibility: hidden;
+                height: 500px;
+              overflow: visible;
+              display: flex;
+              text-align: center;
+              font-size: x-large;
+        }
+
+
+        .container-Sponsor {
+          border-radius: 20px;
+          margin-left: 80px;
+          margin-right: 50px;
+          margin-top: 30px;
+          width: 650px;
+        }
+
+        .container-Sponsorpic {
+              background-color: white;
+              margin-left: 5px;
+              margin-right: 5px;
+              margin-top: 30px;
+              border-radius: 25px;
+              background-color: rgba(260, 260, 260, 0.5);
+              backdrop-filter: blur(7px);
+              box-shadow: 0 .4rem .8rem #0005;
+              border-radius: .8rem;
+              -webkit-backface-visibility: hidden;
+              -moz-backface-visibility: hidden;
+              -webkit-transform: translate3d(0, 0, 0);
+              -moz-transform: translate3d(0, 0, 0);
+              overflow: visible;
+              display: flex;
+        }
+
+        .container-Sponsorpic img {
+              background-color: plum;
+              margin-left: 10px;
+              background-color: rgba(260, 260, 260, 0.5);
+              justify-content: center;
+              backdrop-filter: blur(7px);
+              box-shadow: 0 .4rem .8rem #0005;
+              border-radius: .8rem;
+              -webkit-backface-visibility: hidden;
+              -moz-backface-visibility: hidden;
+              overflow: visible;
+              margin-bottom: 10px;
+        }
+
+        .sponsor-text {
+            margin-top: 20px;
+              margin-left: 10px;
+              display: block;
+              align-items: center;
+            text-align: center;
+
+        }
+
+        .sponsor-text p {
+            display: inline;
+            margin-left: 5px;
+             margin-right: 5px;
+              font-size: x-large;
+              text-align: center;
+             justify-items: center;
+
+        }
+        .sponsor-text strong {
+            margin-left: 5px;
+            margin-right: 5px;
+              font-size: xx-large;
+              text-align: center;
+             justify-items: center;
+
+        }
+        .sponsor-but {
+    margin-top: 120px;
+
+    display: inline-block; /* Ensure the button is displayed as a block element */
+    margin-bottom: 10px;
+    width: auto; /* Remove fixed width to allow content to determine width */
+    padding: 20px 10px; /* Increase padding for more height and less width */
+    text-align: center; /* Center text horizontally */
+    background-color: #2a7dca; /* Background color for the button */
+    color: #fff; /* Text color */
+    text-decoration: none; /* Remove default underline */
+    border-radius: 10px; /* Add rounded corners */
+    border: none; /* Remove border */
+}
+
+.sponsor-but:hover {
+    padding: 20px 10px; /* Increase padding for more height and less width */
+    background-color: #0056b3; /* Background color on hover */
+    outline: none;
+    text-decoration: none;
+    color: #fff;
+}
+
         .payinfo {
             display: flex;
-            margin-left: 200px;
+            justify-content: center;
+            margin-left: -60px;
         }
         aside {
             flex: 1;
             position: relative;
         }
-        .box-payinfo {
-            flex: 1; /* Styles for the box */
-            margin-top: 150px;
-        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -176,7 +283,8 @@
            .middle {
                color: #c3c3c3c3;
            }
-           .sponsor_picture {
+            .sponsor_picture {
+               justify-content: center;
                margin-left: 100px;
                margin-top: 8px;
                padding: 10px;
@@ -188,6 +296,9 @@
                color: #fff; /* Text color */
                text-decoration: none; /* Remove default underline */
                border-radius: 10px; /* Add rounded corners */
+               outline: none;
+               border: none;
+               font-size: 16px;
            }
            .but-edit:hover {
                padding: 10px 20px; /* Add padding for some spacing */
@@ -202,10 +313,12 @@
                padding: 10px 20px; /* Add padding for some spacing */
                background-color: mediumseagreen; /* Background color for the anchor */
                color: #fff; /* Text color */
-               outline: none;
-               border: none;
                text-decoration: none; /* Remove default underline */
                border-radius: 10px; /* Add rounded corners */
+               text-decoration: none; /* Remove default underline */
+               border-radius: 10px; /* Add rounded corners */
+               outline: none;
+               border: none;
                font-size: 16px;
            }
            .but-check:hover {
@@ -237,9 +350,113 @@
                border: none;
                 box-shadow: 0 0 5px rgba(1, 100, 32, 0.5); /* Add box shadow on focus */
            }
+           .row {
+               margin-left: 800px;
+               margin-top: 31px;
+           }
+            .modal {
+              display: none; /* Hidden by default */
+              position: fixed; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 100px; /* Location of the box */
+              left: 0;
+              top: 0;
+              width: 100%; /* Full width */
+              height: 100%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: rgb(0,0,0); /* Fallback color */
+              background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+
+            /* Modal Content */
+            .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 30%;
+              border-radius: 15px;
+              text-align: center;
+                font-size: 20px;
+            }
+            .modal-content-e {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 30%;
+
+              border-radius: 15px;
+              text-align: left;
+                font-size: 20px;
+            }
+            .container {
+                font-size: 18px;
+            }
+            .custom {
+                font-size: 16px;
+            }
+            .modal-content-none{
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 30%;
+                height: 400px;
+              border-radius: 15px;
+              text-align: center;
+                font-size: 20px;
+            }
+              input {
+                  margin-bottom: 10px;
+                  size: 50px;
+                  border-radius: 10px;
+                  text-align: center;
+                  margin-left: 15px;
+                  border-width: 1px;
+                  font-size: 15px;
+            }
+            p {
+                text-align: center;
+            }
+
+            /* The Close Button */
+            .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+            }
+            .center {
+                margin-top: 20px;
+                text-align: center;
+            }
+            .higher {
+                margin-top: 00px;
+                color: lightgrey;
+                  font-size: 50px;
+            }
+            .center {
+                justify-content: center;
+            }
+            .second {
+                 margin-top: -32px;
+                margin-left: 7px;
+                font-size: 41px;
+                color: black;
+              }
+
+
            .but-deleteMem {
                padding: 10px 20px; /* Add padding for some spacing */
-               background-color: #FFA500; /* Background color for the anchor */
+               background-color: rgba(234,174,68, 0.9); /* Background color for the anchor */
                color: #fff; /* Text color */
                text-decoration: none; /* Remove default underline */
                border-radius: 10px; /* Add rounded corners */
@@ -249,7 +466,7 @@
            }
            .but-deleteMem:hover {
                padding: 10px 20px; /* Add padding for some spacing */
-               background-color: #FFA500; /* Background color for the anchor */
+               background-color: rgba(197,141,26, 0.9); /* Background color for the anchor */
                color: #fff; /* Text color */
                text-decoration: none; /* Remove default underline */
                border-radius: 10px; /* Add rounded corners */
@@ -259,11 +476,7 @@
            }
 
 
-           .row {
-               margin-left: 960px;
-               margin-top: 31px;
-           }
-        .modal {
+        .modal-add {
           display: none; /* Hidden by default */
           position: fixed; /* Stay in place */
           z-index: 1; /* Sit on top */
@@ -278,7 +491,7 @@
         }
 
         /* Modal Content */
-        .modal-content {
+        .modal-content-add {
           background-color: #fefefe;
           margin: auto;
           padding: 20px;
@@ -287,70 +500,17 @@
           border-radius: 15px;
           text-align: center;
         }
-        .modal-content-e {
-              background-color: #fefefe;
-              margin: auto;
-              padding: 20px;
-              border: 1px solid #888;
-              width: 30%;
-              border-radius: 15px;
-              text-align: left;
-                font-size: 20px;
-            }
-        .modal2 {
-          display: none; /* Hidden by default */
-          position: fixed; /* Stay in place */
-          z-index: 1; /* Sit on top */
-          padding-top: 100px; /* Location of the box */
-          left: 0;
-          top: 0;
-          width: 100%; /* Full width */
-          height: 100%; /* Full height */
-          overflow: auto; /* Enable scroll if needed */
-          background-color: rgb(0,0,0); /* Fallback color */
-          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        }
 
-        /* Modal Content */
-        .modal2-content {
-          background-color: #fefefe;
-          margin: auto;
-          padding: 20px;
-          border: 1px solid #888;
-          width: 50%;
-          border-radius: 15px;
-          text-align: center;
-        }
-
-        /* The Close Button */
-        .close {
-          color: #aaaaaa;
-          float: right;
-          font-size: 28px;
-          font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-          color: #000;
-          text-decoration: none;
-          cursor: pointer;
-        }
-        .near {
-            white-space: nowrap;
-            text-align: left;
-        }
         .form-container {
             display: inherit;
-
-    justify-content: space-between; /* Distribute columns evenly */
-    margin-left: -300px;
-    max-width: 200px; /* Adjust max-width as needed */
-}
+        justify-content: space-between; /* Distribute columns evenly */
+        margin-left: -300px;
+        max-width: 200px; /* Adjust max-width as needed */
+    }
 
 .column {
     flex: 1; /* Each column takes up equal space */
-    margin-right: 20px; /* Adjust margin between columns */
+    margin-left: -60px; /* Adjust margin between columns */
 }
 
 .input-box {
@@ -358,10 +518,12 @@
     white-space: nowrap;
 }
 
-label {
+ .modal-content-add label {
     display: block; /* Make labels block-level */
     margin-bottom: 5px; /* Adjust margin below labels */
 }
+
+
     </style>
 </head>
 <body>
@@ -393,7 +555,7 @@ label {
 <main class="table" id="customers_table">
         <section class="table__header">
             <h1 class="middle">
-                <p class="back" ><a href="/u_allteamlist"> <i class='bx bxs-left-arrow-circle bx-fade-left-hover'></i></a></p></h1>
+                <p class="back" ><a href="/userdash"> <i class='bx bxs-left-arrow-circle bx-fade-left-hover'></i></a></p></h1>
             <div class="input-group">
                 <h1>Viewing Your Team</h1>
             </div>
@@ -519,9 +681,11 @@ label {
         </section>
     <div class="row">
 
-          <button id="EditButton" class="but-edit">Edit</button>
+
+        <button id="EditButton" class="but-edit">Edit</button>
         <div id="editPop" class="modal">
             <div class="modal-content-e">
+            <div class="container">
                 <span class="close">&times;</span>
                 <p><form action="/updateTeam/{{ row["TeamId"] }}" method="POST">
                 <p><strong>Edit {{ row['TeamName'] }} Information</strong></p>
@@ -544,7 +708,7 @@ label {
                 </select>
 
     <input type="checkbox" name="Member1Custom" onchange="toggleCustomInput(this)">
-    <label for="Member1Custom">Custom</label>
+    <label class="custom" for="Member1Custom">Custom</label>
     <div id="Member1CustomInput" style="display: none;">
         <input type="text" name="Member1CustomFName" placeholder="First Name">
           <input type="text" name="Member1CustomLName" placeholder="Last Name">
@@ -567,7 +731,7 @@ label {
 
     {% endif %}
      <input type="checkbox" name="Member2Custom" onchange="toggleCustomInput(this)">
-    <label for="Member2Custom">Custom</label>
+    <label class="custom" for="Member2Custom">Custom</label>
     <div id="Member2CustomInput" style="display: none;">
         <input type="text" name="Member2CustomFName" placeholder="First Name">
         <input type="text" name="Member2CustomLName" placeholder="Last Name">
@@ -586,7 +750,7 @@ label {
            </select>
     {% endif %}
     <input type="checkbox" name="Member3Custom" onchange="toggleCustomInput(this)">
-    <label for="Member3Custom">Custom</label>
+    <label  class="custom" for="Member3Custom">Custom</label>
     <div id="Member3CustomInput" style="display: none;">
         <input type="text" name="Member3CustomFName" placeholder="First Name">
         <input type="text" name="Member3CustomLName" placeholder="Last Name">
@@ -605,7 +769,7 @@ label {
            </select>
     {% endif %}
    <input type="checkbox" name="Member4Custom" onchange="toggleCustomInput(this)">
-    <label for="Member4Custom">Custom</label>
+    <label class="custom" for="Member4Custom">Custom</label>
     <div id="Member4CustomInput" style="display: none;">
         <input type="text" name="Member4CustomFName" placeholder="First Name">
         <input type="text" name="Member4CustomLName" placeholder="Last Name">
@@ -636,15 +800,16 @@ label {
     </form>
     {% endfor %}
 {% endif %}
-</p>
+
+            </div>
+
             </div>
         </div>
 
-
                     <button id="addMButton" class="but-check">Add Member</button>
-                        <div id="addPop" class="modal">
+                        <div id="addPop" class="modal-add">
 
-                            <div class="modal-content">
+                            <div class="modal-content-add">
                                 <span class="close" id="addClose">&times;</span>
                                 <p><form action="/uc_addMember" method="POST">
                                 <h3> Add Member</h3><br><br>
@@ -655,11 +820,12 @@ label {
                                         <label for="firstName">First Name</label>
                                         <input type="text" id="MemberFName" name="MemberFName" placeholder="Enter Members First Name" autocomplete="off" required>
                                     </div>
+
                                     <div class="input-box">
                                     <label for="MemberLName">Last Name</label>
                                     <input type="text" id="MemberLName" name="MemberLName" placeholder="Enter Members Last Name" autocomplete="off" required>
-                                </div>
-                            </div>
+                                    </div>
+
                                 <div class="input-box">
                                     <label for="MemberEmail">Email</label>
                                     <input type="email" id="MemberEmail" name="MemberEmail"  placeholder="Enter Members Email" autocomplete="off" required>
@@ -669,6 +835,8 @@ label {
                                     <input type="text" id="MemberHCap" name="MemberHCap"  placeholder="Enter Members Handicap Status (0-54)" autocomplete="off" required>
                                 </div>
                             </div>
+                                    </div>
+
 
                                 <br>
                                 <button type="submit" class="but-check">Add Member</button>
@@ -740,25 +908,34 @@ label {
                         </div>
 
         </div>
-            {% endfor %}
 
 
 
 
   <div class="container-payinfo">
   <aside>
-    <img src="../static/css/uploads/default.jpeg" alt="" height="420" width="420" class="sponsor_picture">
-    <p class="payinfo"> This as Sponsor photo?^</p>
-  </aside>
-  <div class="box-payinfo">
+       <div class="box-payinfo">
+           <div class="container-pay">
     <!-- Content of the box -->
           <p>- thinking this box can be for team payment activity </p>
-
+           </div>
   </div>
-</div>
+  </aside>
+<div class="container-Sponsor">
+  <div class="container-Sponsorpic">
+    <img src="{{ row['SponsorPhoto'] }}" alt="" height="320" width="390" class="sponsor_picture">
+    <div class="sponsor-text">
+     <p>{{ row['TeamName'] }} is sponsored by:<br><br><strong>{{ row['SponsorName'] }}</strong></p>
+        <br>
+        <br>
+        <a class="editpic" href="search_p"></a>
+
+    </div>
+  </div>
+</div></div>
+      {% endfor %}
     </main>
 {% endif %}
-
    <script src="../static/js/table.js"></script>
     <script>
     // Handle delPop modal
@@ -836,6 +1013,68 @@ label {
 
 
 </script>
+
+<script>
+    function toggleCustomInput(checkbox) {
+    var customInput = checkbox.nextElementSibling.nextElementSibling;
+    if (checkbox.checked) {
+        customInput.style.display = 'block';
+        checkbox.previousElementSibling.style.pointerEvents = 'none';// Hide the select dropdown
+    } else {
+        customInput.style.display = 'none';
+        checkbox.previousElementSibling.style.pointerEvents = 'auto';
+    }
+}
+</script>
+<script>
+    // Make an AJAX request to fetch registered users
+    var xhr = new XMLHttpRequest();
+xhr.open('GET', '/get_registered_users', true);
+xhr.onload = function () {
+    if (xhr.status === 200) {
+        var data = JSON.parse(xhr.responseText);
+        console.log(data); // Check if data is received correctly
+        populateDropdowns(data);
+    } else {
+        console.error('Request failed. Status:', xhr.status);
+    }
+};
+xhr.send();
+
+ function populateDropdowns(data) {
+    // Define an array of dropdown IDs
+    var dropdownIds = ['MemberName1','MemberName2', 'MemberName3', 'MemberName4'];
+
+    // Iterate over the dropdown IDs
+    for (var j = 0; j < dropdownIds.length; j++) {
+        var dropdownId = dropdownIds[j];
+        var dropdown = document.getElementById(dropdownId);
+
+        // Create an option element and append it to the dropdown for each user
+        for (var i = 0; i < data.length; i++) {
+            var user = data[i];
+            var option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.name;
+            dropdown.appendChild(option);
+        }
+    }
+}
+</script>
+
+<script>
+    $(document).ready(function(){
+        $('select[name^="MemberName"]').change(function(){
+            var selectedUserId = $(this).val();
+            $('select[name^="MemberName"]').not(this).find('option').each(function(){
+                if($(this).val() == selectedUserId) {
+                    $(this).remove();
+                }
+            });
+        });
+    });
+</script>
+
 
 
 </body>
