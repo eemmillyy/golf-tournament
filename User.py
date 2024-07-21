@@ -1049,8 +1049,70 @@ def cap_editTeam():
             newRow['ContactEmail'] = str(Encryption.cipher.decrypt(row['ContactEmail']))
             rows.append(newRow)
         con.close()
+        for row in rows:
+            mc = row['MemberCount']
+            print(mc)
+            print(row['ContactPhoto'])
+            if mc == 1:
+                con = sql.connect("UserInfoDB.db")
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                cur.execute('SELECT UserFName, UserLName, TotalSpent FROM UserInfo WHERE UserId = ?', (row['Member1ID'],))
+                counter = cur.fetchall()
+                payinfo = []
+                for row in counter:
+                    newRow = dict(row)
+                    payinfo.append(newRow)
+                print(payinfo)
+                con.close()
+            if mc == 2:
+                con = sql.connect("UserInfoDB.db")
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                user_ids = (row['Member1ID'], row['Member2ID'])
+                cur.execute('SELECT UserFName, UserLName, TotalSpent FROM UserInfo WHERE UserId IN (?, ?)', user_ids)
 
-        return render_template('c-userEditTeam.html', rows=rows)
+                counter = cur.fetchall()
+                payinfo = []
+                for row in counter:
+                    newRow = dict(row)
+                    payinfo.append(newRow)
+
+                print(payinfo)
+                con.close()
+            if mc == 3:
+                con = sql.connect("UserInfoDB.db")
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                user_ids = (row['Member1ID'], row['Member2ID'], row['Member3ID'])
+                cur.execute('SELECT UserFName, UserLName, TotalSpent FROM UserInfo WHERE UserId IN (?, ?, ?)', user_ids)
+
+                counter = cur.fetchall()
+                payinfo = []
+                for row in counter:
+                    newRow = dict(row)
+                    payinfo.append(newRow)
+
+                print(payinfo)
+                con.close()
+            if mc == 4:
+                con = sql.connect("UserInfoDB.db")
+                con.row_factory = sql.Row
+                cur = con.cursor()
+                user_ids = (row['Member1ID'], row['Member2ID'], row['Member3ID'], row['Member4ID'])
+                cur.execute('SELECT UserFName, UserLName, TotalSpent FROM UserInfo WHERE UserId IN (?, ?, ?, ?)', user_ids)
+
+                counter = cur.fetchall()
+                payinfo = []
+                for row in counter:
+                    newRow = dict(row)
+                    payinfo.append(newRow)
+
+                print(payinfo)
+                con.close()
+
+
+        return render_template('c-userEditTeam.html', rows=rows, payinfo=payinfo)
 
 
 @user.route('/uc_deleteMember', methods=['POST', 'GET'])
