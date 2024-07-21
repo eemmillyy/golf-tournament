@@ -522,6 +522,109 @@
     display: block; /* Make labels block-level */
     margin-bottom: 5px; /* Adjust margin below labels */
 }
+   .pay-table {
+                text-align: center;
+                margin-top: 1px;
+
+                justify-content: space-between;
+                margin-left: 8px;
+                width: 115%;
+                padding: 10px;
+                margin-bottom: 10px;
+               display: block;
+                white-space: nowrap;
+                border: 1px solid #E04D43;
+                padding-right: 30px;
+
+        }
+        .left-column {
+            flex: 1;
+            float: left;
+            text-align: left;
+            padding-right: 170px;
+
+        }
+        .right-column {
+            flex: 1;
+            text-align: right;
+            float: right;
+        }
+        .pay-title {
+             margin-top: 18px;
+            margin-left: 100px;
+            white-space: nowrap;
+            font-size: 20px;
+            padding-right: 30px;
+
+        }
+        .box-title {
+            background-color: rgba(0,0,0,0.05);
+            width: 116%;
+            margin-left: 9px;
+               margin-top: 4px;
+            font-size: 23px;
+            padding: 5px;
+            text-align: center;
+            display: block;
+            border-radius: 10px;
+
+        }
+        .bottom-1 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 270px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+        .bottom-2 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 200px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+        .bottom-3 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 140px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+        .bottom-4 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 90px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
 
 
     </style>
@@ -687,7 +790,7 @@
             <div class="modal-content-e">
             <div class="container">
                 <span class="close">&times;</span>
-                <p><form action="/c-updateTeam/{{ row['TeamId'] }}" method="POST">
+                <p><form action="/updateTeam/{{ row["TeamId"] }}" method="POST">
                 <p><strong>Edit {{ row['TeamName'] }} Information</strong></p>
                 {% if session['logged_in'] %}
                 {% for row in rows %}
@@ -700,6 +803,84 @@
 
                 <br><label for="Cart">Need Cart?:</label>
                 <input type="text" name="NeedCart" value="{{ row['NeedCart'] }}">
+
+<br>
+             <label for="Member1Name">Member 1 Name:</label>
+                     <select id="MemberName1" name="MemberName1">
+                    <option value="">{{ row['MemberName1'] }}</option>
+                </select>
+
+    <input type="checkbox" name="Member1Custom" onchange="toggleCustomInput(this)">
+    <label class="custom" for="Member1Custom">Custom</label>
+    <div id="Member1CustomInput" style="display: none;">
+        <input type="text" name="Member1CustomFName" placeholder="First Name">
+          <input type="text" name="Member1CustomLName" placeholder="Last Name">
+        <input type="email" name="Member1CustomEmail" placeholder="Email">
+         <input type="tel" name="Member1Customnumber" placeholder="Phone Number">
+    <input type="number" name="Member1CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+
+
+     <br><label for="Member2Name">Member 2 Name:</label>
+    {% if row['MemberName2'] == none or row['MemberName2'] == "None" %}
+    <select id="MemberName2" name="MemberName2">
+        <option value="">Add Member</option>
+    </select>
+    {% else %}
+         <select name="MemberName2" id="MemberName2" >
+          <option value=""> {{ row['MemberName2'] }}</option>
+           </select>
+
+    {% endif %}
+     <input type="checkbox" name="Member2Custom" onchange="toggleCustomInput(this)">
+    <label class="custom" for="Member2Custom">Custom</label>
+    <div id="Member2CustomInput" style="display: none;">
+        <input type="text" name="Member2CustomFName" placeholder="First Name">
+        <input type="text" name="Member2CustomLName" placeholder="Last Name">
+        <input type="email" name="Member2ustomEmail" placeholder="Email">
+        <input type="number" name="Member2CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+     <br><label for="Member3Name">Member 3 Name:</label>
+    {% if row['MemberName3'] == none or row['MemberName3'] == "None" %}
+    <select id="MemberName3" name="MemberName3">
+        <option value="">Add Member</option>
+    </select>
+    {% else %}
+       <select name="MemberName3" id="MemberName3" >
+          <option value=""> {{ row['MemberName3'] }}</option>
+           </select>
+    {% endif %}
+    <input type="checkbox" name="Member3Custom" onchange="toggleCustomInput(this)">
+    <label  class="custom" for="Member3Custom">Custom</label>
+    <div id="Member3CustomInput" style="display: none;">
+        <input type="text" name="Member3CustomFName" placeholder="First Name">
+        <input type="text" name="Member3CustomLName" placeholder="Last Name">
+        <input type="email" name="Member3ustomEmail" placeholder="Email">
+        <input type="number" name="Member3CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+    <br><label for="Member4Name">Member 4 Name:</label>
+    {% if row['MemberName4'] == none or row['MemberName4'] == "None" %}
+    <select id="MemberName4" name="MemberName4">
+        <option value="">Add Member</option>
+    </select>
+    {% else %}
+       <select name="MemberName4" id="MemberName4" >
+          <option value=""> {{ row['MemberName4'] }}</option>
+           </select>
+    {% endif %}
+   <input type="checkbox" name="Member4Custom" onchange="toggleCustomInput(this)">
+    <label class="custom" for="Member4Custom">Custom</label>
+    <div id="Member4CustomInput" style="display: none;">
+        <input type="text" name="Member4CustomFName" placeholder="First Name">
+        <input type="text" name="Member4CustomLName" placeholder="Last Name">
+        <input type="email" name="Member4CustomEmail" placeholder="Email">
+        <input type="number" name="Member4CustomHc" placeholder="Handicap (0-54)" >
+    </div>
+
+
 
 
         <br><label for="Start Hole">Starting Hole:</label>
@@ -839,9 +1020,49 @@
        <div class="box-payinfo">
            <div class="container-pay">
     <!-- Content of the box -->
-          <p>- thinking this box can be for team payment activity </p>
+                 <div class="pay">
+                  <h2 class="box-title"> Team Payment History</h2>
+                    <h1 class="pay-title">
+                        <div class="left-column">
+                            Member:
+                        </div>
+                        <div class="right-column">
+                            Total:
+                        </div>
+                    </h1><br><br>
+
+                        {% for payment in payinfo %}
+                                 <div class="pay-table">
+        <div class="left-column">
+            <p> {{ payment['UserFName'] }} {{ payment['UserLName'] }}</p>
+        </div>
+        <div class="right-column">
+            {% if payment['TotalSpent'] != None %}
+            <p> ${{ payment['TotalSpent'] }}</p>
+            {% else %}
+            <p> $0 </p>
+            {% endif %}
+        </div><br><div> </div></div>
+                                {% endfor %}
+                 {% for row in rows %}
+                     {% if row['MemberCount'] == 1 %}
+                      <p class="bottom-1"> Team Entry Fee Paid</p>
+                      {% endif %}
+                     {% if row['MemberCount'] == 2 %}
+                         <p class="bottom-2"> Team Entry Fee Paid</p>
+                      {% endif %}
+                     {% if row['MemberCount'] == 3 %}
+                         <p class="bottom-3"> Team Entry Fee Paid</p>
+                      {% endif %}
+                     {% if row['MemberCount'] == 4 %}
+                       <p class="bottom-4"> Team Entry Fee Paid</p>
+                      {% endif %}
+
+{% endfor %}
+
            </div>
-  </div>
+
+  </div>   </div>
   </aside>
 <div class="container-Sponsor">
   <div class="container-Sponsorpic">
@@ -853,7 +1074,7 @@
         <a class="editpic" href="search_p"></a>
 
     </div>
-  </div>
+  </div>   </div>
 </div></div>
       {% endfor %}
     </main>

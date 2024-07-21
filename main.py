@@ -45,8 +45,6 @@ app.config['MAIL_PORT'] = 1025  # MailHog SMTP port number
 app.config['MAIL_USE_TLS'] = False  # Disable TLS encryption for MailHog
 app.config['MAIL_USERNAME'] = None  # No username required for MailHog
 app.config['MAIL_PASSWORD'] = None  # No password required for MailHog
-
-# Initialize Flask-Mail
 mail = Mail(app)
 
 # Initialize URLSafeTimedSerializer
@@ -54,8 +52,8 @@ s = URLSafeTimedSerializer(app.secret_key)
 
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
-app.config['STRIPE_SECRETE_KEY'] = STRIPE_SECRET_KEYS
-app.config['STRIPE_ENDPOINT_SECRET'] = STRIPE_SECRET_KEYS
+app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
+app.config['STRIPE_ENDPOINT_SECRETE'] = STRIPE_SECRET_KEYS
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 app.config['GOOGLE_API_KEY'] = GOOGLE_API_KEY
@@ -122,7 +120,6 @@ def reset_password(token):
         flash('Your password is now updated!', 'success')
         return redirect(url_for('login'))
 
-    return render_template('reset-password.html')
 
 # **********************************************************************************************
 #                                        PAYMENT STRIPE                    lines: 2230-2508    *

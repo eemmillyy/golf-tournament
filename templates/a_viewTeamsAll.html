@@ -304,7 +304,6 @@
                         <th> Start Hole<span class="icon-arrow"> &UpArrow;</span></th>
                         <th> Cart Rentals<span class="icon-arrow">&UpArrow;</span></th>
                         <th> Contact Information<br><span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Entree Paid<span class="icon-arrow">&UpArrow;</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -352,7 +351,7 @@
                     {% endif %}
                         <aside class="line-break-contact"><p class="name"> {{row["ContactFName"]}} {{row["ContactLName"]}}</p><p class="number"><i class='bx bx-phone' ></i> {{row["ContactPhNum"]}}</p><p class="email"><i class='bx bx-envelope' ></i><a class="e" href="mailto:{{ row['ContactEmail'].strip() }}"> {{row['ContactEmail']}}</a></p></aside>
                     </td>
-                    <td><strong> $0 </strong></td>
+
                     </tr>
                 {% endfor %}
    {% endif %}

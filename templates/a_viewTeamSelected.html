@@ -446,6 +446,109 @@
                 color: black;
               }
 
+            .pay-table {
+                text-align: center;
+                margin-top: 1px;
+                display: flex;
+                justify-content: space-between;
+                margin-left: 8px;
+                width: 115%;
+                padding: 10px;
+                margin-bottom: 10px;
+                white-space: nowrap;
+                border: 1px solid #E04D43;
+                padding-right: 30px;
+
+        }
+        .left-column {
+            flex: 1;
+            float: left;
+            text-align: left;
+            padding-right: 170px;
+
+        }
+        .right-column {
+            flex: 1;
+            text-align: right;
+            float: right;
+        }
+        .pay-title {
+             margin-top: 18px;
+            margin-left: 100px;
+            white-space: nowrap;
+            font-size: 20px;
+            padding-right: 30px;
+
+        }
+        .box-title {
+            background-color: rgba(0,0,0,0.05);
+            width: 116%;
+            margin-left: 9px;
+               margin-top: 4px;
+            font-size: 23px;
+            padding: 5px;
+            text-align: center;
+            display: block;
+            border-radius: 10px;
+
+        }
+             .bottom-1 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 270px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+        .bottom-2 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 200px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+        .bottom-3 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 140px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+        .bottom-4 {
+            display: block; /* Display as block element */
+            text-align: center; /* Center align the text */
+            margin-top: 90px; /* Space above the link */
+            font-size: 16px; /* Font size for the link */
+            color: dimgray; /* Link color */
+            background-color: darkgrey;
+            padding: 10px;
+            text-align: center;
+            border-radius: 15px;
+            margin-left: 70px;
+            text-decoration: none; /* Remove underline */
+
+        }
+
     </style>
 </head>
 <body>
@@ -824,9 +927,50 @@
        <div class="box-payinfo">
            <div class="container-pay">
     <!-- Content of the box -->
-          <p>- thinking this box can be for team payment activity </p>
+              <!-- Content of the box -->
+                 <div class="pay">
+                  <h2 class="box-title"> Team Payment History</h2>
+                    <h1 class="pay-title">
+                        <div class="left-column">
+                            Member:
+                        </div>
+                        <div class="right-column">
+                            Total:
+                        </div>
+                    </h1><br><br>
+
+                        {% for payment in payinfo %}
+                                 <div class="pay-table">
+        <div class="left-column">
+            <p> {{ payment['UserFName'] }} {{ payment['UserLName'] }}</p>
+        </div>
+        <div class="right-column">
+            {% if payment['TotalSpent'] != None %}
+            <p> ${{ payment['TotalSpent'] }}</p>
+            {% else %}
+            <p> $0 </p>
+            {% endif %}
+        </div><br><div> </div></div>
+                                {% endfor %}
+                 {% for row in rows %}
+                     {% if row['MemberCount'] == 1 %}
+                      <p class="bottom-1"> Team Entry Fee Paid</p>
+                      {% endif %}
+                     {% if row['MemberCount'] == 2 %}
+                         <p class="bottom-2"> Team Entry Fee Paid</p>
+                      {% endif %}
+                     {% if row['MemberCount'] == 3 %}
+                         <p class="bottom-3"> Team Entry Fee Paid</p>
+                      {% endif %}
+                     {% if row['MemberCount'] == 4 %}
+                       <p class="bottom-4"> Team Entry Fee Paid</p>
+                      {% endif %}
+
+{% endfor %}
+
            </div>
-  </div>
+
+  </div>   </div>
   </aside>
 <div class="container-Sponsor">
   <div class="container-Sponsorpic">
