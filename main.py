@@ -28,6 +28,8 @@ import random
 import ast
 import socket
 import os
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, static_url_path='/static')
 app.register_blueprint(auth)
@@ -43,13 +45,17 @@ app.config['MAIL_PORT'] = 1025  # MailHog SMTP port number
 app.config['MAIL_USE_TLS'] = False  # Disable TLS encryption for MailHog
 app.config['MAIL_USERNAME'] = None  # No username required for MailHog
 app.config['MAIL_PASSWORD'] = None  # No password required for MailHog
+
+# Initialize Flask-Mail
 mail = Mail(app)
 
+# Initialize URLSafeTimedSerializer
+s = URLSafeTimedSerializer(app.secret_key)
 
 # Personal Stripe Account Connection -- Need company connections!!
 app.config['STRIPE_PUBLIC_KEY'] = STRIPE_PUBLIC_KEYS
-app.config['STRIPE_SECRET_KEY'] = STRIPE_SECRET_KEYS
-app.config['STRIPE_ENDPOINT_SECRETE'] = STRIPE_SECRET_KEYS
+app.config['STRIPE_SECRETE_KEY'] = STRIPE_SECRET_KEYS
+app.config['STRIPE_ENDPOINT_SECRET'] = STRIPE_SECRET_KEYS
 stripe.api_key = app.config['STRIPE_SECRET_KEY']
 
 app.config['GOOGLE_API_KEY'] = GOOGLE_API_KEY
@@ -75,7 +81,48 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # - if team has not paid pop up on dash (ask how handled - sponsor paying entry?)
 #    ↳  maybe when creating a team; before routing to join code, route to payments page first
 
+# **********************************************************************************************
+#                               FORGOT PASSWORD & RESET PASSWORD                               *
+# **********************************************************************************************
 
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+
+        # Generates a token
+        token = s.dumps(email, salt='email-reset')
+        msg = Message('Password Reset Request', sender='your-email@example.com', recipients=[email])
+        link = url_for('reset_password', token=token, _external=True)
+        msg.body = f'Your link to reset your password is {link}'
+        mail.send(msg)
+        flash('A password reset link has been sent to your email.', 'info')
+        return redirect(url_for('login'))
+
+    return render_template('forgot-password.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = s.loads(token, salt='email-reset', max_age=3600)
+    except SignatureExpired:
+        return '<h1>The token has expired!</h1>'
+
+    if request.method == 'POST':
+        new_password = request.form['password']
+        hashed_password = generate_password_hash(new_password, method='sha256')
+
+        # Update user's password in the database
+        con = sql.connect('UserInfoDB.db')
+        cur = con.cursor()
+        cur.execute("UPDATE UserInfo SET Password = ? WHERE Email = ?", (hashed_password, email))
+        con.commit()
+        con.close()
+
+        flash('Your password is now updated!', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('reset-password.html')
 
 # **********************************************************************************************
 #                                        PAYMENT STRIPE                    lines: 2230-2508    *
